@@ -3,6 +3,7 @@ import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const SignUpForm = () => {
     return (
@@ -44,7 +45,7 @@ const SignUpForm = () => {
                         </Button>
                         <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">
                             Already have an account?
-                            <a href="#" className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Login</a>
+                            <Link to='/login' className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Login</Link>
                         </p>
                     </CardContent>
                 </Card>

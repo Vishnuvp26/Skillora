@@ -4,11 +4,14 @@ import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoWhite from "../../assets/Logo white.png";
 import logoBlack from "../../assets/Logo black.png";
+import { useNavigate } from "react-router-dom";
 
 const SignUpNav: React.FC = () => {
     const themeContext = useContext(ThemeContext);
     if (!themeContext) return null;
     const { theme, toggleTheme } = themeContext;
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -17,7 +20,8 @@ const SignUpNav: React.FC = () => {
                     <img 
                         src={theme === "dark" ? logoWhite : logoBlack} 
                         alt="Brand Logo" 
-                        className="h-9" 
+                        className="h-9"
+                        onClick={() => navigate("/")} 
                     />
                 </div>
 

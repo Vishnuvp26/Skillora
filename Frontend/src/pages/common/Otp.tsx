@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import SignUpNav from "@/components/sigupComponent/SignupNav";
 
 const Otp = () => {
-    const [otp, setOtp] = useState("");
+    const [otp, setOtp] = useState<string>("");
 
     const handleSubmit = () => {
         console.log("OTP Submitted:", otp);
@@ -42,4 +42,4 @@ const Otp = () => {
     );
 };
 
-export default Otp;
+export default Otp; 

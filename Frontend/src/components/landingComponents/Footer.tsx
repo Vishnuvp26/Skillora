@@ -13,10 +13,10 @@ const Footer = () => {
                 
                 {/* Left Section */}
                 <div className="text-center md:text-left">
-                    <h3 className="text-lg font-semibold">Help & Support</h3>
+                    <h3 className="text-md font-semibold">Help & Support</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:underline">Blog</p>
                     
-                    <h3 className="text-lg font-semibold mt-4">Follow us on</h3>
+                    <h3 className="text-md font-semibold mt-4">Follow us on</h3>
                     <div className="flex justify-center md:justify-start space-x-4 mt-2">
                         <FaFacebook className="w-6 h-6 cursor-pointer hover:text-blue-600 transition" />
                         <FaInstagram className="w-6 h-6 cursor-pointer hover:text-pink-500 transition" />
@@ -27,13 +27,13 @@ const Footer = () => {
 
                 {/* Middle Section */}
                 <div className="text-center">
-                    <h3 className="text-lg font-semibold">About us</h3>
+                    <h3 className="text-md font-semibold">About us</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:underline">Feedback</p>
                 </div>
 
                 {/* Right Section */}
                 <div className="text-center md:text-right">
-                    <h3 className="text-lg font-semibold">Contact us</h3>
+                    <h3 className="text-md font-semibold">Contact us</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300">skillora@company.com</p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">+91 8853337201</p>
                 </div>

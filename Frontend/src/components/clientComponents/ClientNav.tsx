@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
 
-const FreelancerNav: React.FC = () => {
+const ClientNav: React.FC = () => {
     
     const themeContext = useContext(ThemeContext);
     if (!themeContext) return null;
@@ -35,15 +35,12 @@ const FreelancerNav: React.FC = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center gap-2">
-                                Find Work <ChevronDown className="w-4 h-4" />
+                                Hire Talent <ChevronDown className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                             <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
-                                Find Work
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
-                                Saved Jobs
+                                Post Job
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -51,12 +48,15 @@ const FreelancerNav: React.FC = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center gap-2">
-                                Deliver Work <ChevronDown className="w-4 h-4" />
+                                Manage Work <ChevronDown className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                             <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
                                 Active Contract
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
+                                My Jobs
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -88,13 +88,13 @@ const FreelancerNav: React.FC = () => {
                                 /> */}
                                 <div>
                                     <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Freelancer</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">Client</p>
                                 </div>
                             </div>
 
                             {/* Profile & Logout Options */}
                             <DropdownMenuItem>
-                                <Settings className="w-4 h-4 mr-2" /> Profile
+                                <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
@@ -118,8 +118,7 @@ const FreelancerNav: React.FC = () => {
 
             {/* Mobile Sidebar */}
             <div
-                className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
-                    }`}
+                className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
                 onClick={() => setIsSidebarOpen(false)}
             ></div>
 
@@ -139,15 +138,12 @@ const FreelancerNav: React.FC = () => {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="flex items-center gap-2">
-                            Find Work <ChevronDown className="w-4 h-4" />
+                            Hire Talent <ChevronDown className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                         <DropdownMenuItem>
-                            Find Work
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Saved Jobs
+                            Post Job
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -156,12 +152,15 @@ const FreelancerNav: React.FC = () => {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="flex items-center gap-2">
-                            Deliver Work <ChevronDown className="w-4 h-4" />
+                            Manage Work <ChevronDown className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                         <DropdownMenuItem>
                             Active Contract
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            My Jobs
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -185,19 +184,22 @@ const FreelancerNav: React.FC = () => {
                         {/* User Info Section */}
                         <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
                             {/* <img
-                                    src="https://via.placeholder.com/40" // Replace with actual user image URL
-                                    alt="User Avatar"
-                                    className="w-10 h-10 rounded-full"
-                                /> */}
+                                src="https://via.placeholder.com/40" // Replace with actual user image URL
+                                alt="User Avatar"
+                                className="w-10 h-10 rounded-full"
+                            /> */}
                             <div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">Freelancer</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">Client</p>
                             </div>
                         </div>
 
                         {/* Profile & Logout Options */}
                         <DropdownMenuItem>
-                            <Settings className="w-4 h-4 mr-2" /> Profile
+                            <User className="w-4 h-4 mr-2" /> Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Settings className="w-4 h-4 mr-2" /> Profile Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-red-500">
                             <LogOut className="w-4 h-4 mr-2" /> Logout
@@ -209,4 +211,4 @@ const FreelancerNav: React.FC = () => {
     );
 };
 
-export default FreelancerNav;
+export default ClientNav;

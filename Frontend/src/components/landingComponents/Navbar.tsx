@@ -4,6 +4,7 @@ import { LogIn, UserPlus, Menu, X, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoWhite from '../../assets/Logo white.png'
 import logoBlack from '../../assets/Logo black.png'
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
 
@@ -12,6 +13,8 @@ const Navbar: React.FC = () => {
     const { theme, toggleTheme } = themeContext;
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -27,10 +30,10 @@ const Navbar: React.FC = () => {
 
                 {/* Center: Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
-                    <Button variant="ghost">Home</Button>
-                    <Button variant="ghost">Find Talent</Button>
-                    <Button variant="ghost">Find Work</Button>
-                    <Button variant="ghost">About Us</Button>
+                    <Button onClick={() => navigate("/login")}  variant="ghost">Home</Button>
+                    <Button onClick={() => navigate("/login")} variant="ghost">Find Talent</Button>
+                    <Button onClick={() => navigate("/login")} variant="ghost">Find Work</Button>
+                    <Button onClick={() => navigate("/login")} variant="ghost">About Us</Button>
                 </div>
 
                 {/* Right: Login, Signup, and Dark Mode Toggle (Desktop Only) */}
@@ -38,10 +41,10 @@ const Navbar: React.FC = () => {
                     <Button variant="ghost" onClick={toggleTheme}>
                         {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                     </Button>
-                    <Button variant="ghost">
+                    <Button onClick={() => navigate("/login")} variant="ghost">
                         <LogIn className="w-4 h-4 mr-2" /> Login
                     </Button>
-                    <Button variant="ghost">
+                    <Button onClick={() => navigate("/select-role")} variant="ghost">
                         <UserPlus className="w-4 h-4 mr-2" /> Signup
                     </Button>
                 </div>
