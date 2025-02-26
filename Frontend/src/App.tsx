@@ -2,6 +2,7 @@ import Login from "./pages/common/Login";
 import { ThemeProvider } from "./context/ThemeContext";
 import Landing from "./pages/common/Landing";
 import SignUp from "./pages/common/SignUp";
+import Otp from "./pages/common/Otp";
 
 const App = () => {
     return (
@@ -9,7 +10,8 @@ const App = () => {
             <ThemeProvider>
                 {/* <Landing /> */}
                 {/* <Login/> */}
-                <SignUp/>
+                {/* <SignUp/> */}
+                <Otp/>
             </ThemeProvider>
         </div>
     )
