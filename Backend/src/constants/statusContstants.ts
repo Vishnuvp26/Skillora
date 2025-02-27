@@ -8,4 +8,4 @@ export enum HttpStatus {
     INTERNAL_SERVER_ERROR = 500,
     CONFLICT = 409,
     NO_CONTENT = 204,
-}
+}   

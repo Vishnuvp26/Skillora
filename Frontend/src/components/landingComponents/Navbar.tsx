@@ -85,10 +85,10 @@ const Navbar: React.FC = () => {
                 </Button>
 
                 {/* Mobile Login & Signup */}
-                <Button variant="ghost">
+                <Button variant="ghost" onClick={() => navigate("/login")}>
                     <LogIn className="w-4 h-4 mr-2" /> Login
                 </Button>
-                <Button variant="ghost">
+                <Button variant="ghost"  onClick={() => navigate("/select-role")}>
                     <UserPlus className="w-4 h-4 mr-2" /> Signup
                 </Button>
             </div>

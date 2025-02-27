@@ -3,12 +3,35 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SignUpNav from "@/components/sigupComponent/SignupNav";
+import { useLocation, useNavigate } from "react-router-dom";
+import { verifyOtp } from "@/api/authApi";
 
 const Otp = () => {
     const [otp, setOtp] = useState<string>("");
 
-    const handleSubmit = () => {
-        console.log("OTP Submitted:", otp);
+    const location = useLocation();
+    const navigate = useNavigate()
+
+    const email = location.state?.email;
+    const userData = location.state?.userData;
+
+    console.log("Received userData:", userData);
+
+    if (!email) {
+        alert("Email not provided!");
+        return;
+    };
+
+    const handleSubmit = async () => {
+        try {
+            console.log(`Sending OTP: ${otp} for email: ${email}`);
+            console.log("Final userData before API call:", userData);
+            await verifyOtp(email, otp, userData);
+            alert('otp verified successfully')
+            navigate("/login");
+        } catch (error) {
+            console.log('OTP submit error :', error)
+        }
     };
 
     return (
@@ -25,7 +48,7 @@ const Otp = () => {
                         Please enter the one-time password sent to your mail.
                     </p>
                     <div className="flex justify-center">
-                        <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                        <InputOTP maxLength={6} value={otp} onChange={setOtp} >
                             <InputOTPGroup>
                                 {[...Array(6)].map((_, index) => (
                                     <InputOTPSlot key={index} index={index} className="w-10 h-12 text-lg border border-gray-300 dark:border-gray-600 focus:ring-[#0077B6] dark:focus:ring-[#00FFE5]" />
@@ -42,4 +65,4 @@ const Otp = () => {
     );
 };
 
-export default Otp; 
+export default Otp;

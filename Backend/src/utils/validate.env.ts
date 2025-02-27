@@ -13,4 +13,10 @@ export default function validateEnv() {
     if (!env.CLIENT_URL) {
         throw new Error ('CLIENT_URL is not defined in env')
     }
+    if (!env.EMAIL_USER) {
+        throw new Error ('EMAIL_USER is not defined in env')
+    }
+    if (!env.EMAIL_PASS) {
+        throw new Error ('EMAIL_PASS is not defined in env')
+    }
 }

@@ -15,5 +15,11 @@ export const env = {
     },
     get CLIENT_URL() {
         return process.env.CLIENT_URL
+    },
+    get EMAIL_USER() {
+        return process.env.EMAIL_USER
+    },
+    get EMAIL_PASS() {
+        return process.env.EMAIL_PASS
     }
 };

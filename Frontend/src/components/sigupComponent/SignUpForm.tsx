@@ -3,9 +3,50 @@ import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {FormData} from '../../types/Types'
+import { registerUser } from "@/api/authApi";
 
 const SignUpForm = () => {
+    
+    const [formData, setFormData] = useState<FormData>({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        role: ""
+    })
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const storedRole = localStorage.getItem('userRole')
+        if (storedRole) {
+            setFormData((prev) => ({ ...prev, role: storedRole }))
+        }
+    }, []);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (formData.password !== formData.confirmPassword) {
+            alert('password do not match')
+            return
+        }
+        try {
+            console.log('inside try');
+            await registerUser({ name: formData.name, email: formData.email, password: formData.password, role: formData.role });
+            alert('OTP sent to your mail')
+            navigate("/otp", { state: { email: formData.email, userData: formData } });
+        } catch (err) {
+            console.log('Error OTP :', err)
+        }
+    };
+
     return (
         <div className="flex items-center justify-center min-h-[90vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
             <motion.div
@@ -18,22 +59,56 @@ const SignUpForm = () => {
                         <CardTitle className="text-center">Signup</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <form className="space-y-6">
+
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <Input className="h-12" placeholder="Enter your name"/>
-                                <Input className="h-12" type="email" placeholder="Enter your email" />
+                                <Input
+                                    className="h-12"
+                                    placeholder="Enter your name"
+                                    name="name"
+                                    onChange={handleChange}
+                                    value={formData.name}
+                                />
+                                <Input
+                                    className="h-12"
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    onChange={handleChange}
+                                    value={formData.email}
+                                />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <Input className="h-12" type="password" placeholder="Enter your password" />
-                                <Input className="h-12" type="password" placeholder="Enter password again"/>
+                                <Input
+                                    className="h-12"
+                                    type="password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                />
+                                <Input
+                                    className="h-12"
+                                    type="password"
+                                    name="confirmPassword"
+                                    placeholder="Enter password again"
+                                    onChange={handleChange}
+                                    value={formData.confirmPassword}
+                                />
                             </div>
                             <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
                                     Forgot password?
                                 </a>
                             </div>
-                            <Button className="w-full h-12">Sign Up</Button>
+                            <Button
+                                className="w-full h-12"
+                                type="submit"
+                            >
+                                Sign Up
+                            </Button>
                         </form>
+
                         <div className="flex items-center my-4">
                             <hr className="flex-grow border-gray-300 dark:border-gray-600" />
                             <span className="px-2 text-gray-500 dark:text-gray-400">OR</span>
