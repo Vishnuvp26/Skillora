@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-const axiosInstance = axios.create({
+const Axios = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true,
     headers: {
@@ -10,4 +10,4 @@ const axiosInstance = axios.create({
     },
 })
 
-export default axiosInstance
+export default Axios

@@ -10,6 +10,9 @@ export default function validateEnv() {
     if (!env.JWT_SECRET) {
         throw new Error('JWT_Secret is not defined in env')
     }
+    if (!env.REFRESH_SECRET) {
+        throw new Error('REFRESH_SECRET is not defined in env')
+    }
     if (!env.CLIENT_URL) {
         throw new Error ('CLIENT_URL is not defined in env')
     }

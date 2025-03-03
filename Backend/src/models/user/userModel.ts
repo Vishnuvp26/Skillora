@@ -6,6 +6,7 @@ export interface Iuser extends Document{
     mobile: string
     password: string
     role: "freelancer" | "client" | "admin"
+    profilePic: string
     status: "active" | "blocked"
     createdAt: Date
     updatedAt: Date
@@ -33,6 +34,9 @@ const UserSchema: Schema = new Schema<Iuser>(
             type: String,
             enum: ['freelancer', 'client', 'admin'],
             required: true
+        },
+        profilePic: {
+            type: String
         },
         status: {
             type: String,

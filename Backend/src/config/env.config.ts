@@ -11,7 +11,10 @@ export const env = {
         return process.env.MONGODB_URL
     },
     get JWT_SECRET() {
-        return process.env.JWT_SECRET
+        return process.env.JWT_SECRET!
+    },
+    get REFRESH_SECRET() {
+        return process.env.REFRESH_SECRET!
     },
     get CLIENT_URL() {
         return process.env.CLIENT_URL

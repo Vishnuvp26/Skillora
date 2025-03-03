@@ -7,10 +7,13 @@ import Otp from "./pages/common/Otp";
 import ClientHomepage from "./pages/clients/ClientHomepage";
 import SelectRole from "./pages/common/SelectRole";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import { Toaster } from "react-hot-toast";
+import FreelancerHomepage from "./pages/freelancer/FreelancerHomepage";
 
 const App = () => {
     return (
         <ThemeProvider>
+            <Toaster position="top-right" reverseOrder={false} />
             <Router>
                 <Routes>
                     {/* Common Routes */}
@@ -26,6 +29,7 @@ const App = () => {
 
                     {/* Client Routes */}
                     <Route path="/client-homepage" element={<ClientHomepage />} />
+                    <Route path="/freelancer-homepage" element={<FreelancerHomepage />} />
                 </Routes>
             </Router>
         </ThemeProvider>

@@ -6,6 +6,10 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
+import { logoutUser } from "@/api/authApi";
+import { removeUser } from "@/redux/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ClientNav: React.FC = () => {
     
@@ -14,6 +18,19 @@ const ClientNav: React.FC = () => {
     const { theme, toggleTheme } = themeContext;
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+            dispatch(removeUser());
+            navigate("/");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };    
 
     return (
         <>
@@ -99,7 +116,7 @@ const ClientNav: React.FC = () => {
                             <DropdownMenuItem>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-500">
+                            <DropdownMenuItem onClick={handleLogout} className="text-red-500">
                                 <LogOut className="w-4 h-4 mr-2" /> Logout
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -201,8 +218,8 @@ const ClientNav: React.FC = () => {
                         <DropdownMenuItem>
                             <Settings className="w-4 h-4 mr-2" /> Profile Settings
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500">
-                            <LogOut className="w-4 h-4 mr-2" /> Logout
+                        <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+                            <LogOut onClick={handleLogout} className="w-4 h-4 mr-2" /> Logout
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

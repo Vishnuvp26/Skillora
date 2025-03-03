@@ -3,6 +3,7 @@ import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {FormData} from '../../types/Types'
@@ -17,6 +18,9 @@ const SignUpForm = () => {
         confirmPassword: "",
         role: ""
     })
+
+    const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null);
 
     const navigate = useNavigate()
 
@@ -34,16 +38,23 @@ const SignUpForm = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (formData.password !== formData.confirmPassword) {
-            alert('password do not match')
+            toast.error('password do not match')
             return
         }
         try {
-            console.log('inside try');
-            await registerUser({ name: formData.name, email: formData.email, password: formData.password, role: formData.role });
+            setLoading(true)
+            await registerUser({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+                role: formData.role
+            });
             alert('OTP sent to your mail')
             navigate("/otp", { state: { email: formData.email, userData: formData } });
-        } catch (err) {
-            console.log('Error OTP :', err)
+        } catch (error: any) {
+            setError(error.error || "Something went wrong, please try again");
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -96,17 +107,18 @@ const SignUpForm = () => {
                                     value={formData.confirmPassword}
                                 />
                             </div>
-                            <div className="text-right">
+                            {/* <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
                                     Forgot password?
                                 </a>
-                            </div>
-                            <Button
-                                className="w-full h-12"
-                                type="submit"
-                            >
-                                Sign Up
+                            </div> */}
+                            {error && (
+                                <p className="text-sm text-red-500 text-center mt-2">{error}</p>
+                            )}
+                            <Button className="w-full h-12" type="submit" disabled={loading}>
+                                {loading ? "Please wait..." : "Sign Up"}
                             </Button>
+                            {loading && <p className="text-sm text-gray-500 text-center mt-2">Sending OTP, please wait...</p>}
                         </form>
 
                         <div className="flex items-center my-4">
@@ -127,6 +139,6 @@ const SignUpForm = () => {
             </motion.div>
         </div>
     );
-}
+};
 
 export default SignUpForm;

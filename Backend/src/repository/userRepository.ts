@@ -8,6 +8,6 @@ export class UserRepository extends BaseRepository<Iuser> implements IUserReposi
     }
 
     async findByEmail(email: string): Promise<Iuser | null> {
-        return await this.model.findOne({email})
+        return await this.findOne({email})
     }
 }

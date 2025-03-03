@@ -1,9 +1,10 @@
 import express, { Application } from "express";
 import { env } from "process";
 import validateEnv from "./utils/validate.env";
-import connectDB from "./config/db";
+import connectDB from "./config/db.config";
 import cors from "cors";
 import routes from  './routes/userRoutes'
+import { errorHandler } from "./middlewares/errorMiddleware";
 
 class App {
     public app: Application;
@@ -33,6 +34,7 @@ class App {
 
     private initializeRoutes(): void{
         this.app.use('/api/auth', routes);
+        this.app.use(errorHandler)
     }
 
     public listen() {
