@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "@/api/authApi";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice";
+import toast from "react-hot-toast";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -19,6 +20,10 @@ const LoginForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!email || !password) {
+            toast.error('Enter credentials')
+            return
+        }
         setLoading(true);
         setError("");
     
@@ -50,13 +55,13 @@ const LoginForm = () => {
     }; 
 
     return (
-        <div className="flex items-center justify-center min-h-[90vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
+        <div className="flex items-center justify-center min-h-[92vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
             <motion.div
                 className="w-[90%] sm:w-[400px] min-h-[500px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }}
             >
-                <Card className="min-h-[550px]">
+                <Card className="min-h-[530px]">
                     <CardHeader>
                         <CardTitle className="text-center">Login</CardTitle>
                     </CardHeader>
@@ -70,7 +75,6 @@ const LoginForm = () => {
                                 className="h-12"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                required
                             />
                             <Input
                                 type="password"
@@ -78,7 +82,6 @@ const LoginForm = () => {
                                 className="h-12"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                required
                             />
                             <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">

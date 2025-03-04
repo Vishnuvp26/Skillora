@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -9,12 +8,24 @@ const AdminLogin = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 p-4">
-            <Card className="w-full max-w-md p-6 shadow-lg dark:bg-gray-900">
-                <CardHeader>
-                    <CardTitle className="text-center text-2xl font-bold">Skillora Admin</CardTitle>
-                </CardHeader>
-                <CardContent>
+        <div className="flex min-h-screen">
+            {/* Left Side - Hidden on Mobile */}
+            <div className="hidden md:flex w-1/2 items-center justify-center bg-cyan-800 text-white p-8">
+                <div className="text-center">
+                    <h2 className="text-3xl font-bold mb-4">Welcome to Skillora Admin</h2>
+                    <p className="text-lg">Manage your platform efficiently and securely.</p>
+                    {/* <img 
+                        src="/images/admin-banner.png" 
+                        alt="Admin Dashboard" 
+                        className="mt-6 w-3/4 mx-auto"
+                    /> */}
+                </div>
+            </div>
+
+            {/* Right Side - Login Form */}
+            <div className="w-full md:w-1/2 flex items-center justify-center p-6">
+                <div className="w-full max-w-md">
+                    <h2 className="text-center text-2xl font-bold mb-6">Skillora Admin</h2>
                     <form>
                         <div className="mb-4">
                             <Label htmlFor="email">Email</Label>
@@ -42,8 +53,8 @@ const AdminLogin = () => {
                             Login
                         </Button>
                     </form>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     );
 };
