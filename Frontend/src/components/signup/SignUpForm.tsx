@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,8 @@ const SignUpForm = () => {
 
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     const navigate = useNavigate()
 
@@ -37,6 +40,10 @@ const SignUpForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+            toast.error("All fields are required");
+            return;
+        }
         if (formData.password !== formData.confirmPassword) {
             toast.error('password do not match')
             return
@@ -89,23 +96,41 @@ const SignUpForm = () => {
                                     value={formData.email}
                                 />
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <Input
-                                    className="h-12"
-                                    type="password"
-                                    name="password"
-                                    placeholder="Enter your password"
-                                    onChange={handleChange}
-                                    value={formData.password}
-                                />
-                                <Input
-                                    className="h-12"
-                                    type="password"
-                                    name="confirmPassword"
-                                    placeholder="Enter password again"
-                                    onChange={handleChange}
-                                    value={formData.confirmPassword}
-                                />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
+                                <div className="relative">
+                                    <Input
+                                        className="h-12 pr-10"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        placeholder="Enter your password"
+                                        onChange={handleChange}
+                                        value={formData.password}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-3 flex items-center"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <Eye size={15} /> : <EyeOff size={15} />}
+                                    </button>
+                                </div>
+                                <div className="relative">
+                                    <Input
+                                        className="h-12 pr-10"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        name="confirmPassword"
+                                        placeholder="Enter password again"
+                                        onChange={handleChange}
+                                        value={formData.confirmPassword}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-3 flex items-center"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    >
+                                        {showConfirmPassword ? <Eye size={15} /> : <EyeOff size={15} />}
+                                    </button>
+                                </div>
                             </div>
                             {/* <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
