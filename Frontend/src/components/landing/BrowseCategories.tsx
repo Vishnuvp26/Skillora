@@ -31,7 +31,7 @@ const BrowseCategories = () => {
                     <motion.div
                         key={index}
                         whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)" }}
-                        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-xl text-center shadow-sm transition-all"
+                        className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-xl text-center shadow-sm transition-all"
                     >
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             {category}

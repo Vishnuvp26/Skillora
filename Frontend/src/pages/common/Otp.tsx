@@ -2,7 +2,7 @@ import { useState } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import SignUpNav from "@/components/sigupComponent/SignupNav";
+import SignUpNav from "@/components/signup/SignupNav";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyOtp } from "@/api/authApi";
 import { toast } from "react-hot-toast";

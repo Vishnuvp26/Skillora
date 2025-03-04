@@ -1,7 +1,7 @@
-import Body from "@/components/landingComponents/Body";
-import BrowseCategories from "@/components/landingComponents/BrowseCategories";
-import Footer from "@/components/landingComponents/Footer";
-import Navbar from "@/components/landingComponents/Navbar";
+import Body from "@/components/landing/Body";
+import BrowseCategories from "@/components/landing/BrowseCategories";
+import Footer from "@/components/landing/Footer";
+import Navbar from "@/components/landing/Navbar";
 
 const Landing = () => {
     return (

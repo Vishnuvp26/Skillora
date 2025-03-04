@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import SignUpNav from "@/components/sigupComponent/SignupNav";
+import SignUpNav from "@/components/signup/SignupNav";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 

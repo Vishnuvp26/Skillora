@@ -1,5 +1,5 @@
-import SignUpForm from "@/components/sigupComponent/SignUpForm";
-import SignUpNav from "@/components/sigupComponent/SignupNav";
+import SignUpForm from "@/components/signup/SignUpForm";
+import SignUpNav from "@/components/signup/SignupNav";
 
 const SignUp = () => {
     return (

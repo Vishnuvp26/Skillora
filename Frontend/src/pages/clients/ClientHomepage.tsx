@@ -1,4 +1,4 @@
-import ClientNav from '@/components/clientComponents/ClientNav';
+import ClientNav from '@/components/client/ClientNav';
 import { Button } from "@/components/ui/button";
 import { Briefcase } from "lucide-react";
 

@@ -23,9 +23,12 @@ const Body = () => {
                     className="w-full lg:w-1/2 text-left"
                 >
                     <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-[1.3]">
-                        We <span className="text-[#0077B6] dark:text-[#00FFE5]">connect</span> <br />
+                        We <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-green-300 dark:via-teal-400 dark:to-cyan-500 dark:bg-clip-text dark:text-transparent">
+                            connect
+                        </span>
+                        <br />
                         people to bring <br />
-                        projects to <span className="text-[#0077B6] dark:text-[#00FFE5]">life</span>
+                        projects to <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-green-300 dark:via-teal-400 dark:to-cyan-500 dark:bg-clip-text dark:text-transparent">life</span>
                     </h1>
                     <h3 className="text-white-500 dark:text-gray-400 mx-auto mt-10">
                         Find high-quality talent or open jobs with the <br />

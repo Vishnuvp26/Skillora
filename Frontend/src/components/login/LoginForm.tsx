@@ -36,9 +36,9 @@ const LoginForm = () => {
             }));
     
             if (response.role === "client") {
-                navigate("/client-homepage");
+                navigate("/client/home");
             } else if (response.role === "freelancer") {
-                navigate("/freelancer-homepage");
+                navigate("/freelancer/home");
             } else {
                 navigate("/dashboard");
             }
