@@ -9,11 +9,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export const sendEmail = async (to: string, subject: string, text: string): Promise<void> => {
+export const sendEmail = async (to: string, subject: string, text: string, html?: string): Promise<void> => {
     await transporter.sendMail({
         from: env.EMAIL_USER,
         to,
         subject,
-        text
+        text,
+        html,
     })
 }
