@@ -21,7 +21,7 @@ const LoginForm = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
-            toast.error('Enter credentials')
+            toast.success('Enter credentials')
             return
         }
         setLoading(true);

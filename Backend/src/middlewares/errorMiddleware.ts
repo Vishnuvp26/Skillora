@@ -4,7 +4,7 @@ import { Messages } from "../constants/messageConstants";
 import { HttpStatus } from "../constants/statusContstants";
 
 export const errorHandler = (err: HttpError | Error, req: Request, res: Response, next: NextFunction) => {
-    console.log("Error caught in ERROR MIDDLEWARE :", err); // Debugging
+    console.log("Error caught in ERROR MIDDLEWARE :", err);
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR || 500
     let message = Messages.SERVER_ERROR
 

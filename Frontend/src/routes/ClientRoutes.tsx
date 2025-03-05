@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import ClientHomepage from "@/pages/clients/ClientHomepage";
-import ProtectedRoutes from "./ProtectedRoutes";
+import ProtectedRoutes from "../components/protectedRoute/ProtectedRoutes";
 
 const ClientRoutes = () => (
     <Routes>

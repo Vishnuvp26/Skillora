@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store/store";
+import { RootState } from "../../redux/store/store";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
-    requiredRole?: "freelancer" | "client" | "admin";
+    requiredRole?: "admin";
 }
 
-const ProtectedRoutes: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+const AdminProtected: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
     const user = useSelector((state: RootState) => state.user);
     const token = user?.accessToken;
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/admin/login" replace />;
     }
 
     if (requiredRole && user?.role !== requiredRole) {
@@ -22,4 +22,4 @@ const ProtectedRoutes: React.FC<ProtectedRouteProps> = ({ children, requiredRole
     return <>{children}</>;
 };
 
-export default ProtectedRoutes;
+export default AdminProtected;

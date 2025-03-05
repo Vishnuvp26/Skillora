@@ -13,6 +13,7 @@ export const verifyOtp = async (email: string, otp: string, userData = {}) => {
     console.log("Sending to backend:", { email, otp, userData });
     try {
         const response = await Axios.post("/auth/verify-otp", { email, otp, userData });
+        console.log('verifyOtp api call response in axios file: ', response)
         return response.data;
     } catch (error: any) {
         console.log("Axios Error Response:", error.response?.data); 

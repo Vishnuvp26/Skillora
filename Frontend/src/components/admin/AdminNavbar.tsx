@@ -8,6 +8,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ThemeContext } from "@/context/ThemeContext";
 import { useContext } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "@/api/authApi";
+import { removeUser } from "@/redux/authSlice";
 
 interface NavbarProps {
     toggleSidebar: () => void;
@@ -18,6 +22,19 @@ const AdminNavbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
     const themeContext = useContext(ThemeContext);
     if (!themeContext) return null;
     const { theme, toggleTheme } = themeContext;
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+            dispatch(removeUser())
+            navigate('/admin/login')
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     return (
         <nav className="bg-gray-200 dark:bg-black border-b border-zinc-200 dark:border-zinc-800 p-4">
@@ -53,7 +70,7 @@ const AdminNavbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-                            <DropdownMenuItem className="text-red-500 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer">
+                            <DropdownMenuItem onClick={handleLogout} className="text-red-500 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-zinc-800 cursor-pointer">
                                 <LogOut className="mr-2 h-4 w-4" />
                                 Logout
                             </DropdownMenuItem>
