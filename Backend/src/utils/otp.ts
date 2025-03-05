@@ -7,7 +7,7 @@ export const generateOtp = (): string => {
 };
 
 export const sendOtp = async (email: string, otp: string): Promise<void> => {
-    await sendEmail(email, "Your OTP Code", `Your OTP is: ${otp}`);
+    await sendEmail(email, "Your OTP Code for skillora registration", `Your OTP is: ${otp}`);
 };
 
 export const storeOtp = async (email: string, otp: string): Promise<void> => {

@@ -21,8 +21,6 @@ const AdminRoutes = () => (
                 </AdminProtected>
             }
         />
-
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         <Route path="/clients" element={<Clients/> } />
         <Route path="/freelancers" element={<Freelancers/> } />
         <Route path="/contracts" element={<Contracts/> } />
