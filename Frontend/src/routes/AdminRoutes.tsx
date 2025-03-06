@@ -12,7 +12,7 @@ import AdminProtected from "@/components/protectedRoute/AdminProtected";
 const AdminRoutes = () => (
     <Routes>
         <Route path="/login" element={<AdminLogin />} />
-        
+
         <Route
             path="/dashboard"
             element={
@@ -21,12 +21,54 @@ const AdminRoutes = () => (
                 </AdminProtected>
             }
         />
-        <Route path="/clients" element={<Clients/> } />
-        <Route path="/freelancers" element={<Freelancers/> } />
-        <Route path="/contracts" element={<Contracts/> } />
-        <Route path="/payments" element={<Payments/> } />
-        <Route path="/job-categories" element={<JobCategories/> } />
-        <Route path="/skills" element={<Skills/> } />
+        <Route
+            path="/clients"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <Clients />
+                </AdminProtected>
+            }
+        />
+        <Route
+            path="/freelancers"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <Freelancers />
+                </AdminProtected>
+            }
+        />
+        <Route
+            path="/contracts"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <Contracts />
+                </AdminProtected>
+            }
+        />
+        <Route
+            path="/payments"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <Payments />
+                </AdminProtected>
+            }
+        />
+        <Route
+            path="/job-categories"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <JobCategories />
+                </AdminProtected>
+            }
+        />
+        <Route
+            path="/skills"
+            element={
+                <AdminProtected requiredRole="admin">
+                    <Skills />
+                </AdminProtected>
+            }
+        />
     </Routes>
 );
 

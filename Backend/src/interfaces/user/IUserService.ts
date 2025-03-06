@@ -1,4 +1,3 @@
-import { NextFunction } from "express";
 import { Iuser } from "../../models/user/userModel";
 
 export interface IUserService {

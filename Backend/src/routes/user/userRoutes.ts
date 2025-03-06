@@ -1,6 +1,6 @@
 import express from "express";
 import { UserController } from "../controllers/user/userController";
-import { UserService } from "../services/userService";
+import { UserService } from "../services/user/userService";
 import { UserRepository } from "../repository/userRepository";
 // import { validRegistration } from '../middlewares/validationMiddleware';
 
