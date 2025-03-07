@@ -6,12 +6,17 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
 
 const FreelancerNav: React.FC = () => {
     
     const themeContext = useContext(ThemeContext);
     if (!themeContext) return null;
     const { theme, toggleTheme } = themeContext;
+
+    const userName = useSelector((state: RootState) => state.user.name);
+    const userRole = useSelector((state: RootState) => state.user.role)
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
@@ -87,8 +92,8 @@ const FreelancerNav: React.FC = () => {
                                     className="w-10 h-10 rounded-full"
                                 /> */}
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">Freelancer</p>
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{userName}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{userRole}</p>
                                 </div>
                             </div>
 

@@ -1,18 +1,23 @@
 import ClientNav from '@/components/client/ClientNav';
 import { Button } from "@/components/ui/button";
+import { RootState } from '@/redux/store/store';
 import { Briefcase } from "lucide-react";
+import { useSelector } from 'react-redux';
 
 const ClientHomepage = () => {
+    const userName = useSelector((state: RootState) => state.user.name);
+
     return (
         <div className="min-h-screen  dark:bg-gray-950">
-            {/* Navbar */}
             <ClientNav />
 
             {/* Header Section */}
             <div className="flex justify-between items-center p-6 mt-20">
                 <h1 className="text-2xl font-semibold">
                     <span className="text-black dark:text-white">Welcome,</span>
-                    <span className="text-[#0077B6] dark:text-[#00FFE5]"> Vishnu</span>
+                    <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent">
+                        {userName}
+                    </span>
                 </h1>
 
                 <Button className="bg-[#0077B6] dark:bg-[#00FFE5] hover:bg-[#005f8c] dark:hover:bg-[#00d4c0] text-white dark:text-black px-4 py-2 rounded-lg">
