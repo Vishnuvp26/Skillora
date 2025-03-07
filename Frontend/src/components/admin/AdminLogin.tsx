@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { loginUser } from "@/api/authApi";
+import { loginUser } from "@/api/auth/authApi";
 import { setUser } from "@/redux/authSlice";
 
 const AdminLogin = () => {

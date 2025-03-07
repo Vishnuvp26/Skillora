@@ -10,7 +10,7 @@ import { ThemeContext } from "@/context/ThemeContext";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "@/api/authApi";
+import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
 
 interface NavbarProps {

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SignUpNav from "@/components/signup/SignupNav";
 import { useLocation, useNavigate } from "react-router-dom";
-import { verifyOtp } from "@/api/authApi";
+import { verifyOtp } from "@/api/auth/authApi";
 import { toast } from "react-hot-toast";
 
 const Otp = () => {

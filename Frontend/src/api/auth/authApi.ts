@@ -1,8 +1,8 @@
-import Axios from "./axiosInstance";
+import Axios from "../axios/axiosInstance";
 
 export const registerUser = async (userData: { name: string; email: string; password: string; role: string }) => {
     try {
-        const response = await Axios.post("/auth/register", userData);
+        const response = await Axios.post("/api/auth/register", userData);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Registration failed";
@@ -12,7 +12,7 @@ export const registerUser = async (userData: { name: string; email: string; pass
 export const verifyOtp = async (email: string, otp: string, userData = {}) => {
     console.log("Sending to backend:", { email, otp, userData });
     try {
-        const response = await Axios.post("/auth/verify-otp", { email, otp, userData });
+        const response = await Axios.post("/api/auth/verify-otp", { email, otp, userData });
         console.log('verifyOtp api call response in axios file: ', response)
         return response.data;
     } catch (error: any) {
@@ -23,7 +23,7 @@ export const verifyOtp = async (email: string, otp: string, userData = {}) => {
 
 export const resendOtp = async (email: string) => {
     try {
-        const response = await Axios.post("/auth/resend-otp", { email });
+        const response = await Axios.post("/api/auth/resend-otp", { email });
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Resending OTP failed";
@@ -32,7 +32,7 @@ export const resendOtp = async (email: string) => {
 
 export const loginUser = async (email: string, password: string) => {
     try {
-        const response = await Axios.post("/auth/login", { email, password });
+        const response = await Axios.post("/api/auth/login", { email, password });
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Login failed";
@@ -41,7 +41,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const logoutUser = async () => {
     try {
-        const response = await Axios.post("/auth/logout")
+        const response = await Axios.post("/api/auth/logout")
         return response.data
     } catch (error: any) {
         throw error.response?.data || "Logout failed"

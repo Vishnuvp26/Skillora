@@ -1,8 +1,8 @@
-    import Axios from "./axiosInstance";
+import Axios from "../axios/axiosInstance";
 
 export const fetchCategories = async () => {
     try {
-        const response = await Axios.get('/admin/get-categories');
+        const response = await Axios.get('/api/admin/categories/get-categories');
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to load categories';
@@ -11,7 +11,7 @@ export const fetchCategories = async () => {
 
 export const addCategory = async (categoryData: { name: string }) => {
     try {
-        const response = await Axios.post('/admin/add-category', categoryData);
+        const response = await Axios.post('/api/admin/categories/add-category', categoryData);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to add category';
@@ -20,7 +20,7 @@ export const addCategory = async (categoryData: { name: string }) => {
 
 export const editCategory = async (id: string, categoryData: { name: string }) => {
     try {
-        const response = await Axios.put(`/admin/edit-category/${id}`, categoryData);
+        const response = await Axios.put(`/api/admin/categories/edit-category/${id}`, categoryData);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to edit category';
@@ -29,7 +29,7 @@ export const editCategory = async (id: string, categoryData: { name: string }) =
 
 export const listCategory = async (id: string) => {
     try {
-        const response = await Axios.put(`/admin/list-category/${id}`);
+        const response = await Axios.put(`/api/admin/categories/list-category/${id}`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to list category';
@@ -38,7 +38,7 @@ export const listCategory = async (id: string) => {
 
 export const unlistCategory = async (id: string) => {
     try {
-        const response = await Axios.put(`/admin/unlist-category/${id}`);
+        const response = await Axios.put(`/api/admin/categories/unlist-category/${id}`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to unlist category';

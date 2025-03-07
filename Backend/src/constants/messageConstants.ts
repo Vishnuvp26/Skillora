@@ -30,4 +30,12 @@ export const Messages = {
     LOGIN_SUCCESS: "Login successful",
     LOGOUT_SUCCESS: "Logout successful",
     SIGNUP_SUCCESS: "Signup successful",
+    CATEGORY_NOT_FOUND: "Category not found",
+    CATEGORY_EXIST: "Category already exists",
+    SKILLS_NOT_FOUND: "Skills not found",
+    SKILLS_EXIST: "Skill already exists",
+    CATEGORY_LISTED: "Category listed successfully",
+    CATEGORY_UNLISTED: "Category unlisted successfully",
+    SKILLS_LISTED: "Skills listed successfully",
+    SKILLS_UNLISTED: "Skils unlisted successfully"
 }

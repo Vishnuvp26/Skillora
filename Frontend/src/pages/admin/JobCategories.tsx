@@ -5,9 +5,9 @@ import useMobile from "@/hooks/useMobile";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { addCategory, editCategory, fetchCategories, listCategory, unlistCategory } from "@/api/adminApi";
+import { addCategory, editCategory, fetchCategories, listCategory, unlistCategory } from "@/api/admin/categoryApi";
 import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
 
@@ -32,14 +32,11 @@ const JobCategories = () => {
     const loadCategories = async () => {
         try {
             const response = await fetchCategories();
-            console.log("Fetched categories:", response);
             setCategories(response.data);
         } catch (error) {
             console.log('Failed to fetch categories :', error);
         }
     };
-
-    console.log('Fetched categoris: ', categories)
 
     const handleAddCategory = async () => {
         if (!newCategory.trim()) return toast.error("Category name is required");
@@ -135,6 +132,9 @@ const JobCategories = () => {
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
                                     <DialogTitle>Add New Category</DialogTitle>
+                                    <DialogDescription>
+                                        Add the category name and save changes.
+                                    </DialogDescription>
                                 </DialogHeader>
                                 <Input
                                     type="text"
@@ -211,6 +211,9 @@ const JobCategories = () => {
                                                         <DialogContent className="sm:max-w-[425px]">
                                                             <DialogHeader>
                                                                 <DialogTitle>Edit Category</DialogTitle>
+                                                                <DialogDescription>
+                                                                    Update the category name and save changes.
+                                                                </DialogDescription>
                                                             </DialogHeader>
                                                             <Input
                                                                 value={editCategoryData.name}

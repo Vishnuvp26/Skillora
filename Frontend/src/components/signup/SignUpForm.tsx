@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {FormData} from '../../types/Types'
-import { registerUser } from "@/api/authApi";
+import { registerUser } from "@/api/auth/authApi";
 
 const SignUpForm = () => {
     

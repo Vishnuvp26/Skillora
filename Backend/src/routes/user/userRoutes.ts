@@ -1,7 +1,7 @@
 import express from "express";
-import { UserController } from "../controllers/user/userController";
-import { UserService } from "../services/user/userService";
-import { UserRepository } from "../repository/userRepository";
+import { UserRepository } from "../../repository/userRepository";
+import { UserService } from "../../services/user/userService";
+import { UserController } from "../../controllers/user/userController";
 // import { validRegistration } from '../middlewares/validationMiddleware';
 
 const router = express.Router();

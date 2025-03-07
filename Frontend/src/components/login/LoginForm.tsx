@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "@/api/authApi";
+import { loginUser } from "@/api/auth/authApi";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice";
 import toast from "react-hot-toast";
