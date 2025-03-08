@@ -8,6 +8,7 @@ import JobCategories from "@/pages/admin/JobCategories";
 import Skills from "@/pages/admin/Skills";
 import AdminLogin from "@/components/admin/AdminLogin";
 import AdminProtected from "@/components/protectedRoute/AdminProtected";
+import NotFound from "@/components/error/NotFound";
 
 const AdminRoutes = () => (
     <Routes>
@@ -69,6 +70,7 @@ const AdminRoutes = () => (
                 </AdminProtected>
             }
         />
+        <Route path="*" element={<NotFound/>} />
     </Routes>
 );
 

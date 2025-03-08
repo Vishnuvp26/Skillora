@@ -39,7 +39,6 @@ const ClientHomepage = () => {
                         dark:hover:bg-[#00FFE511]">
                         + Post a Job
                     </Button>
-
                 </div>
             </div>
         </div>
