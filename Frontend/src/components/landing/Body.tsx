@@ -43,7 +43,7 @@ const Body = () => {
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
                     className="w-full lg:w-1/2 flex justify-end mt-10 lg:mt-0"
                 >
-                    <Carousel className="w-full max-w-md">
+                    <Carousel className="w-full max-w-md overflow-hidden">
                         <CarouselContent>
                             <CarouselItem>
                                 <img src={image1} alt="Project Collaboration" className="rounded-lg shadow-lg" />
