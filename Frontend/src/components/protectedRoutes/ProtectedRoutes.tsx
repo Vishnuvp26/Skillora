@@ -12,7 +12,11 @@ const ProtectedRoutes: React.FC<ProtectedRouteProps> = ({ children, requiredRole
     const token = user?.accessToken;
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
+    }
+
+    if (user.status === "blocked") {
+        return <Navigate to="/" replace />;
     }
 
     if (requiredRole && user?.role !== requiredRole) {

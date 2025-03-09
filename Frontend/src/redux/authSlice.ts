@@ -32,8 +32,12 @@ const userSlice = createSlice({
             Cookies.remove("accessToken");
             return initialState;
         },
+        setAccessToken: (state, action) => {
+            Cookies.set("accessToken", action.payload.accessToken, { expires: 7 });
+            return { ...state, ...action.payload };
+        }
     },
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, setAccessToken } = userSlice.actions;
 export default userSlice.reducer;

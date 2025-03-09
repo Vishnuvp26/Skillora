@@ -4,7 +4,7 @@ import Login from "@/pages/common/Login";
 import Otp from "@/pages/common/Otp";
 import SelectRole from "@/pages/common/SelectRole";
 import SignUp from "@/pages/common/SignUp";
-import ProtectedRoute from "@/components/protectedRoute/SelectProtected";
+import ProtectedRoute from "@/components/protectedRoutes/SelectProtected";
 
 const AuthRoutes = () => (
     <Routes>

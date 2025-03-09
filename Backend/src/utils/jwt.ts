@@ -18,3 +18,11 @@ export function verifyToken(token: string) {
         return null
     }
 }
+
+export function verifyRefreshToken(token: string) {
+    try {
+        return jwt.verify(token, env.REFRESH_SECRET) as {id: string, role: Role}
+    } catch (error) {
+        return null
+    }
+}

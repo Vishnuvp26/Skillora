@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import FreelancerHomepage from "@/pages/freelancer/FreelancerHomepage";
-import ProtectedRoutes from "../components/protectedRoute/ProtectedRoutes";
+import ProtectedRoutes from "../components/protectedRoutes/ProtectedRoutes";
 import NotFound from "@/components/error/NotFound";
 
 const FreelancerRoutes = () => (

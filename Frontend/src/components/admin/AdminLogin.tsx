@@ -42,7 +42,7 @@ const AdminLogin = () => {
             if (response.role === "admin") {
                 navigate('/admin/dashboard')
             } else {
-                navigate('/')
+                toast.error('Access denied for unauthorized users')
             }
         } catch (error: any) {
             setError(error.error || 'Admin login failed')

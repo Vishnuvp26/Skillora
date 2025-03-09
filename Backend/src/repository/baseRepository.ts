@@ -30,9 +30,9 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
         return await this.model.find(filter, null, options)
     }
 
-    async findByIdAndUpdate(id: string, data: Partial<T>): Promise<T | null> {
-        return await this.model.findByIdAndUpdate(id, data, {new: true})
-    }
+    async findByIdAndUpdate(id: string, data: Partial<T>, options?: QueryOptions): Promise<T | null> {
+        return await this.model.findByIdAndUpdate(id, data, { new: true, ...options });
+    }    
 
     async findByIdAndDelete(id: string): Promise<T | null> {
         return await this.model.findByIdAndDelete(id)

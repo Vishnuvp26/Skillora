@@ -4,11 +4,12 @@ import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-hot-toast";
+// import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {FormData} from '../../types/Types'
 import { registerUser } from "@/api/auth/authApi";
+import { validateRegistration } from "@/utils/validation";
 
 const SignUpForm = () => {
     
@@ -21,7 +22,7 @@ const SignUpForm = () => {
     })
 
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
@@ -35,33 +36,38 @@ const SignUpForm = () => {
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        
+        // Live validation
+        const { errors } = validateRegistration({ ...formData, [name]: value });
+        setError((prev) => ({ ...prev, [name]: errors[name] || "" }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            toast.error("All fields are required");
+        e.preventDefault();
+    
+        const { valid, errors } = validateRegistration(formData);
+    
+        if (!valid) {
+            setError(errors);
             return;
         }
-        if (formData.password !== formData.confirmPassword) {
-            toast.error('password do not match')
-            return
-        }
+    
         try {
-            setLoading(true)
+            setLoading(true);
             await registerUser({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
                 role: formData.role
             });
-            alert('OTP sent to your mail')
+            alert('OTP sent to your mail');
             navigate("/otp", { state: { email: formData.email, userData: formData } });
         } catch (error: any) {
-            setError(error.error || "Something went wrong, please try again");
+            setError({ general: error.error || "Something went wrong, please try again" });
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -80,66 +86,84 @@ const SignUpForm = () => {
 
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <Input
-                                    className="h-12"
-                                    placeholder="Enter your name"
-                                    name="name"
-                                    onChange={handleChange}
-                                    value={formData.name}
-                                />
-                                <Input
-                                    className="h-12"
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter your email"
-                                    onChange={handleChange}
-                                    value={formData.email}
-                                />
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
-                                <div className="relative">
+                                {/* Name Field */}
+                                <div className="flex flex-col">
                                     <Input
-                                        className="h-12 pr-10"
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        placeholder="Enter your password"
+                                        className="h-12"
+                                        placeholder="Enter your name"
+                                        name="name"
                                         onChange={handleChange}
-                                        value={formData.password}
+                                        value={formData.name}
                                     />
-                                    <button
-                                        type="button"
-                                        className="absolute inset-y-0 right-3 flex items-center"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        {showPassword ? <Eye size={15} /> : <EyeOff size={15} />}
-                                    </button>
+                                    {error.name && <p className="text-sm text-red-500 mt-1">{error.name}</p>}
                                 </div>
-                                <div className="relative">
+
+                                {/* Email Field */}
+                                <div className="flex flex-col">
                                     <Input
-                                        className="h-12 pr-10"
-                                        type={showConfirmPassword ? "text" : "password"}
-                                        name="confirmPassword"
-                                        placeholder="Enter password again"
+                                        className="h-12"
+                                        type="email"
+                                        name="email"
+                                        placeholder="Enter your email"
                                         onChange={handleChange}
-                                        value={formData.confirmPassword}
+                                        value={formData.email}
                                     />
-                                    <button
-                                        type="button"
-                                        className="absolute inset-y-0 right-3 flex items-center"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    >
-                                        {showConfirmPassword ? <Eye size={15} /> : <EyeOff size={15} />}
-                                    </button>
+                                    {error.email && <p className="text-sm text-red-500 mt-1">{error.email}</p>}
                                 </div>
                             </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Password Field */}
+                                <div className="flex flex-col">
+                                    <div className="relative flex items-center">
+                                        <Input
+                                            className="h-12 pr-10 flex-grow"
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            placeholder="Enter your password"
+                                            onChange={handleChange}
+                                            value={formData.password}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute right-3 flex items-center"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <Eye size={15} /> : <EyeOff size={15} />}
+                                        </button>
+                                    </div>
+                                    {error.password && <p className="text-sm text-red-500 mt-1">{error.password}</p>}
+                                </div>
+
+                                {/* Confirm Password Field */}
+                                <div className="flex flex-col">
+                                    <div className="relative flex items-center">
+                                        <Input
+                                            className="h-12 pr-10 flex-grow"
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            name="confirmPassword"
+                                            placeholder="Enter password again"
+                                            onChange={handleChange}
+                                            value={formData.confirmPassword}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="absolute right-3 flex items-center"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        >
+                                            {showConfirmPassword ? <Eye size={15} /> : <EyeOff size={15} />}
+                                        </button>
+                                    </div>
+                                    {error.confirmPassword && <p className="text-sm text-red-500 mt-1">{error.confirmPassword}</p>}
+                                </div>
+                            </div>
+
                             {/* <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
                                     Forgot password?
                                 </a>
                             </div> */}
-                            {error && (
-                                <p className="text-sm text-red-500 text-center mt-2">{error}</p>
-                            )}
+                            {error.general && <p className="text-sm text-red-500 text-center mt-2">{error.general}</p>}
                             <Button className="w-full h-12" type="submit" disabled={loading}>
                                 {loading ? "Please wait..." : "Sign Up"}
                             </Button>

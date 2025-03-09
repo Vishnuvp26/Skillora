@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,11 @@ const Otp = () => {
     const email = location.state?.email;
     const userData = location.state?.userData;
 
-    console.log("Received userData:", userData);
+    useEffect(() => {
+        if (!email || !userData) {
+            navigate("/signup", { replace: true });
+        }
+    }, [email, userData, navigate]);
 
     if (!email) {
         alert("Email not provided!");

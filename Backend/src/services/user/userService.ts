@@ -6,7 +6,7 @@ import { Iuser } from "../../models/user/userModel";
 import { deleteOtp, generateOtp, sendOtp, storeOtp, verifyOtp } from "../../utils/otp";
 import { hashPassword, comparePassword } from "../../utils/password";
 import { IUserService } from "../../interfaces/user/IUserService";
-import { generateAccessToken, generateRefreshToken } from "../../utils/jwt";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt";
 
 export class UserService implements IUserService {
     private userRepository: IUserRepository;
@@ -87,16 +87,15 @@ export class UserService implements IUserService {
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND)
         }
-
-        if (user.status === 'blocked') {
-            throw createHttpError(HttpStatus.FORBIDDEN, Messages.USER_BLOCKED)
-        }
-
+        
         const isPasswordValid = await comparePassword(password, user.password)
         if (!isPasswordValid) {
             throw createHttpError(HttpStatus.UNAUTHORIZED, Messages.INVALID_CREDENTIALS)
         }
-
+        
+        if (user.status === 'blocked') {
+            throw createHttpError(HttpStatus.FORBIDDEN, Messages.USER_BLOCKED)
+        }
         const accessToken = generateAccessToken(user.id.toString(), user.role);
         const refreshToken = generateRefreshToken(user.id.toString(), user.role)
 
@@ -114,5 +113,14 @@ export class UserService implements IUserService {
                 profilePic: user.profilePic || "",
             },
         }
+    };
+
+    async refreshAccessToken(token: string): Promise<string> {
+        const decoded = verifyRefreshToken(token);
+        if (!decoded){
+            throw createHttpError(HttpStatus.UNAUTHORIZED, Messages.INVALID_TOKEN)
+        }
+        const accessToken = generateAccessToken(decoded.id, decoded.role)
+        return accessToken
     };
 };

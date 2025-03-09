@@ -3,6 +3,7 @@ import { env } from "process";
 import validateEnv from "./utils/validate.env";
 import connectDB from "./config/db.config";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import routes from './routes/user/userRoutes'
 import adminRoutes from './routes/admin/adminRoute'
 import { errorHandler } from "./middlewares/errorMiddleware";
@@ -27,6 +28,7 @@ class App {
             credentials: true
         }));
         this.app.use(express.json());
+        this.app.use(cookieParser())
     }
 
     private initializeDatabase(): void{

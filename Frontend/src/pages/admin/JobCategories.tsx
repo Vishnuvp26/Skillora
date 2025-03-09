@@ -10,6 +10,8 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import { addCategory, editCategory, fetchCategories, listCategory, unlistCategory } from "@/api/admin/categoryApi";
 import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Category } from "@/types/Types";
 
 const JobCategories = () => {
     const isMobile = useMobile();
@@ -18,7 +20,7 @@ const JobCategories = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [error, setError] = useState("");
-    const [categories, setCategories] = useState<{ _id: string; name: string; isListed: boolean }[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [newCategory, setNewCategory] = useState("");
     const [editCategoryData, setEditCategoryData] = useState<{ id: string; name: string }>({ id: "", name: "" });
     const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
@@ -123,7 +125,6 @@ const JobCategories = () => {
                                 </button>
                             )}
                         </div>
-
                         
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger asChild>
@@ -144,7 +145,7 @@ const JobCategories = () => {
                                     className="mt-2"
                                 />
                                 <DialogFooter>
-                                {error && <p className="text-red-500 text-sm mt-3 mr-10">{error}</p>}
+                                    {error && <p className="text-red-500 text-sm mt-3 mr-10">{error}</p>}
                                     <Button className="mt-4" onClick={handleAddCategory}>
                                         Save Category
                                     </Button>
@@ -199,7 +200,7 @@ const JobCategories = () => {
                                                     >
                                                         <DialogTrigger asChild>
                                                             <Button
-                                                                className="mt-2 bg-slate-600 text-white text-xs px-3 py-1 hover:bg-slate-700" 
+                                                                className="mt-2 bg-slate-600 text-white text-xs px-3 py-1 hover:bg-slate-700"
                                                                 onClick={() => {
                                                                     setEditingCategoryId(category._id);
                                                                     setEditCategoryData({ id: category._id, name: category.name });
@@ -239,29 +240,43 @@ const JobCategories = () => {
                                 )}
                             </TableBody>
                         </Table>
-
                     </div>
 
-                    {/* Pagination Controls */}
-                    <div className="flex justify-between items-center mt-4">
-                        <Button
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(prev => prev - 1)}
-                            className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
-                        >
-                            Previous
-                        </Button>
-                        <span className="text-sm text-gray-900 dark:text-gray-300">
-                            Page {currentPage} of {Math.ceil(categories.length / itemsPerPage)}
-                        </span>
-                        <Button
-                            disabled={currentPage === Math.ceil(categories.length / itemsPerPage)}
-                            onClick={() => setCurrentPage(prev => prev + 1)}
-                            className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
-                        >
-                            Next
-                        </Button>
+                    <div className="mt-6 flex justify-center">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                                    />
+                                </PaginationItem>
+
+                                {[...Array(Math.ceil(categories.length / itemsPerPage))].map((_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            isActive={currentPage === index + 1}
+                                            onClick={() => setCurrentPage(index + 1)}
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+
+                                <PaginationItem>
+                                    <PaginationNext
+                                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                                        className={
+                                            currentPage === Math.ceil(categories.length / itemsPerPage)
+                                                ? "pointer-events-none opacity-50"
+                                                : ""
+                                        }
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     </div>
+
                 </main>
             </div>
             {!isCollapsed && isMobile && (

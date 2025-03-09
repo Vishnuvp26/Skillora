@@ -42,7 +42,7 @@ const Testimonials = () => {
                 <motion.div
                     className="flex space-x-6"
                     animate={{ x: ["0%", "-100%"] }}
-                    transition={{ ease: "linear", duration: 50, repeat: Infinity }}
+                    transition={{ ease: "linear", duration: 30, repeat: Infinity }}
                 >
                     {extendedTestimonials.map((testimonial, i) => (
                         <Card key={i} className="w-[280px] p-6 shadow-md text-center flex-shrink-0 bg-white dark:bg-gray-950">

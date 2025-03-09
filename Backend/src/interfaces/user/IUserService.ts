@@ -10,12 +10,13 @@ export interface IUserService {
         accessToken?: string,
         refreshToken?: string
         role?: string,
-        user?: { 
+        user?: {
             id: string;
             name: string;
             email: string;
             status: string;
             profilePic?: string;
         };
-    }>
+    }>;
+    refreshAccessToken(token: string): Promise<string>;
 };

@@ -45,7 +45,7 @@ const LoginForm = () => {
             } else if (response.role === "freelancer") {
                 navigate("/freelancer/home");
             } else {
-                navigate("/dashboard");
+                toast.error('No access')
             }
         } catch (err: any) {
             setError(err.error || "Login failed");

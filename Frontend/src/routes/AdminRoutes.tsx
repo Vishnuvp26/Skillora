@@ -7,7 +7,7 @@ import Payments from "@/pages/admin/Payments";
 import JobCategories from "@/pages/admin/JobCategories";
 import Skills from "@/pages/admin/Skills";
 import AdminLogin from "@/components/admin/AdminLogin";
-import AdminProtected from "@/components/protectedRoute/AdminProtected";
+import AdminProtected from "@/components/protectedRoutes/AdminProtected";
 import NotFound from "@/components/error/NotFound";
 
 const AdminRoutes = () => (

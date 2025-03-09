@@ -43,24 +43,24 @@ const Body = () => {
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
                     className="w-full lg:w-1/2 flex justify-end mt-10 lg:mt-0"
                 >
-                    <Carousel className="w-full max-w-md overflow-hidden">
+                    <Carousel className="w-full max-w-md overflow-hidden relative">
                         <CarouselContent>
-                            <CarouselItem>
-                                <img src={image1} alt="Project Collaboration" className="rounded-lg shadow-lg" />
+                            <CarouselItem className="flex justify-center">
+                                <img src={image1} alt="Project Collaboration" className="rounded-lg shadow-lg w-full object-cover" />
                             </CarouselItem>
-                            <CarouselItem>
-                                <img src={image2} alt="Teamwork" className="rounded-lg shadow-lg" />
+                            <CarouselItem className="flex justify-center">
+                                <img src={image2} alt="Teamwork" className="rounded-lg shadow-lg w-full object-cover" />
                             </CarouselItem>
-                            <CarouselItem>
-                                <img src={image3} alt="Freelancing" className="rounded-lg shadow-lg" />
+                            <CarouselItem className="flex justify-center">
+                                <img src={image3} alt="Freelancing" className="rounded-lg shadow-lg w-full object-cover" />
                             </CarouselItem>
                         </CarouselContent>
-                        <CarouselPrevious />
-                        <CarouselNext />
+                        <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10" />
+                        <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10" />
                     </Carousel>
                 </motion.div>
             </motion.div>
-            {/* New Section: Large Image + Glassmorphic Text */}
+
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}

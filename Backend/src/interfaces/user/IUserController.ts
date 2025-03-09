@@ -5,4 +5,5 @@ export interface IUserController {
     verifyOtp(req: Request, res: Response, next: NextFunction): Promise<void>
     resendOtp(req: Request, res: Response, next: NextFunction): Promise<void>
     login(req: Request, res: Response, next: NextFunction): Promise<void>
+    refreshAccessToken(req: Request, res: Response, next: NextFunction):Promise<void>
 };

@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
-import AuthRoutes from "./routes/AuthRoutes";
-import FreelancerRoutes from "./routes/FreelancerRoutes";
-import ClientRoutes from "./routes/ClientRoutes";
 import Spinner from "./components/ui/Spinner";
-import { Suspense } from "react";
-import AdminRoutes from "./routes/AdminRoutes";
+const AuthRoutes = lazy(() => import("@/routes/AuthRoutes"));
+const FreelancerRoutes = lazy(() => import("@/routes/FreelancerRoutes"));
+const ClientRoutes = lazy(() => import("@/routes/ClientRoutes"));
+const AdminRoutes = lazy(() => import("@/routes/AdminRoutes"));
 
 const App = () => {
     return (

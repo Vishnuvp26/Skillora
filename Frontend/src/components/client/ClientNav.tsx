@@ -219,7 +219,7 @@ const ClientNav: React.FC = () => {
                             <Settings className="w-4 h-4 mr-2" /> Profile Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleLogout} className="text-red-500">
-                            <LogOut onClick={handleLogout} className="w-4 h-4 mr-2" /> Logout
+                            <LogOut className="w-4 h-4 mr-2" /> Logout
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

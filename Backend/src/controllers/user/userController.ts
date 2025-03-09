@@ -68,7 +68,18 @@ export class UserController implements IUserController {
             })
             res.status(HttpStatus.OK).json({message: Messages.LOGOUT_SUCCESS})
         } catch (error) {
-            
+            next(error)
+        }
+    };
+
+    async refreshAccessToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const refreshToken = req.cookies.refreshToken;
+            const accessToken = await this._userService.refreshAccessToken(refreshToken)
+            console.log('accessREfreshToken', accessToken);
+            res.status(HttpStatus.OK).json({accessToken})
+        } catch (error) {
+            next(error)
         }
     };
 };
