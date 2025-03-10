@@ -14,7 +14,7 @@ export class UserController implements IUserController {
             res.status(HttpStatus.OK).json({ message: response.message });
         } catch (error) {
             next(error);
-        }
+        }   
     };
 
     async verifyOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -29,13 +29,15 @@ export class UserController implements IUserController {
 
     async resendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log("[DEBUG] Resend OTP request received:", req.body); // Log request payload
             const { email } = req.body;
             const response = await this._userService.resendOtp(email);
             res.status(HttpStatus.OK).json({ message: response.message });
         } catch (error) {
+            console.log("[DEBUG] Resend OTP Error:", error); // Log errors
             next(error);
         }
-    };
+    };    
 
     async login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -81,5 +83,28 @@ export class UserController implements IUserController {
         } catch (error) {
             next(error)
         }
-    };
+    };  
+
+    async googleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { token, role } = req.body;
+            const response = await this._userService.googleLogin(token, role);
+            
+            res.cookie("refreshToken", response.refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+
+            res.status(HttpStatus.OK).json({
+                message: response.message,
+                accessToken: response.accessToken,
+                role: response.role,
+                user: response.user,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 };

@@ -18,5 +18,19 @@ export interface IUserService {
             profilePic?: string;
         };
     }>;
+    googleLogin(token: string, role: "client" | "freelancer"): Promise<{
+        status: number;
+        message: string;
+        accessToken: string;
+        refreshToken: string;
+        role: string;
+        user: {
+            id: string;
+            name: string;
+            email: string;
+            profilePic: string;
+            status: string;
+        };
+    }>;
     refreshAccessToken(token: string): Promise<string>;
 };

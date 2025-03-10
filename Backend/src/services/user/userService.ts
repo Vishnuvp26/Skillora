@@ -7,6 +7,7 @@ import { deleteOtp, generateOtp, sendOtp, storeOtp, verifyOtp } from "../../util
 import { hashPassword, comparePassword } from "../../utils/password";
 import { IUserService } from "../../interfaces/user/IUserService";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt";
+import { verifyGoogleToken } from "../../utils/googleAuth";
 
 export class UserService implements IUserService {
     private userRepository: IUserRepository;
@@ -34,8 +35,9 @@ export class UserService implements IUserService {
         const isValidOtp = await verifyOtp(email, otp);
         console.log("OTP Verification Result:", isValidOtp);
     
-        if (!isValidOtp) {
-            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INCORRECT_OTP);
+        if (!isValidOtp.success) {
+            console.log(`[DEBUG] Invalid OTP. Aborting user creation.`);
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.OTP_EXPIRED);
         }
     
         console.log("Deleting OTP for:", email);
@@ -43,7 +45,7 @@ export class UserService implements IUserService {
     
         if (!userData.password) {
             console.log("Error: Password is undefined");
-            throw createHttpError(HttpStatus.BAD_REQUEST, "Password is required");
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.PASSWORD_REQUIRED);
         }
     
         console.log("Hashing password for:", email);
@@ -53,14 +55,9 @@ export class UserService implements IUserService {
         await this.userRepository.create(userData as Iuser);
     
         return { status: HttpStatus.CREATED, message: Messages.SIGNUP_SUCCESS };
-    };
+    };    
 
     async resendOtp(email: string): Promise<{ status: number; message: string }> {
-        const existingUser = await this.userRepository.findByEmail(email)
-        if (!existingUser) {
-            throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND)
-        }
-
         await deleteOtp(email)
         const newOtp = generateOtp()
         sendOtp(email, newOtp)
@@ -86,11 +83,6 @@ export class UserService implements IUserService {
 
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND)
-        }
-        
-        const isPasswordValid = await comparePassword(password, user.password)
-        if (!isPasswordValid) {
-            throw createHttpError(HttpStatus.UNAUTHORIZED, Messages.INVALID_CREDENTIALS)
         }
         
         if (user.status === 'blocked') {
@@ -123,4 +115,51 @@ export class UserService implements IUserService {
         const accessToken = generateAccessToken(decoded.id, decoded.role)
         return accessToken
     };
+
+    //Google Auth
+    async googleLogin(token: string, role: "client" | "freelancer") {
+        const googleUser = await verifyGoogleToken(token);
+        if (!googleUser || !googleUser.email || !googleUser.name) {
+            throw createHttpError(HttpStatus.UNAUTHORIZED, Messages.INVALID_GOOGLE_TOKEN);
+        }
+    
+        let user = await this.userRepository.findByEmail(googleUser.email);
+
+        console.log("Google Login User Data:", user);
+        
+        if (!user) {
+            user = await this.userRepository.create({
+                name: googleUser.name,
+                email: googleUser.email,
+                profilePic: googleUser.profilePic || "",
+                role,
+                status: "active",
+                password: "",
+            } as Iuser);                        
+        }
+
+        console.log("User status before returning:", user.status);
+    
+        if (user.status === "blocked") {
+            throw createHttpError(HttpStatus.FORBIDDEN, Messages.USER_BLOCKED);
+        }
+    
+        const accessToken = generateAccessToken(user.id.toString(), user.role);
+        const refreshToken = generateRefreshToken(user.id.toString(), user.role);
+    
+        return {
+            status: HttpStatus.OK,
+            message: Messages.LOGIN_SUCCESS,
+            accessToken,
+            refreshToken,
+            role: user.role,
+            user: {
+                id: user.id.toString(),
+                name: user.name,
+                email: user.email,
+                profilePic: user.profilePic,
+                status: user.status || "active",
+            },
+        };
+    };    
 };

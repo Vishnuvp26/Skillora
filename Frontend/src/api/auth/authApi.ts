@@ -56,3 +56,12 @@ export const refreshToken = async () => {
         throw error.response?.data || "Refresh token failed";
     }
 };
+
+export const googleLogin = async (token: string, role: "client" | "freelancer") => {
+    try {
+        const response = await axiosInstance.post("/api/auth/google-login", { token, role });
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Google login failed";
+    }
+};

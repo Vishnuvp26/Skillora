@@ -2,14 +2,14 @@ import { motion } from "framer-motion";
 import { Code, Paintbrush, FileText, Megaphone, Smartphone, PenTool, Video, BarChart } from "lucide-react";
 
 const categories = [
-    { name: "Web Development", icon: <Code className="w-7 h-7 text-blue-500 dark:text-blue-400" /> },
-    { name: "Graphic Design", icon: <Paintbrush className="w-8 h-8 text-pink-500 dark:text-pink-400" /> },
-    { name: "Content Writing", icon: <FileText className="w-8 h-8 text-green-500 dark:text-green-400" /> },
-    { name: "Digital Marketing", icon: <Megaphone className="w-8 h-8 text-yellow-500 dark:text-yellow-400" /> },
-    { name: "App Development", icon: <Smartphone className="w-8 h-8 text-purple-500 dark:text-purple-400" /> },
-    { name: "UI/UX Design", icon: <PenTool className="w-8 h-8 text-teal-500 dark:text-teal-400" /> },
-    { name: "Video Editing", icon: <Video className="w-8 h-8 text-red-500 dark:text-red-400" /> },
-    { name: "Data Science", icon: <BarChart className="w-8 h-8 text-indigo-500 dark:text-indigo-400" /> },
+    { name: "Web Development", icon: <Code className="w-6 h-6 text-blue-500 dark:text-blue-400" /> },
+    { name: "Graphic Design", icon: <Paintbrush className="w-6 h-6 text-pink-500 dark:text-pink-400" /> },
+    { name: "Content Writing", icon: <FileText className="w-6 h-6 text-green-500 dark:text-green-400" /> },
+    { name: "Digital Marketing", icon: <Megaphone className="w-6 h-6 text-yellow-500 dark:text-yellow-400" /> },
+    { name: "App Development", icon: <Smartphone className="w-6 h-6 text-purple-500 dark:text-purple-400" /> },
+    { name: "UI/UX Design", icon: <PenTool className="w-6 h-6 text-teal-500 dark:text-teal-400" /> },
+    { name: "Video Editing", icon: <Video className="w-6 h-6 text-red-500 dark:text-red-400" /> },
+    { name: "Data Science", icon: <BarChart className="w-6 h-6 text-indigo-500 dark:text-indigo-400" /> },
 ];
 
 const BrowseCategories = () => {

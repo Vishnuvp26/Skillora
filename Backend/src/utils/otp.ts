@@ -26,27 +26,25 @@ export const sendOtp = async (email: string, otp: string): Promise<void> => {
 };
 
 export const storeOtp = async (email: string, otp: string): Promise<void> => {
-    await redisClient.setEx(email, 300, otp);
-    console.log(`Stored OTP for ${email}:`, otp);
+    await redisClient.setEx(email, 60, otp);
+    console.log(`[DEBUG] Stored OTP for ${email}: ${otp}`);
+    const ttl = await redisClient.ttl(email);
+    console.log(`[DEBUG] OTP for ${email} will expire in ${ttl} seconds.`);
 };
 
 export const verifyOtp = async (email: string, otp: string): Promise<{ success: boolean; message?: string }> => {
     const storedOtp = await redisClient.get(email);
     
     if (!storedOtp) {
-        console.log(`OTP expired or not found for ${email}`);
+        console.log(`[DEBUG] OTP expired or not found for ${email}`);
         return { success: false, message: "OTP has expired. Please request a new one." };
     }
 
-    console.log(`Stored OTP: ${storedOtp}, Entered OTP: ${otp}`);
-    
     if (storedOtp !== otp) {
         return { success: false, message: "Incorrect OTP. Please try again." };
     }
-
     return { success: true };
 };
-
 
 export const deleteOtp = async (email: string): Promise<void> => {
     await redisClient.del(email);

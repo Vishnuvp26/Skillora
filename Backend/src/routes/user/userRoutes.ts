@@ -16,5 +16,6 @@ router.post("/resend-otp", userController.resendOtp.bind(userController));
 router.post("/login", userController.login.bind(userController));
 router.post("/logout", userController.logout.bind(userController));
 router.post('/refresh-token', userController.refreshAccessToken.bind(userController))
+router.post('/google-login', userController.googleLogin.bind(userController));
 
 export default router;

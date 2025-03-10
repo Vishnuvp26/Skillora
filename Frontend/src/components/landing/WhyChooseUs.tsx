@@ -3,19 +3,19 @@ import { motion } from "framer-motion";
 
 const reasons = [
     {
-        icon: <DollarSign className="w-10 h-10 text-blue-500" />,
+        icon: <DollarSign className="w-7 h-7 text-blue-500" />,
         title: "Value", text: "We have the lowest fees in the industry, providing you with maximum value at minimum cost."
     },
     {
-        icon: <ShieldCheck className="w-10 h-10 text-green-500" />,
+        icon: <ShieldCheck className="w-7 h-7 text-green-500" />,
         title: "Security", text: "We offer SafePay payment protection and your choice of preferred payment method."
     },
     {
-        icon: <ThumbsUp className="w-10 h-10 text-yellow-500" />,
+        icon: <ThumbsUp className="w-7 h-7 text-yellow-500" />,
         title: "Credibility", text: "Our platform is trusted by thousands of freelancers and businesses worldwide."
     },
     {
-        icon: <RefreshCcw className="w-10 h-10 text-purple-500" />,
+        icon: <RefreshCcw className="w-7 h-7 text-purple-500" />,
         title: "Flexibility", text: "Work on your own terms, set your schedule, and choose projects that fit your skills."
     },
 ];

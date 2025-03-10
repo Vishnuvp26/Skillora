@@ -5,23 +5,29 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "@/api/auth/authApi";
+import { googleLogin, loginUser } from "@/api/auth/authApi";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/authSlice";
 import toast from "react-hot-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { GoogleLogin } from "@react-oauth/google";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [showRoleModal, setShowRoleModal] = useState(false);
+    const [selectedRole, setSelectedRole] = useState<"client" | "freelancer" | null>(null);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
-            toast.success('Enter credentials')
+            toast.error('Enter credentials')
             return
         }
         setLoading(true);
@@ -29,7 +35,7 @@ const LoginForm = () => {
     
         try {
             const response = await loginUser(email, password);
-            console.log("API login Response:", response); 
+            console.log("API login Response:", response);
             dispatch(setUser({
                 _id: response.user?.id || "",
                 email: response.user?.email || "",
@@ -52,7 +58,37 @@ const LoginForm = () => {
         } finally {
             setLoading(false);
         }
-    }; 
+    };
+
+    const handleGoogleLogin = async (credentialResponse: any) => {
+        if (!selectedRole) {
+            toast.error("Please select a role before logging in.");
+            return;
+        }
+
+        try {
+            const token = credentialResponse.credential;
+            const response = await googleLogin(token, selectedRole);
+
+            dispatch(setUser({
+                _id: response.user.id,
+                email: response.user.email,
+                role: response.role,
+                status: response.status,
+                profilePic: response.user.profilePic || "",
+                accessToken: response.accessToken,
+                name: response.user.name,
+            }));
+
+            if (response.role === "client") {
+                navigate("/client/home");
+            } else if (response.role === "freelancer") {
+                navigate("/freelancer/home");
+            }
+        } catch (error: any) {
+            toast.error(error.error);
+        }
+    };
 
     return (
         <div className="flex items-center justify-center min-h-[92vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
@@ -61,7 +97,7 @@ const LoginForm = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }}
             >
-                <Card className="min-h-[530px]">
+                <Card className="min-h-[530px] shadow-none">
                     <CardHeader>
                         <CardTitle className="text-center">Login</CardTitle>
                     </CardHeader>
@@ -83,11 +119,11 @@ const LoginForm = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                            <div className="text-right">
+                            {/* <div className="text-right">
                                 <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
                                     Forgot password?
                                 </a>
-                            </div>
+                            </div> */}
                             {error && <p className="text-red-500 text-sm">{error}</p>}
                             <Button className="w-full h-12" type="submit" disabled={loading}>
                                 {loading ? "Logging in..." : "Login"}
@@ -99,10 +135,34 @@ const LoginForm = () => {
                             <span className="px-2 text-gray-500 dark:text-gray-400">OR</span>
                             <hr className="flex-grow border-gray-300 dark:border-gray-600" />
                         </div>
-                        <Button variant="outline" className="w-full flex items-center justify-center h-12">
-                            <FaGoogle className="w-5 h-5 mr-2" />
-                            Continue with Google
-                        </Button>
+                        <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full flex items-center justify-center h-12">
+                                    <FaGoogle className="w-5 h-5 mr-2" />
+                                    Continue with Google
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-[90%] sm:max-w-md mx-auto p-4">
+                                <DialogHeader>
+                                    <DialogTitle className="text-center">Select Your Role</DialogTitle>
+                                </DialogHeader>
+                                <RadioGroup onValueChange={(value) => setSelectedRole(value as "client" | "freelancer")}>
+                                    <div className="flex justify-between p-4">
+                                        <label className="flex items-center gap-2">
+                                            <RadioGroupItem value="client" />
+                                            Client
+                                        </label>
+                                        <label className="flex items-center gap-2">
+                                            <RadioGroupItem value="freelancer" />
+                                            Freelancer
+                                        </label>
+                                    </div>
+                                </RadioGroup>
+                                {selectedRole && (
+                                    <GoogleLogin onSuccess={handleGoogleLogin} onError={() => toast.error("Google Login Failed")} />
+                                )}
+                            </DialogContent>
+                        </Dialog>
                         <p className="mt-6 text-center text-sm text-gray-700 dark:text-gray-300">
                             Don’t have an account?
                             <Link to="/select-role" className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Sign up</Link>

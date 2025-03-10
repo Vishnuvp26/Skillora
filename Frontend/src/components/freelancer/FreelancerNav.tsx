@@ -116,7 +116,7 @@ const FreelancerNav: React.FC = () => {
 
                             {/* Profile & Logout Options */}
                             <DropdownMenuItem>
-                                <Settings className="w-4 h-4 mr-2" /> Profile
+                                <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
@@ -219,7 +219,7 @@ const FreelancerNav: React.FC = () => {
 
                         {/* Profile & Logout Options */}
                         <DropdownMenuItem>
-                            <Settings className="w-4 h-4 mr-2" /> Profile
+                            <User className="w-4 h-4 mr-2" /> Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleLogout} className="text-red-500">
                             <LogOut className="w-4 h-4 mr-2" /> Logout
