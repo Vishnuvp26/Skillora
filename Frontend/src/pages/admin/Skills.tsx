@@ -10,6 +10,7 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
 import { addSkills, editSkills, fetchSkills, listSkills, unlistSkills } from "@/api/admin/skillsApi";
+import { validateSkill } from "@/utils/validation";
 
 const Skills = () => {
     const isMobile = useMobile();
@@ -22,7 +23,7 @@ const Skills = () => {
     const [newSkills, setNewSkills] = useState("");
     const [editSkillsData, setEditSkillsData] = useState<{ id: string; name: string }>({ id: "", name: "" });
     const [editingSkillId, setEditingSkillId] = useState<string | null>(null);
-
+    
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -40,7 +41,14 @@ const Skills = () => {
     };
 
     const handleAddSkills = async () => {
-        if (!newSkills.trim()) return toast.error("Skill name is required");
+        const { valid, errors } = validateSkill(newSkills);
+    
+        if (!valid) {
+            setError(errors.skill || "");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
+    
         try {
             await addSkills({ name: newSkills });
             toast.success("Skill added successfully!");
@@ -48,10 +56,8 @@ const Skills = () => {
             setIsDialogOpen(false);
             loadSkills();
         } catch (error: any) {
-            setError(error.error || 'Failed to add skill')
-            setTimeout(() => {
-                setError('')
-            }, 3000);
+            setError(error.error || "Failed to add skill");
+            setTimeout(() => setError(""), 3000);
         }
     };
 
@@ -73,25 +79,30 @@ const Skills = () => {
     };
     
     const handleEdit = async () => {
-        if (!editSkillsData.name.trim()) return toast.error("Skill name is required");
+        const { valid, errors } = validateSkill(editSkillsData.name);
+    
+        if (!valid) {
+            setError(errors.skill || "");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
+    
         try {
             await editSkills(editSkillsData.id, { name: editSkillsData.name });
             toast.success("Skill updated successfully!");
     
             setSkills((prev) =>
-                prev.map((cat) =>
-                    cat._id === editSkillsData.id ? { ...cat, name: editSkillsData.name } : cat
+                prev.map((skill) =>
+                    skill._id === editSkillsData.id ? { ...skill, name: editSkillsData.name } : skill
                 )
             );
     
             setEditingSkillId(null);
         } catch (error: any) {
-            setError(error.error || 'Failed to add skill')
-            setTimeout(() => {
-                setError('')
-            }, 3000);
+            setError(error.error || "Failed to update skill");
+            setTimeout(() => setError(""), 3000);
         }
-    };
+    };    
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 

@@ -37,25 +37,26 @@ export class UserService implements IUserService {
     
         if (!isValidOtp.success) {
             console.log(`[DEBUG] Invalid OTP. Aborting user creation.`);
-            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.OTP_EXPIRED);
+            throw createHttpError(HttpStatus.BAD_REQUEST, isValidOtp.message || 'Otp validation fail in service');
         }
     
-        console.log("Deleting OTP for:", email);
-        await deleteOtp(email);
-    
+        
         if (!userData.password) {
             console.log("Error: Password is undefined");
             throw createHttpError(HttpStatus.BAD_REQUEST, Messages.PASSWORD_REQUIRED);
         }
-    
+        
         console.log("Hashing password for:", email);
         userData.password = await hashPassword(userData.password);
         
         console.log("Creating user:", userData);
         await this.userRepository.create(userData as Iuser);
-    
+        
+        console.log("Deleting OTP for:", email);
+        await deleteOtp(email);
+        
         return { status: HttpStatus.CREATED, message: Messages.SIGNUP_SUCCESS };
-    };    
+    };
 
     async resendOtp(email: string): Promise<{ status: number; message: string }> {
         await deleteOtp(email)

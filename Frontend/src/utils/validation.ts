@@ -43,3 +43,35 @@ export const validateRegistration = (formData: FormData) => {
         errors
     };
 };
+
+export const validateCategory = (category: string) => {
+    const trimmedCategory = category.trim();
+    const errors: Record<string, string> = {};
+
+    if (!trimmedCategory) {
+        errors.category = VALIDATION_MESSAGES.CATEGORY.NAME_REQUIRED;
+    } else if (!/^[a-zA-Z0-9][a-zA-Z0-9\s-]*$/.test(trimmedCategory)) {
+        errors.category = VALIDATION_MESSAGES.CATEGORY.INVALID_NAME;
+    }
+
+    return {
+        valid: Object.keys(errors).length === 0,
+        errors
+    };
+};
+
+export const validateSkill = (skill: string) => {
+    const trimmedSkill = skill.trim();
+    const errors: Record<string, string> = {};
+
+    if (!trimmedSkill) {
+        errors.skill = VALIDATION_MESSAGES.SKILLS.NAME_REQUIRED;
+    } else if (!/^[a-zA-Z0-9][a-zA-Z0-9\s-]*$/.test(trimmedSkill)) {
+        errors.skill = VALIDATION_MESSAGES.SKILLS.INVALID_SKILL;
+    }
+
+    return {
+        valid: Object.keys(errors).length === 0,
+        errors
+    };
+};

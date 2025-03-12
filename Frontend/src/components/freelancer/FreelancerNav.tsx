@@ -89,7 +89,7 @@ const FreelancerNav: React.FC = () => {
                 <div className="hidden lg:flex gap-4 items-center">
                     {/* Dark Mode Toggle */}
                     <Button variant="ghost" onClick={toggleTheme}>
-                        {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                        {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-orange-400" />}
                     </Button>
 
                     {/* Profile Dropdown */}
@@ -109,13 +109,15 @@ const FreelancerNav: React.FC = () => {
                                     className="w-10 h-10 rounded-full"
                                 /> */}
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{userName}</p>
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white" onClick={() => navigate('/freelancer/profile')}>
+                                        {userName}
+                                    </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{userRole}</p>
                                 </div>
                             </div>
 
                             {/* Profile & Logout Options */}
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate('/freelancer/profile')}>
                                 <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem>

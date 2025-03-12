@@ -12,44 +12,63 @@ export class CategoryService implements ICategoryService {
         return await this.categoryRepository.findAll();
     };
 
-    async addCategory(data: Partial<ICategory>): Promise<ICategory> {
-        const normalizedCategoryName = data.name!.trim().toLowerCase();
+    // async addCategory(data: Partial<ICategory>): Promise<ICategory> {
+    //     const normalizedCategoryName = data.name!.trim().toLowerCase();
         
-        const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName);
+    //     const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName);
+    //     if (existingCategory) {
+    //         throw createHttpError(HttpStatus.CONFLICT, Messages.CATEGORY_EXIST);
+    //     }
+    
+    //     return await this.categoryRepository.create({ ...data, name: normalizedCategoryName });
+    // }; 
+
+    async addCategory(data: Partial<ICategory>): Promise<ICategory> {
+        const normalizedCategoryName = data.name!.trim();
+    
+        const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName.toLowerCase());
         if (existingCategory) {
             throw createHttpError(HttpStatus.CONFLICT, Messages.CATEGORY_EXIST);
         }
-    
         return await this.categoryRepository.create({ ...data, name: normalizedCategoryName });
-    }; 
+    };
 
     // async editCategory(id: string, data: Partial<ICategory>): Promise<ICategory> {
+    //     if (data.name) {
+    //         const normalizedCategoryName = data.name.trim().toLowerCase();
+    
+    //         const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName);
+    //         if (existingCategory && existingCategory.id !== id) {
+    //             throw createHttpError(HttpStatus.CONFLICT, Messages.CATEGORY_EXIST);
+    //         }
+    //         data.name = normalizedCategoryName;
+    //     }
     //     const updatedCategory = await this.categoryRepository.findByIdAndUpdate(id, data);
     //     if (!updatedCategory) {
-    //         throw createHttpError(HttpStatus.NOT_FOUND, "Category not found");
+    //         throw createHttpError(HttpStatus.NOT_FOUND, Messages.CATEGORY_NOT_FOUND);
     //     }
+    
     //     return updatedCategory;
-    // }
+    // };
 
     async editCategory(id: string, data: Partial<ICategory>): Promise<ICategory> {
         if (data.name) {
-            const normalizedCategoryName = data.name.trim().toLowerCase();
+            const normalizedCategoryName = data.name.trim();
     
-            const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName);
+            const existingCategory = await this.categoryRepository.findByName(normalizedCategoryName.toLowerCase());
             if (existingCategory && existingCategory.id !== id) {
                 throw createHttpError(HttpStatus.CONFLICT, Messages.CATEGORY_EXIST);
             }
             data.name = normalizedCategoryName;
         }
+    
         const updatedCategory = await this.categoryRepository.findByIdAndUpdate(id, data);
         if (!updatedCategory) {
             throw createHttpError(HttpStatus.NOT_FOUND, Messages.CATEGORY_NOT_FOUND);
         }
-    
         return updatedCategory;
     };
-       
-
+    
     async listCategory(id: string): Promise<void> {
         const category = await this.categoryRepository.findByIdAndUpdate(id, { isListed: true });
         if (!category) {

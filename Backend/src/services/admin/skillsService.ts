@@ -12,21 +12,31 @@ export class SkillsService implements ISkillsService {
         return await this.skillsRepository.findAll()
     };
 
-    async addSkills(data: Partial<ISkills>): Promise<ISkills> {
-        const skillsName = data.name!.trim().toLocaleLowerCase()
+    // async addSkills(data: Partial<ISkills>): Promise<ISkills> {
+    //     const skillsName = data.name!.trim()
 
-        const existingSkills = await this.skillsRepository.findByName(skillsName)
+    //     const existingSkills = await this.skillsRepository.findByName(skillsName.toLocaleLowerCase())
+    //     if (existingSkills) {
+    //         throw createHttpError(HttpStatus.CONFLICT, Messages.SKILLS_EXIST)
+    //     }
+    //     return await this.skillsRepository.create({...data, name: skillsName})
+    // };
+
+    async addSkills(data: Partial<ISkills>): Promise<ISkills> {
+        const skillsName = data.name!.trim();
+    
+        const existingSkills = await this.skillsRepository.findByName(skillsName.toLowerCase());
         if (existingSkills) {
-            throw createHttpError(HttpStatus.CONFLICT, Messages.SKILLS_EXIST)
+            throw createHttpError(HttpStatus.CONFLICT, Messages.SKILLS_EXIST);
         }
-        return await this.skillsRepository.create({...data, name: skillsName})
+        return await this.skillsRepository.create({ ...data, name: skillsName });
     };
 
     async editSkills(id: string, data: Partial<ISkills>): Promise<ISkills> {
         if (data.name) {
-            const skillsName = data.name.trim().toLowerCase()
+            const skillsName = data.name.trim()
             
-            const existingSkills = await this.skillsRepository.findByName(skillsName)
+            const existingSkills = await this.skillsRepository.findByName(skillsName.toLowerCase())
             if (existingSkills && existingSkills.id !== id) {
                 throw createHttpError(HttpStatus.CONFLICT, Messages.SKILLS_EXIST)
             }

@@ -23,5 +23,13 @@ export const VALIDATION_MESSAGES = {
     ROLE: {
         REQUIRED: "Role is required",
         INVALID: "Invalid role"
+    },
+    CATEGORY: {
+        NAME_REQUIRED: "Category name required",
+        INVALID_NAME: "Category name must contain only letters"
+    },
+    SKILLS: {
+        NAME_REQUIRED: "SKill name required",
+        INVALID_SKILL: "Skill must contain only letters"
     }
 };

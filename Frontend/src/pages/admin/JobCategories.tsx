@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Category } from "@/types/Types";
+import { validateCategory } from "@/utils/validation";
 
 const JobCategories = () => {
     const isMobile = useMobile();
@@ -41,7 +42,13 @@ const JobCategories = () => {
     };
 
     const handleAddCategory = async () => {
-        if (!newCategory.trim()) return toast.error("Category name is required");
+        const { valid, errors } = validateCategory(newCategory);
+        
+        if (!valid) {
+            setError(errors.category || "");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
         try {
             await addCategory({ name: newCategory });
             toast.success("Category added successfully!");
@@ -49,10 +56,8 @@ const JobCategories = () => {
             setIsDialogOpen(false);
             loadCategories();
         } catch (error: any) {
-            setError(error.error || 'Failed to add category')
-            setTimeout(() => {
-                setError('')
-            }, 3000);
+            setError(error.error || "Failed to add category");
+            setTimeout(() => setError(""), 3000);
         }
     };
 
@@ -74,7 +79,13 @@ const JobCategories = () => {
     };
     
     const handleEdit = async () => {
-        if (!editCategoryData.name.trim()) return toast.error("Category name is required");
+        const { valid, errors } = validateCategory(editCategoryData.name);
+    
+        if (!valid) {
+            setError(errors.category || "");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
         try {
             await editCategory(editCategoryData.id, { name: editCategoryData.name });
             toast.success("Category updated successfully!");
@@ -84,15 +95,12 @@ const JobCategories = () => {
                     cat._id === editCategoryData.id ? { ...cat, name: editCategoryData.name } : cat
                 )
             );
-    
             setEditingCategoryId(null);
         } catch (error: any) {
-            setError(error.error || 'Failed to add category')
-            setTimeout(() => {
-                setError('')
-            }, 3000);
+            setError(error.error || "Failed to update category");
+            setTimeout(() => setError(""), 3000);
         }
-    };
+    };  
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 

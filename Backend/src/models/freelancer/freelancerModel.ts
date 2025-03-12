@@ -1,21 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IFreelancer extends Document {
-    userId: mongoose.Types.ObjectId
-    title: string
-    bio: string
-    skills: string[]
-    jobCategory: mongoose.Types.ObjectId
-    city: string
-    state: string
-    country: string
-    zip: string
-    language: string[]
-    isBlocked: boolean
-    portfolio: { name: string; imageUrl: string }[]
-    education: { college: string; cource: string }
-    experienceLevel: 'Beginner' | 'Intermediate' | 'Expert'
-    linkedAccounts: {github: string, linkedIn: string, website: string}
+    userId: mongoose.Types.ObjectId;
+    title: string;
+    bio: string;
+    skills: string[];
+    jobCategory: mongoose.Types.ObjectId;
+    city: string;
+    state: string;
+    country: string;
+    zip: string;
+    language: string[];
+    profileCompleted: boolean;
+    portfolio: { name: string; imageUrl: string }[];
+    education: { college: string; course: string };
+    experienceLevel: "Beginner" | "Intermediate" | "Expert";
+    linkedAccounts: { github: string; linkedIn: string; website: string };
+    employmentHistory: { company: string; position: string; duration: string }[];
 }
 
 const FreelancerSchema: Schema = new Schema<IFreelancer>(
@@ -39,7 +40,7 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
         ],
         jobCategory: {
             type: Schema.Types.ObjectId,
-            ref: "JobCategory",
+            ref: "Category"
         },
         city: {
             type: String,
@@ -62,7 +63,7 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
                 type: String
             }
         ],
-        isBlocked: {
+        profileCompleted: {
             type: Boolean,
             default: false
         },
@@ -85,9 +86,16 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
             github: String,
             linkedIn: String,
             website: String
-        }
+        },
+        employmentHistory: [
+            {
+                company: String,
+                position: String,
+                duration: String
+            }
+        ]
     },
     { timestamps: true }
-)
+);
 
 export default mongoose.model<IFreelancer>("Freelancer", FreelancerSchema);

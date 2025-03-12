@@ -4,7 +4,7 @@ import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {FormData} from '../../types/Types'
@@ -62,7 +62,7 @@ const SignUpForm = () => {
                 password: formData.password,
                 role: formData.role
             });
-            alert('OTP sent to your mail');
+            toast.success('OTP sent to your mail');
             navigate("/otp", { state: { email: formData.email, userData: formData } });
         } catch (error: any) {
             setError({ general: error.error || "Something went wrong, please try again" });
