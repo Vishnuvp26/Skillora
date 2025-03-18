@@ -28,6 +28,9 @@ export const Messages = {
     PASSWORD_REQUIRED: "Password is required",
     PASSWORD_LENGTH: "Your password must be at least 8 characters long",
     PASSWORD_INCORRECT: "Incorrect password, try again",
+    PROFILE_UPDATED: "Profile updated successfully",
+    PROFILE_PICTURE_UPDATE: "Profile picture updated successfully",
+    NO_FILE: "No file uploaded",
     LOGIN_SUCCESS: "Login successful",
     LOGOUT_SUCCESS: "Logout successful",
     SIGNUP_SUCCESS: "Signup successful",
@@ -38,5 +41,6 @@ export const Messages = {
     CATEGORY_LISTED: "Category listed successfully",
     CATEGORY_UNLISTED: "Category unlisted successfully",
     SKILLS_LISTED: "Skills listed successfully",
-    SKILLS_UNLISTED: "Skils unlisted successfully"
+    SKILLS_UNLISTED: "Skils unlisted successfully",
+
 }

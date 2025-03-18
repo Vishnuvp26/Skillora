@@ -20,21 +20,65 @@ export interface Category {
     isListed: boolean;
 }
 
-interface FreelancerData {
-    profilePicture: File | null;
+export interface ISkill {
+    _id?: string;
+    name: string;
+}
+
+export interface IJobCategory {
+    _id: string;
+    name: string;
+}
+
+export interface IPortfolio {
+    name: string;
+    imageUrl: string;
+}
+
+export interface IEducation {
+    college: string;
+    course: string;
+}
+
+export interface ILinkedAccounts {
+    github: string;
+    linkedIn: string;
+    website: string;
+}
+
+export interface IEmploymentHistory {
+    _id?: string;
+    company: string;
+    position: string;
+    duration: string;
+}
+
+export interface IFreelancer {
+    _id: string;
+    userId: string;
+    firstName: string;
     title: string;
     bio: string;
-    skills: string[];
-    jobCategory: string;
+    skills: ISkill[];
+    jobCategory: IJobCategory;
     city: string;
     state: string;
     country: string;
     zip: string;
     language: string[];
+    socialLinks?: string[];
     profileCompleted: boolean;
-    portfolio: { name: string; imageUrl: string }[];
-    education: { college: string; course: string };
+    profilePic: string;
+    portfolio: IPortfolio[];
+    education: IEducation;
     experienceLevel: "Beginner" | "Intermediate" | "Expert";
-    linkedAccounts: { github: string; linkedIn: string; website: string };
-    employmentHistory: { company: string; position: string; duration: string }[];
+    linkedAccounts: ILinkedAccounts;
+    employmentHistory: IEmploymentHistory[];
+    createdAt: string;
+    updatedAt: string;
 };
+
+export interface FreelancerProfileFormProps {
+    profile?: IFreelancer | null;
+    onUpdate?: (updatedProfile: IFreelancer) => void;
+}

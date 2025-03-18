@@ -25,15 +25,16 @@ const Navbar: React.FC = () => {
                         src={theme === "dark" ? logoWhite : logoBlack} 
                         alt="Brand Logo" 
                         className="h-9" 
+                        onClick={() => navigate("/")}
                     />
                 </div>
 
                 {/* Center: Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
-                    <Button onClick={() => navigate("/login")}  variant="ghost">Home</Button>
+                    <Button onClick={() => navigate("/")}  variant="ghost">Home</Button>
                     <Button onClick={() => navigate("/login")} variant="ghost">Find Talent</Button>
                     <Button onClick={() => navigate("/login")} variant="ghost">Find Work</Button>
-                    <Button onClick={() => navigate("/login")} variant="ghost">About Us</Button>
+                    <Button onClick={() => navigate("")} variant="ghost">About Us</Button>
                 </div>
 
                 {/* Right: Login, Signup, and Dark Mode Toggle (Desktop Only) */}

@@ -26,7 +26,6 @@ router.put(
 
 router.get(
     '/get-categories', 
-    authenticateToken, 
     categoryController.getCategory.bind(categoryController)
 );
 

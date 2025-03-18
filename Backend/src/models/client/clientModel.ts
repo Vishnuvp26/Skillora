@@ -2,12 +2,13 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface IClient extends Document {
     userId: mongoose.Types.ObjectId
+    firstName: string
     city: string
     state: string
-    country: string
     profilePic: string
-    zip:number
-}
+    totalSpent: number
+    jobsPosted: number
+};
 
 const ClientSchema: Schema = new Schema<IClient>(
     {
@@ -16,27 +17,27 @@ const ClientSchema: Schema = new Schema<IClient>(
             ref: "User",
             required: true
         },
+        firstName: {
+            type: String
+        },
         city: {
             type: String,
-            required: true,
         },
         state: {
             type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
         },
         profilePic: {
             type: String,
         },
-        zip: {
-            type: Number,
-            required: true
+        jobsPosted: {
+            type: Number
+        },
+        totalSpent: {
+            type: Number
         }
     },
-    {timestamps: true}
-)
+    { timestamps: true }
+);
 
 export const Client = mongoose.model<IClient>('Client', ClientSchema);
+export default Client;

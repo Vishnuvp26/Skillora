@@ -2,10 +2,12 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IFreelancer extends Document {
     userId: mongoose.Types.ObjectId;
+    firstName: string;
     title: string;
     bio: string;
-    skills: string[];
-    jobCategory: mongoose.Types.ObjectId;
+    profilePic: string;
+    skills: mongoose.Types.ObjectId[];
+    jobCategory: mongoose.Types.ObjectId | null;
     city: string;
     state: string;
     country: string;
@@ -25,17 +27,25 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true
+        },  
+        firstName: {
+            type: String
         },
         title: {
             type: String,
-            required: true
+        },
+        profilePic: {
+            type: String,
+            default: ""
         },
         bio: {
             type: String
         },
         skills: [
             {
-                type: String
+                type: Schema.Types.ObjectId,
+                ref: "Skills",
+                required: true
             }
         ],
         jobCategory: {
@@ -44,19 +54,15 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
         },
         city: {
             type: String,
-            required: true
         },
         state: {
             type: String,
-            required: true
         },
         country: {
             type: String,
-            required: true
         },
         zip: {
             type: String,
-            required: true
         },
         language: [
             {
@@ -80,7 +86,6 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
         experienceLevel: {
             type: String,
             enum: ["Beginner", "Intermediate", "Expert"],
-            required: true
         },
         linkedAccounts: {
             github: String,
@@ -98,4 +103,5 @@ const FreelancerSchema: Schema = new Schema<IFreelancer>(
     { timestamps: true }
 );
 
-export default mongoose.model<IFreelancer>("Freelancer", FreelancerSchema);
+const Freelancer = mongoose.model<IFreelancer>("Freelancer", FreelancerSchema);
+export default Freelancer

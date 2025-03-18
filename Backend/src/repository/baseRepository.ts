@@ -9,7 +9,6 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     }
 
     async create(data: Partial<T>): Promise<T>{
-        console.log("Creating user with data:", data)
         const newItem = new this.model(data);
         return await newItem.save()
     }

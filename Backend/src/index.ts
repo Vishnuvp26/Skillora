@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import routes from './routes/user/userRoutes'
 import adminRoutes from './routes/admin/adminRoute'
+import freelancerRoutes from './routes/freelancer/freelancerRoutes'
 import { errorHandler } from "./middlewares/errorMiddleware";
 
 class App {
@@ -38,6 +39,7 @@ class App {
     private initializeRoutes(): void{
         this.app.use('/api/auth', routes);
         this.app.use('/api/admin', adminRoutes);
+        this.app.use('/api/freelancer', freelancerRoutes)
         this.app.use(errorHandler)
     }
 

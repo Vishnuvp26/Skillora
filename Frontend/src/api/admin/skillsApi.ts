@@ -1,8 +1,8 @@
-import Axios from "../axios/axiosInstance";
+import Axios, { axiosInstance } from "../axios/axiosInstance";
 
 export const fetchSkills = async () => {
     try {
-        const response = await Axios.get('/api/admin/skills/get-skills');
+        const response = await axiosInstance.get('/api/admin/skills/get-skills');
         return response.data
     } catch (error: any) {
         throw error.response?.data || 'Failed to load skills'

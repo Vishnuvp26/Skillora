@@ -24,5 +24,14 @@ export const env = {
     },
     get EMAIL_PASS() {
         return process.env.EMAIL_PASS
+    },
+    get CLOUDINARY_CLOUD_NAME() {
+        return process.env.CLOUDINARY_CLOUD_NAME
+    },
+    get CLOUDINARY_API_KEY() {
+        return process.env.CLOUDINARY_API_KEY
+    },
+    get CLOUDINARY_API_SECRET() {
+        return process.env.CLOUDINARY_API_SECRET
     }
 };

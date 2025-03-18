@@ -22,4 +22,13 @@ export default function validateEnv() {
     if (!env.EMAIL_PASS) {
         throw new Error ('EMAIL_PASS is not defined in env')
     }
+    if (!env.CLOUDINARY_CLOUD_NAME) {
+        throw new Error('CLOUDINARY_CLOUD_NAME is not defined in env')
+    }
+    if (!env.CLOUDINARY_API_KEY) {
+        throw new Error('CLOUDINARY_API_KEY is not defined in env')
+    }
+    if (!env.CLOUDINARY_API_SECRET) {
+        throw new Error('CLOUDINARY_API_SECRET is not defined in env')
+    }
 }

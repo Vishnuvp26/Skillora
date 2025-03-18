@@ -47,12 +47,15 @@ const FreelancerNav: React.FC = () => {
                         src={theme === "dark" ? logoWhite : logoBlack}
                         alt="Brand Logo"
                         className="h-9"
+                        onClick={() => navigate("/freelancer/home")}
                     />
                 </div>
 
                 {/* Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
-                    <Button variant="ghost">Home</Button>
+                    <Button variant="ghost" onClick={() => navigate("/freelancer/home")}>
+                        Home
+                    </Button>
                     {/* find work */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -102,18 +105,18 @@ const FreelancerNav: React.FC = () => {
                         <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
             
                             {/* User Info Section */}
-                            <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center border-gray-200 dark:border-gray-700">
                                 {/* <img
                                     src="https://via.placeholder.com/40" // Replace with actual user image URL
                                     alt="User Avatar"
                                     className="w-10 h-10 rounded-full"
                                 /> */}
-                                <div>
+                                {/* <div>
                                     <p className="text-sm font-medium text-gray-900 dark:text-white" onClick={() => navigate('/freelancer/profile')}>
                                         {userName}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{userRole}</p>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Profile & Logout Options */}

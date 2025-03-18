@@ -26,8 +26,6 @@ router.put(
 
 router.get(
     '/get-skills',
-    authenticateToken, 
-    authorizeRoles('admin'), 
     skillsController.getSkills.bind(skillsController)
 );
 

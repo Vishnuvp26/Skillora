@@ -1,8 +1,8 @@
-import Axios from "../axios/axiosInstance";
+import Axios, { axiosInstance } from "../axios/axiosInstance";
 
 export const fetchCategories = async () => {
     try {
-        const response = await Axios.get('/api/admin/categories/get-categories');
+        const response = await axiosInstance.get('/api/admin/categories/get-categories');
         return response.data;
     } catch (error: any) {
         throw error.response?.data || 'Failed to load categories';

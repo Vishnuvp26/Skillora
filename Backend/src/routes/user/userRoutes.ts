@@ -2,12 +2,14 @@ import express from "express";
 import { UserRepository } from "../../repository/userRepository";
 import { UserService } from "../../services/user/userService";
 import { UserController } from "../../controllers/user/userController";
+import { ProfileRepository } from "../../repository/profileRepository";
 // import { validRegistration } from '../middlewares/validationMiddleware';
 
 const router = express.Router();
 
 const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
+const fProfileRepository = new ProfileRepository()
+const userService = new UserService(userRepository, fProfileRepository);
 const userController = new UserController(userService);
 
 router.post("/register", userController.register.bind(userController));
