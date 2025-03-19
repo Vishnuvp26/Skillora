@@ -1,6 +1,6 @@
-import { ICategoryRepository } from "../interfaces/admin/category/ICategoryRepository";
-import Skills, { ISkills } from "../models/admin/skillsModel";
-import { BaseRepository } from "./baseRepository";
+import { ICategoryRepository } from "../../interfaces/admin/category/ICategoryRepository";
+import Skills, { ISkills } from "../../models/admin/skillsModel";
+import { BaseRepository } from "../../repository/base/baseRepository";
 
 export class SkillsRepository extends BaseRepository<ISkills> implements ICategoryRepository {
     constructor() {

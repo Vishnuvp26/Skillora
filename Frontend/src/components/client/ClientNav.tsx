@@ -30,7 +30,7 @@ const ClientNav: React.FC = () => {
         } catch (error) {
             console.error("Logout failed:", error);
         }
-    };    
+    };   
 
     return (
         <>
@@ -42,12 +42,13 @@ const ClientNav: React.FC = () => {
                         src={theme === "dark" ? logoWhite : logoBlack}
                         alt="Brand Logo"
                         className="h-9"
+                        onClick={() => navigate('/client/home')}
                     />
                 </div>
 
                 {/* Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
-                    <Button variant="ghost">Home</Button>
+                    <Button variant="ghost" onClick={() => navigate("/client/home")}>Home</Button>
                     {/* find work */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -97,20 +98,20 @@ const ClientNav: React.FC = () => {
                         <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
             
                             {/* User Info Section */}
-                            <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center border-gray-200 dark:border-gray-700">
                                 {/* <img
-                                    src="https://via.placeholder.com/40" // Replace with actual user image URL
+                                    src={} // Replace with actual user image URL
                                     alt="User Avatar"
                                     className="w-10 h-10 rounded-full"
                                 /> */}
-                                <div>
+                                {/* <div>
                                     <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">Client</p>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Profile & Logout Options */}
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate("/client/profile")}>
                                 <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem>
@@ -149,7 +150,7 @@ const ClientNav: React.FC = () => {
                 </Button>
 
                 {/* Sidebar Links */}
-                <Button variant="ghost">Home</Button>
+                <Button variant="ghost" onClick={() => navigate("/client/home")}>Home</Button>
 
                 {/* Find Work (Dropdown) */}
                 <DropdownMenu>
@@ -199,20 +200,20 @@ const ClientNav: React.FC = () => {
                     <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
             
                         {/* User Info Section */}
-                        <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center p-3 border-b border-gray-200 dark:border-gray-700">
                             {/* <img
                                 src="https://via.placeholder.com/40" // Replace with actual user image URL
                                 alt="User Avatar"
                                 className="w-10 h-10 rounded-full"
                             /> */}
-                            <div>
+                            {/* <div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">Client</p>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Profile & Logout Options */}
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate("/client/home")}>
                             <User className="w-4 h-4 mr-2" /> Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem>

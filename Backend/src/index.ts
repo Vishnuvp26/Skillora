@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import routes from './routes/user/userRoutes'
 import adminRoutes from './routes/admin/adminRoute'
+import clientRoutes from './routes/client/clientRoutes'
 import freelancerRoutes from './routes/freelancer/freelancerRoutes'
 import { errorHandler } from "./middlewares/errorMiddleware";
 
@@ -24,7 +25,7 @@ class App {
     private initializeMiddlewares(): void {
         this.app.use(cors({ 
             origin: env.CLIENT_URL,
-            methods: ["GET", "POST", "PUT", "DELETE"],
+            methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
             allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
         }));
@@ -39,14 +40,15 @@ class App {
     private initializeRoutes(): void{
         this.app.use('/api/auth', routes);
         this.app.use('/api/admin', adminRoutes);
-        this.app.use('/api/freelancer', freelancerRoutes)
-        this.app.use(errorHandler)
+        this.app.use('/api/client', clientRoutes);
+        this.app.use('/api/freelancer', freelancerRoutes);
+        this.app.use(errorHandler);
     }
 
     public listen() {
         this.app.listen(env.PORT, () => {
             console.log(`Server running on http://localhost:${env.PORT}`);
-        })
+        });
     }
 };
 

@@ -3,7 +3,6 @@ import FreelancerHomepage from "@/pages/freelancer/FreelancerHomepage";
 import ProtectedRoutes from "../components/protectedRoutes/ProtectedRoutes";
 import NotFound from "@/components/error/NotFound";
 import FreelancerProfile from "@/pages/freelancer/FreelancerProfile";
-import FreelancerProfileForm from "@/components/freelancer/Form";
 
 const FreelancerRoutes = () => (
     <Routes>
@@ -11,13 +10,19 @@ const FreelancerRoutes = () => (
             path="home"
             element={
                 <ProtectedRoutes requiredRole="freelancer">
-                    <FreelancerHomepage/>
+                    <FreelancerHomepage />
                 </ProtectedRoutes>
             }
         />
-        <Route path="profile" element={<FreelancerProfile/>} />
-        <Route path="profile-form" element={<FreelancerProfileForm/>} />
-        <Route path="*" element={<NotFound/>} />
+        <Route
+            path="profile"
+            element={
+                <ProtectedRoutes>
+                    <FreelancerProfile />
+                </ProtectedRoutes>
+            }
+        />
+        <Route path="*" element={<NotFound />} />
     </Routes>
 );
 

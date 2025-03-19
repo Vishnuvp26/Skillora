@@ -1,21 +1,21 @@
-import { IFreelancer } from "@/types/Types";
+import { IClient } from "@/types/Types";
 import Axios, { axiosInstance } from "../axios/axiosInstance"
 
-export const getProfile = async (id: string) => {
+export const fetchProfile = async (id: string) => {
     try {
-        const response = await axiosInstance.get(`/api/freelancer/profile/get-profile/${id}`)
+        const response = await axiosInstance.get(`/api/client/profile/get-profile/${id}`)
         return response.data
     } catch (error: any) {
-        throw error.response?.data || 'Failed to get profile'
+        throw error.response?.data || "Failed to get profile"
     }
 };
 
-export const updateProfile = async (id: string, profileData: Partial<IFreelancer>) => {
+export const updateProfile = async (id: string, profileData: Partial<IClient>) => {
     try {
-        const response = await Axios.put(`/api/freelancer/profile/update-profile/${id}`, profileData);
-        return response.data;
+        const response = await Axios.put(`/api/client/profile/update-profile/${id}`, profileData)
+        return response.data
     } catch (error: any) {
-        throw error.response?.data || "Failed to update profile";
+        throw error.response?.data || "Failed to update profile"
     }
 };
 
@@ -25,7 +25,7 @@ export const uploadProfileImage = async (id: string, file: File) => {
         formData.append("profilePic", file);
 
         const response = await Axios.post(
-            `/api/freelancer/profile/upload-image/${id}`,
+            `/api/client/profile/upload-image/${id}`,
             formData,
             {
                 headers: { "Content-Type": "multipart/form-data" },

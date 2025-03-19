@@ -7,6 +7,7 @@ export interface Iuser extends Document{
     password: string
     role: "freelancer" | "client" | "admin"
     profilePic: string
+    isGoogleAuth: boolean
     status: "active" | "blocked"
     createdAt: Date
     updatedAt: Date
@@ -36,6 +37,10 @@ const UserSchema: Schema = new Schema<Iuser>(
         },
         profilePic: {
             type: String
+        },
+        isGoogleAuth: {
+            type: Boolean,
+            default: false
         },
         status: {
             type: String,

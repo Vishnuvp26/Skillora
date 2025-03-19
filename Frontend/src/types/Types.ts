@@ -78,7 +78,23 @@ export interface IFreelancer {
     updatedAt: string;
 };
 
+export interface IClient {
+    _id: string
+    userId: string
+    firstName: string
+    city: string
+    state: string
+    profilePic: string
+    totalSpent: number
+    jobsPosted: number
+}
+
 export interface FreelancerProfileFormProps {
     profile?: IFreelancer | null;
     onUpdate?: (updatedProfile: IFreelancer) => void;
+}
+
+export interface ClientProfileFormTypes {
+    profile?: IClient | null;
+    onUpdate?: (updateProfile: IClient) => void
 }

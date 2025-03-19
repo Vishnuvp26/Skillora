@@ -1,6 +1,7 @@
 import { FormData } from "@/types/Types";
 import { VALIDATION_MESSAGES } from "@/constants/errorMessages";
 
+// Registration
 export const validateRegistration = (formData: FormData) => {
     const errors: Record<string, string> = {};
 
@@ -44,6 +45,7 @@ export const validateRegistration = (formData: FormData) => {
     };
 };
 
+// Category
 export const validateCategory = (category: string) => {
     const trimmedCategory = category.trim();
     const errors: Record<string, string> = {};
@@ -60,6 +62,7 @@ export const validateCategory = (category: string) => {
     };
 };
 
+// Skills
 export const validateSkill = (skill: string) => {
     const trimmedSkill = skill.trim();
     const errors: Record<string, string> = {};
@@ -74,4 +77,52 @@ export const validateSkill = (skill: string) => {
         valid: Object.keys(errors).length === 0,
         errors
     };
+};
+
+// Client profile validation
+export const validateClientForm = (formData: { firstName: string; city: string; state: string }) => {
+    let errors: Record<string, string> = {};
+    const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+    const cityStateRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+
+    if (!formData.firstName.trim()) {
+        errors.firstName = VALIDATION_MESSAGES.NAME.REQUIRED
+    } else if (!nameRegex.test(formData.firstName)) {
+        errors.firstName = VALIDATION_MESSAGES.NAME.INVALID
+    }
+
+    if (!formData.city.trim()) {
+        errors.city = VALIDATION_MESSAGES.CITY.REQUIRED
+    } else if (!cityStateRegex.test(formData.city)) {
+        errors.city = VALIDATION_MESSAGES.CITY.INVALID
+    }
+
+    if (!formData.state.trim()) {
+        errors.state = VALIDATION_MESSAGES.STATE.REQUIRED
+    } else if (!cityStateRegex.test(formData.state)) {
+        errors.state = VALIDATION_MESSAGES.STATE.INVALID
+    }
+
+    return errors;
+};
+
+// Freelancer profile validation
+export const validateFreelancerForm = (formData: any) => {
+    let errors: Record<string, string> = {};
+
+    if (!formData.firstName?.trim()) {
+        errors.firstName = VALIDATION_MESSAGES.NAME.REQUIRED
+    } else if (!/^[A-Za-z\s]+$/.test(formData.firstName)) {
+        errors.firstName = VALIDATION_MESSAGES.NAME.INVALID
+    }
+
+    if (!formData.title.trim()) {
+        errors.title = VALIDATION_MESSAGES.TITLE_REQUIRED
+    }
+
+    if (!formData.city.trim()) {
+        errors.city = VALIDATION_MESSAGES.CITY.REQUIRED
+    }
+
+    return errors;
 };

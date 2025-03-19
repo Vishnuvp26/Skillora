@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IClient extends Document {
+export interface IClient extends Document {
     userId: mongoose.Types.ObjectId
     firstName: string
     city: string
@@ -8,6 +8,7 @@ interface IClient extends Document {
     profilePic: string
     totalSpent: number
     jobsPosted: number
+    profileCompleted: boolean
 };
 
 const ClientSchema: Schema = new Schema<IClient>(
@@ -30,10 +31,16 @@ const ClientSchema: Schema = new Schema<IClient>(
             type: String,
         },
         jobsPosted: {
-            type: Number
+            type: Number,
+            default: 0
         },
         totalSpent: {
-            type: Number
+            type: Number,
+            default: 0
+        },
+        profileCompleted: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }

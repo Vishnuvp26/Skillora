@@ -1,7 +1,7 @@
 import express from 'express';
 import { authenticateToken, authorizeRoles } from '../../middlewares/authMiddleware';
 import { AdminController } from '../../controllers/admin/adminControllers';
-import { AdminRepository } from '../../repository/adminRepository';
+import { AdminRepository } from '../../repository/admin/adminRepository';
 import { AdminService } from '../../services/admin/adminService';
 
 const router = express.Router();

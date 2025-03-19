@@ -1,7 +1,7 @@
 import express from 'express';
 import { CategoryController } from '../../controllers/admin/categoryController';
 import { CategoryService } from '../../services/admin/categoryService';
-import { CategoryRepository } from '../../repository/categoryRepository';
+import { CategoryRepository } from '../../repository/admin/categoryRepository';
 import { authenticateToken, authorizeRoles } from '../../middlewares/authMiddleware'; // Import middleware
 
 const router = express.Router();

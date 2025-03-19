@@ -1,6 +1,6 @@
-import { IUserRepository } from "../interfaces/user/IUserRepository";
-import { Iuser, User } from "../models/user/userModel";
-import { BaseRepository } from "./baseRepository";
+import { IUserRepository } from "../../interfaces/user/IUserRepository";
+import { Iuser, User } from "../../models/user/userModel";
+import { BaseRepository } from "../../repository/base/baseRepository";
 
 export class UserRepository extends BaseRepository<Iuser> implements IUserRepository {
     constructor() {

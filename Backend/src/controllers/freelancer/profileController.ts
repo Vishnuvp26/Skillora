@@ -16,23 +16,15 @@ export class ProfileController implements IProfileController {
         }
     };
 
-    // async addProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    //     try {
-    //         const userId = req.params.id;
-    //         const profileData = req.body;
-
-    //         const updatedProfile = await this._profileService.addProfile(userId, profileData);
-    //         res.status(HttpStatus.OK).json({ message: "Profile updated successfully", data: updatedProfile });
-    //     } catch (error) {
-    //         next(error);
-    //     }
-    // }
-
     async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.params.id;
             const profileData = req.body;
-            console.log('UPDATE PROFILE DATA RECIEVED :', profileData);
+
+            if (!userId) {
+                res.status(HttpStatus.BAD_REQUEST).json({message: Messages.USER_NOT_FOUND})
+            }
+
             const updatedProfile = await this._profileService.updateProfile(userId, profileData);
             res.status(HttpStatus.OK).json({ message: Messages.PROFILE_UPDATED, data: updatedProfile });
         } catch (error) {

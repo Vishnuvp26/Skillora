@@ -11,6 +11,8 @@ import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import { updateProfile } from "@/api/freelancer/profileApi";
 import toast from "react-hot-toast";
+import { Plus, X } from "lucide-react";
+import { validateFreelancerForm } from "@/utils/validation";
 
 const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, onUpdate }) => {
 
@@ -24,19 +26,19 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         jobCategory: profile?.jobCategory?._id || "",
         skills: profile?.skills || [],
         education: profile?.education || { college: "", course: "" },
-        employmentHistory: profile?.employmentHistory || [{ company: "", position: "", duration: "" }],
+        employmentHistory: profile?.employmentHistory?.length
+            ? profile.employmentHistory
+            : [{ company: "", position: "", duration: "" }],
         socialLinks: profile?.linkedAccounts || { github: "", linkedIn: "", website: "" },
         city: profile?.city || "",
         language: profile?.language || [],
     });
-    
-    console.log('FORMDATA CATEGORY', formData.jobCategory);
-    console.log('FORMDATA SKILL', formData.skills);
 
     const [skillsList, setSkillsList] = useState<ISkill[]>([]);
     const [jobCategories, setJobCategories] = useState<IJobCategory[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<string[]>(formData.skills?.map(skill => skill._id || "") || []);
     const [languageInput, setLanguageInput] = useState("")
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
         const loadData = async () => {
@@ -63,6 +65,20 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
             ...prev,
             education: { ...prev.education, [field]: e.target.value },
         }));
+    };
+
+    const handleAddEmployment = () => {
+        setFormData((prev) => ({
+            ...prev,
+            employmentHistory: [...prev.employmentHistory, { company: "", position: "", duration: "" }],
+        }));
+    };
+
+    const handleRemoveEmployment = (index: number) => {
+        setFormData((prev) => {
+            const updatedEmployment = prev.employmentHistory.filter((_, i) => i !== index);
+            return { ...prev, employmentHistory: updatedEmployment };
+        });
     };
 
     const handleEmploymentChange = (index: number, field: string, value: string) => {
@@ -105,22 +121,18 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.title.trim()) {
-            toast.error("Title is required!");
-            return;
-        }
-        if (!formData.jobCategory) {
-            toast.error("Job category is required!");
-            return;
-        }
+        const validationErrors = validateFreelancerForm(formData);
+        setErrors(validationErrors);
+    
         if (selectedSkills.length === 0) {
-            toast.error("At least one skill is required!");
-            return;
+            return toast.error("Atleast select one skill")
         }
-        if (!formData.city.trim()) {
-            toast.error("City is required!");
-            return;
+
+        if (!formData.jobCategory) {
+            return toast.error("Select Job category")
         }
+
+        if (Object.keys(validationErrors).length > 0) return;
 
         try {
             const updatedData = await updateProfile(userId, formData);
@@ -149,6 +161,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                             onChange={handleChange}
                             className="text-xs placeholder:text-xs"
                         />
+                        {errors.firstName && <p className="text-sm text-red-500 mt-1">{errors.firstName}</p>}
                     </div>
                     {/* Title */}
                     <div>
@@ -161,6 +174,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                             className="text-xs placeholder:text-xs"
                             placeholder="Eg: Freelance web developer Passionate about building web applications..."
                         />
+                        {errors.title && <p className="text-sm text-red-500 mt-1">{errors.title}</p>}
                     </div>
                     {/* Bio */}
                     <div>
@@ -248,9 +262,17 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                     {/* Employment History */}
                     <div>
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Employment History</label>
-                        <div className="space-y-4">
+                        <div className="relative space-y-4 rounded-lg">
+                            <button
+                                type="button"
+                                onClick={handleAddEmployment}
+                                className="absolute -top-8 right-0 dark:bg-gray-800 bg-[#186e9c] text-white p-2 rounded-lg hover:bg-[#005F8C]"
+                            >
+                                <Plus size={10} />
+                            </button>
+
                             {formData.employmentHistory.map((job, index) => (
-                                <div key={index} className="flex flex-col sm:flex-row gap-4">
+                                <div key={index} className="flex flex-col sm:flex-row gap-4 items-center relative">
                                     <Input
                                         className="text-xs placeholder:text-xs"
                                         placeholder="Company"
@@ -269,6 +291,15 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                                         value={job.duration}
                                         onChange={(e) => handleEmploymentChange(index, "duration", e.target.value)}
                                     />
+                                    {index > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveEmployment(index)}
+                                            className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600"
+                                        >
+                                            <X size={10} />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -291,7 +322,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                                 className="text-xs placeholder:text-xs"
                                 placeholder="Type a language and press Add"
                             />
-                            <Button type="button" onClick={handleAddLanguage} className="bg-[#0077B6] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700">
+                            <Button type="button" onClick={handleAddLanguage} className="bg-[#186e9c] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700">
                                 Add
                             </Button>
                         </div>
@@ -318,7 +349,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                     </div>
 
                     {/* Submit Button */}
-                    <Button type="submit" className="w-full bg-[#0077B6] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700">
+                    <Button type="submit" className="w-full bg-[#186e9c] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700">
                         Save Profile
                     </Button>
                 </form>

@@ -6,8 +6,8 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
+import { useDispatch } from "react-redux";
+// import { RootState } from "@/redux/store/store";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
@@ -18,8 +18,8 @@ const FreelancerNav: React.FC = () => {
     if (!themeContext) return null;
     const { theme, toggleTheme } = themeContext;
 
-    const userName = useSelector((state: RootState) => state.user.name);
-    const userRole = useSelector((state: RootState) => state.user.role)
+    // const userName = useSelector((state: RootState) => state.user.name);
+    // const userRole = useSelector((state: RootState) => state.user.role)
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 

@@ -31,5 +31,16 @@ export const VALIDATION_MESSAGES = {
     SKILLS: {
         NAME_REQUIRED: "SKill name required",
         INVALID_SKILL: "Skill must contain only letters"
-    }
+    },
+    CITY: {
+        REQUIRED: "City is required",
+        INVALID: "City can only contain letters"
+    },
+    STATE: {
+        REQUIRED: "State is required",
+        INVALID: "State can only contain letters"
+    },
+    TITLE_REQUIRED: "Title is required",
+    CATEGORY_REQUIRED: "Job category is required!",
+    SKILL_REQUIRED: "At least one skill is required!",
 };

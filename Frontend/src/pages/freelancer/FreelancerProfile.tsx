@@ -1,13 +1,13 @@
 import FreelancerNav from "@/components/freelancer/FreelancerNav";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+// import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TfiPencil } from "react-icons/tfi";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 import { LuGlobe } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
-import pic1 from '../../assets/portfolio1.png';
-import pic2 from '../../assets/portfolio2.png';
+// import pic1 from '../../assets/portfolio1.png';
+// import pic2 from '../../assets/portfolio2.png';
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import FreelancerProfileForm from "../../components/freelancer/Form";
@@ -15,10 +15,10 @@ import { useEffect, useState } from "react";
 import { IFreelancer } from "@/types/Types";
 import { getProfile, uploadProfileImage } from "@/api/freelancer/profileApi";
 
-const projects = [
-    { id: 1, src: pic1, title: "Ecommerce" },
-    { id: 2, src: pic2, title: "Booking" },
-];
+// const projects = [
+//     { id: 1, src: pic1, title: "Ecommerce" },
+//     { id: 2, src: pic2, title: "Booking" },
+// ];
 
 const FreelancerProfile = () => {
     const userEmail = useSelector((state: RootState) => state.user.email);
@@ -57,20 +57,15 @@ const FreelancerProfile = () => {
         try {
             setIsUploading(true);
             await uploadProfileImage(userId, file);
-            // Fetch the complete profile data again
             const response = await getProfile(userId);
-            console.log('IMAGE UPLOADED RESPONSE :', response)
             setProfile(response.data);
-            console.log('AFTER IMAGE UPLOADED PROIFLE DATA :', profile)
-            e.target.value = ""; // Reset file input
+            e.target.value = "";
         } catch (error) {
             console.error("Error uploading image:", error);
         } finally {
             setIsUploading(false)
         }
     };
-
-    console.log('PROFILE STATE', profile);
 
     return (
         <div className="min-h-screen dark:bg-gray-950 flex justify-center p-6">
@@ -226,9 +221,9 @@ const FreelancerProfile = () => {
                                 <p className="mt-8 text-gray-600 dark:text-gray-400">
                                     {profile?.bio || 'No bio provided'}
                                 </p>
-                                <hr className="my-6 border-gray-300 dark:border-gray-900" />
+                                {/* <hr className="my-6 border-gray-300 dark:border-gray-900" /> */}
                                 {/* PORTFOLIO */}
-                                <h2 className="text-xl font-bold text-black dark:text-white mt-10">Portfolio</h2>
+                                {/* <h2 className="text-xl font-bold text-black dark:text-white mt-10">Portfolio</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
                                     {projects.map((project) => (
                                         <Dialog key={project.id}>
@@ -255,7 +250,7 @@ const FreelancerProfile = () => {
                                             </DialogContent>
                                         </Dialog>
                                     ))}
-                                </div>
+                                </div> */}
 
                                 {/* SKILLS */}
                                 <hr className="my-6 border-gray-300 dark:border-gray-900" />

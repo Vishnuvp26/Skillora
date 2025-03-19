@@ -8,16 +8,18 @@ import { hashPassword, comparePassword } from "../../utils/password";
 import { IUserService } from "../../interfaces/user/IUserService";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../../utils/jwt";
 import { verifyGoogleToken } from "../../utils/googleAuth";
-import mongoose from "mongoose";
 import { IProfileRepository } from "../../interfaces/freelancer/profile/IProfileRepository";
+import { IProfileRepositoryClient } from "../../interfaces/client/profile/IProfileRepository";
 
 export class UserService implements IUserService {
     private userRepository: IUserRepository;
     private freelancerRepository: IProfileRepository;
+    private clientRepository: IProfileRepositoryClient
 
-    constructor(userRepository: IUserRepository, freelancerRepository: IProfileRepository) {
+    constructor(userRepository: IUserRepository, freelancerRepository: IProfileRepository, clientRepository: IProfileRepositoryClient) {
         this.userRepository = userRepository;
         this.freelancerRepository = freelancerRepository;
+        this.clientRepository = clientRepository
     }
 
     async register(userData: Partial<Iuser>): Promise<{ status: number; message: string }> {
@@ -73,12 +75,22 @@ export class UserService implements IUserService {
                 country: "",
                 zip: "",
                 language: [],
-                profileCompleted: false,
                 portfolio: [],
                 education: { college: "", course: "" },
                 experienceLevel: "Beginner",
                 employmentHistory: []
             });
+        }
+
+        if (userData.role === "client") {
+            console.log("Creating Client Profile for:", email);
+            await this.clientRepository.create({
+                userId: user.id,
+                firstName: user.name,
+                city: "",
+                state: "",
+                profilePic: "",
+            })
         }
         return { status: HttpStatus.CREATED, message: Messages.SIGNUP_SUCCESS };
     }
@@ -166,9 +178,10 @@ export class UserService implements IUserService {
                 role,
                 status: "active",
                 password: "",
+                isGoogleAuth: true
             } as Iuser);                        
         }
-
+        
         console.log("User status before returning:", user.status);
     
         if (user.status === "blocked") {
@@ -179,27 +192,42 @@ export class UserService implements IUserService {
         const refreshToken = generateRefreshToken(user.id.toString(), user.role);
     
         if (user.role === "freelancer") {
-            console.log("Creating Freelancer google Profile for:", user.email);
-            await this.freelancerRepository.create({
-                userId: user.id,
-                firstName: user.name,
-                title: "",
-                bio: "",
-                profilePic: googleUser.profilePic,
-                skills: [],
-                jobCategory: null,
-                city: "",
-                state: "",
-                country: "",
-                zip: "",
-                language: [],
-                profileCompleted: false,
-                portfolio: [],
-                education: { college: "", course: "" },
-                experienceLevel: "Beginner",
-                employmentHistory: []
-            });
+            const existingFreelancer = await this.freelancerRepository.findByUserId(user.id.toString())
+            if (!existingFreelancer) {
+                await this.freelancerRepository.create({
+                    userId: user.id,
+                    firstName: user.name,
+                    title: "",
+                    bio: "",
+                    profilePic: googleUser.profilePic,
+                    skills: [],
+                    jobCategory: null,
+                    city: "",
+                    state: "",
+                    country: "",
+                    zip: "",
+                    language: [],
+                    profileCompleted: false,
+                    portfolio: [],
+                    education: { college: "", course: "" },
+                    experienceLevel: "Beginner",
+                    employmentHistory: []
+                });
+            }
         }
+
+        if (user.role === "client") {
+            const existingClient = await this.clientRepository.findByUserId(user.id.toString());
+            if (!existingClient) {
+                await this.clientRepository.create({
+                    userId: user.id,
+                    firstName: user.name,
+                    city: "",
+                    state: "",
+                    profilePic: "",
+                })
+            }
+        };
 
         return {
             status: HttpStatus.OK,

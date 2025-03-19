@@ -1,6 +1,6 @@
-import { IAdminRepository } from "../interfaces/admin/handleUsers/IAdminRepository";
-import User, { Iuser } from "../models/user/userModel";
-import { BaseRepository } from "./baseRepository";
+import { IAdminRepository } from "../../interfaces/admin/handleUsers/IAdminRepository";
+import User, { Iuser } from "../../models/user/userModel";
+import { BaseRepository } from "../../repository/base/baseRepository";
 
 export class AdminRepository extends BaseRepository<Iuser> implements IAdminRepository {
     constructor() {

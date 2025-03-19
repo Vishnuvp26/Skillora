@@ -10,6 +10,7 @@ export const Messages = {
     INCORRECT_OTP: "The OTP you provided is incorrect",
     NAME_REQUIRED: "Name is required",
     EMAIL_REQUIRED: "Email is required",
+    ID_REQUIRED: "User _id is required",
     NO_ACCESS: "Unauthorized Access",
     TOKEN_REQUIRED: "Access denied. No token provided.",
     BLOCKED: "User blocked successfully",
@@ -42,5 +43,6 @@ export const Messages = {
     CATEGORY_UNLISTED: "Category unlisted successfully",
     SKILLS_LISTED: "Skills listed successfully",
     SKILLS_UNLISTED: "Skils unlisted successfully",
-
+    ERROR_FETCHING_PROFILE: "Failed to fetch profile",
+    ERROR_UPDATING_PROFILE: "Error updating proifle"
 }

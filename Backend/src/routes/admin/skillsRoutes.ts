@@ -1,5 +1,5 @@
 import express from 'express';
-import { SkillsRepository} from '../../repository/skillsRepository';
+import { SkillsRepository} from '../../repository/admin/skillsRepository';
 import { SkillsService } from '../../services/admin/skillsService';
 import { SKillsController } from '../../controllers/admin/skillsController';
 import { authenticateToken, authorizeRoles } from '../../middlewares/authMiddleware';
