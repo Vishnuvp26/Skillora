@@ -9,6 +9,7 @@ import adminRoutes from './routes/admin/adminRoute'
 import clientRoutes from './routes/client/clientRoutes'
 import freelancerRoutes from './routes/freelancer/freelancerRoutes'
 import { errorHandler } from "./middlewares/errorMiddleware";
+import { logger, morganMiddleware } from "./middlewares/loggerMiddleware";
 
 class App {
     public app: Application;
@@ -30,7 +31,8 @@ class App {
             credentials: true
         }));
         this.app.use(express.json());
-        this.app.use(cookieParser())
+        this.app.use(cookieParser());
+        this.app.use(morganMiddleware);
     }
 
     private initializeDatabase(): void{
@@ -47,6 +49,7 @@ class App {
 
     public listen() {
         this.app.listen(env.PORT, () => {
+            logger.info(`Server running on http://localhost:${env.PORT}`)
             console.log(`Server running on http://localhost:${env.PORT}`);
         });
     }

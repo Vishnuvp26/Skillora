@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
 import { addSkills, editSkills, fetchSkills, listSkills, unlistSkills } from "@/api/admin/skillsApi";
 import { validateSkill } from "@/utils/validation";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 const Skills = () => {
     const isMobile = useMobile();
@@ -102,7 +103,7 @@ const Skills = () => {
             setError(error.error || "Failed to update skill");
             setTimeout(() => setError(""), 3000);
         }
-    };    
+    };
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
@@ -255,24 +256,39 @@ const Skills = () => {
                     </div>
 
                     {/* Pagination Controls */}
-                    <div className="flex justify-between items-center mt-4">
-                        <Button
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(prev => prev - 1)}
-                            className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
-                        >
-                            Previous
-                        </Button>
-                        <span className="text-sm text-gray-900 dark:text-gray-300">
-                            Page {currentPage} of {Math.ceil(skills.length / itemsPerPage)}
-                        </span>
-                        <Button
-                            disabled={currentPage === Math.ceil(skills.length / itemsPerPage)}
-                            onClick={() => setCurrentPage(prev => prev + 1)}
-                            className="bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50"
-                        >
-                            Next
-                        </Button>
+                    <div className="mt-6 flex justify-center">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                                    />
+                                </PaginationItem>
+
+                                {[...Array(Math.ceil(skills.length / itemsPerPage))].map((_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            isActive={currentPage === index + 1}
+                                            onClick={() => setCurrentPage(index + 1)}
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+
+                                <PaginationItem>
+                                    <PaginationNext
+                                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                                        className={
+                                            currentPage === Math.ceil(skills.length / itemsPerPage)
+                                                ? "pointer-events-none opacity-50"
+                                                : ""
+                                        }
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     </div>
                 </main>
             </div>
