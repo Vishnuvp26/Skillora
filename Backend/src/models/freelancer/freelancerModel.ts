@@ -13,7 +13,7 @@ export interface IFreelancer extends Document {
     country: string;
     zip: string;
     language: string[];
-    profileCompleted: boolean;
+    profileCompleted: boolean;  
     portfolio: { name: string; imageUrl: string }[];
     education: { college: string; course: string };
     experienceLevel: "Beginner" | "Intermediate" | "Expert";

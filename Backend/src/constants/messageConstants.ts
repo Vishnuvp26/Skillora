@@ -3,6 +3,7 @@ export const Messages = {
     USER_EXIST: "User already exist",
     USER_BLOCKED: "Your are blocked from Skillora",
     USER_NOT_FOUND: "User not found, try to signup",
+    JOB_NOT_FOUND: "Job id not found",
     OTP_SENT: "OTP has been sent",
     OTP_RESENT: "OTP has been resent successfully",
     OTP_VERIFIED: "OTP verification successful",
@@ -15,6 +16,7 @@ export const Messages = {
     TOKEN_REQUIRED: "Access denied. No token provided.",
     BLOCKED: "User blocked successfully",
     UNBLOCKED: "User unblocked successfully",
+    INVALID_ID: "invalid id, failed to lookup",
     INVALID_TOKEN: "Invalid authentication token.",
     INVALID_BIO: "Bio should contains 100 - 600 characters",
     INVALID_FILE_TYPE: "Only jpeg, jpg, webp and png files allowed",
@@ -44,5 +46,11 @@ export const Messages = {
     SKILLS_LISTED: "Skills listed successfully",
     SKILLS_UNLISTED: "Skils unlisted successfully",
     ERROR_FETCHING_PROFILE: "Failed to fetch profile",
-    ERROR_UPDATING_PROFILE: "Error updating proifle"
+    ERROR_UPDATING_PROFILE: "Error updating proifle",
+    JOB_UPDATED: "Job has been updated",
+    REQUIRED_ALL: "All feilds are required",
+    ACCESS_DENIED: "You are not authorized to access this job.",
+    JOB_TITLE_REQUIRED: "Job title cannot be empty",
+    JOB_DESCRIPTION_REQUIRED: "Job description cannot be empty",
+    JOB_RATE_LIMIT: "Job rate must be greater than zero",
 }
