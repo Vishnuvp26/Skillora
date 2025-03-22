@@ -98,3 +98,44 @@ export interface ClientProfileFormTypes {
     profile?: IClient | null;
     onUpdate?: (updateProfile: IClient) => void
 }
+
+export interface Job {
+    _id: string;
+    title: string;
+    description: string;
+    rate: number;
+    experienceLevel: string;
+    category: {
+        _id: string;
+        name: string;
+    };
+    skills: { _id: string; name: string }[];
+    createdAt: Date;
+}
+
+export interface JobsListProps {
+    jobs: Job[];
+    visibleJobs: number;
+    setVisibleJobs: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export type JobType = {
+    _id: string;
+    clientId: {
+        _id: string;
+        name: string
+    }
+    title: string;
+    description: string;
+    rate: number;
+    experienceLevel: string;
+    category: {
+        _id: string;
+        name: string;
+    };
+    location: string;
+    status: string;
+    skills: { _id: string; name: string }[];
+    createdAt: string;
+    applicants: number
+};

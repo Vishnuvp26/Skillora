@@ -6,13 +6,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RootState } from "@/redux/store/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { createJob } from "@/api/client/jobApi";
+import { updateJob, jobDetails } from "@/api/client/jobApi";
 import toast from "react-hot-toast";
 import { fetchSkills } from "@/api/admin/skillsApi";
 import { fetchCategories } from "@/api/admin/categoryApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const PostJob = () => {
+const EditJob = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
 
     const [skillsList, setSkillsList] = useState<{ id: string; name: string }[]>([]);
     const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
@@ -28,19 +30,37 @@ const PostJob = () => {
     });
 
     useEffect(() => {
-        const loadSkills = async () => {
+        const loadJobDetails = async () => {
             try {
-                const [skillsResponse, categoryResponce] = await Promise.all([fetchSkills(), fetchCategories()])
-                console.log('FETCHED SKILLS :', skillsResponse);
-                console.log('FETCHED CATEGORY :', categoryResponce);
-                setSkillsList(skillsResponse.data.map((skill: any) => ({ id: skill._id, name: skill.name })));
-                setCategoryList(categoryResponce.data.map((category: any) => ({ id: category._id, name: category.name })));
+                const response = await jobDetails(id!);
+                const job = response.data;
+                setFormData({
+                    title: job.title,
+                    description: job.description,
+                    rate: job.rate.toString(),
+                    experienceLevel: job.experienceLevel,
+                    location: job.location,
+                    category: job.category._id,
+                });
+                setSelectedSkills(job.skills.map((skill: any) => skill._id));
             } catch (error) {
-                console.error("Error fetching skills:", error);
+                console.error("Error fetching job details:", error);
             }
         };
-        loadSkills();
-    }, []);
+
+        const loadSkillsAndCategories = async () => {
+            try {
+                const [skillsResponse, categoryResponse] = await Promise.all([fetchSkills(), fetchCategories()]);
+                setSkillsList(skillsResponse.data.map((skill: any) => ({ id: skill._id, name: skill.name })));
+                setCategoryList(categoryResponse.data.map((category: any) => ({ id: category._id, name: category.name })));
+            } catch (error) {
+                console.error("Error fetching skills or categories:", error);
+            }
+        };
+
+        loadJobDetails();
+        loadSkillsAndCategories();
+    }, [id]);
 
     const handleSkillChange = (skillId: string) => {
         setSelectedSkills((prev) =>
@@ -51,8 +71,6 @@ const PostJob = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,15 +84,14 @@ const PostJob = () => {
             category: formData.category,
             skills: selectedSkills,
         };
-        console.log("Submitting job data:", jobData);
         try {
-            const response = await createJob(userId, jobData)
-            console.log("Job posted successfully:", response);
-            toast.success("Job posted successfully!");
+            const response = await updateJob(id!, jobData);
+            console.log("Job updated successfully:", response);
+            toast.success("Job updated successfully!");
             setTimeout(() => navigate("/client/home"), 2000);
         } catch (error: any) {
-            console.error("Error posting job:", error);
-            toast.error(error.error)
+            console.error("Error updating job:", error);
+            toast.error(error.error);
         }
     };
 
@@ -82,7 +99,7 @@ const PostJob = () => {
         <div className="max-w-6xl mx-auto my-10 bg-white dark:bg-gray-950 p-6 rounded-lg border-none">
             <CardHeader>
                 <CardTitle className="text-xl font-semibold text-center text-gray-900 dark:text-white">
-                    Post Your Job
+                    Edit Your Job
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -123,8 +140,8 @@ const PostJob = () => {
                     </div>
                     <div className="mt-5">
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Experience Level</label>
-                        <Select onValueChange={(value) => setFormData({ ...formData, experienceLevel: value })}>
-                            <SelectTrigger className="border-gray-400 dark:border-gray-800 h-11 mt-1.5" >
+                        <Select onValueChange={(value) => setFormData({ ...formData, experienceLevel: value })} value={formData.experienceLevel}>
+                            <SelectTrigger className="border-gray-400 dark:border-gray-800 h-11 mt-1.5">
                                 <SelectValue placeholder="Select experience level" />
                             </SelectTrigger>
                             <SelectContent>
@@ -147,8 +164,8 @@ const PostJob = () => {
                     </div>
                     <div className="mt-5">
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Job Category</label>
-                        <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}>
-                            <SelectTrigger className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800">
+                        <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))} value={formData.category}>
+                            <SelectTrigger className="text-sm placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800">
                                 <SelectValue placeholder="Select job category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -177,7 +194,6 @@ const PostJob = () => {
                                     </label>
                                 </div>
                             ))}
-
                         </div>
                         {/* Display Selected Skills */}
                         {selectedSkills.length > 0 && (
@@ -200,7 +216,7 @@ const PostJob = () => {
                             Cancel
                         </Button>
                         <Button type="submit" className="border border-[#0077B6] text-[#0077B6] bg-transparent hover:bg-[#0077B611]">
-                            Submit
+                            Update
                         </Button>
                     </div>
                 </form>
@@ -209,4 +225,4 @@ const PostJob = () => {
     );
 };
 
-export default PostJob;
+export default EditJob;

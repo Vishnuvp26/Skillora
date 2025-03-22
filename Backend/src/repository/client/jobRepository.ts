@@ -57,16 +57,15 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
     };
 
     async getJobsByClientId(userId: string): Promise<IJob[]> {
-        console.log("Fetching jobs for client ID:", userId); // Debug log
+        console.log("Fetching jobs for client ID:", userId);
     
-        const jobs = await this.model.find({ clientId: new mongoose.Types.ObjectId(userId) }) // Fix: Change userId to clientId
+        const jobs = await this.model.find({ clientId: new mongoose.Types.ObjectId(userId) })
             .populate("category", "name")
             .populate("skills", "name")
             .populate("hiredFreelancer", "name email")
             .exec();
     
-        console.log("Jobs found:", jobs.length); // Debug: Check if jobs are retrieved
+        console.log("Jobs found:", jobs.length);
         return jobs;
     };
-    
 };

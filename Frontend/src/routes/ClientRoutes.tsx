@@ -6,6 +6,8 @@ import ClientProfile from "@/pages/clients/ClientProfile";
 import PostJob from "@/pages/clients/PostJob";
 import ClientNav from "@/components/client/ClientNav";
 import Footer from "@/components/landing/Footer";
+import JobDetail from "@/pages/clients/JobDetails";
+import EditJob from "@/pages/clients/EditJob";
 
 const ClientRoutes = () => (
     <div>
@@ -19,7 +21,7 @@ const ClientRoutes = () => (
                     </ProtectedRoutes>
                 }
             />
-            <Route 
+            <Route
                 path="profile"
                 element={
                     <ProtectedRoutes requiredRole="client">
@@ -27,7 +29,7 @@ const ClientRoutes = () => (
                     </ProtectedRoutes>
                 }
             />
-            <Route 
+            <Route
                 path="post-job"
                 element={
                     <ProtectedRoutes requiredRole="client">
@@ -35,9 +37,25 @@ const ClientRoutes = () => (
                     </ProtectedRoutes>
                 }
             />
+            <Route
+                path="job/view-job/:id"
+                element={
+                    <ProtectedRoutes requiredRole="client">
+                        <JobDetail />
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="job/edit-job/:id"
+                element={
+                    <ProtectedRoutes requiredRole="client">
+                        <EditJob />
+                    </ProtectedRoutes>
+                }
+            />
             <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* <Footer/> */}
+        <Footer />
     </div>
 );
 

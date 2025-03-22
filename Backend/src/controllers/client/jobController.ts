@@ -49,7 +49,7 @@ export class JobController implements IJobController {
                 return;
             }
             
-            res.status(HttpStatus.OK).json({ job });
+            res.status(HttpStatus.OK).json({ data: job });
         } catch (error) {
             next(error)
         }
