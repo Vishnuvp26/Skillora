@@ -6,7 +6,7 @@ import ClientProfile from "@/pages/clients/ClientProfile";
 import PostJob from "@/pages/clients/PostJob";
 import ClientNav from "@/components/client/ClientNav";
 import Footer from "@/components/landing/Footer";
-import JobDetail from "@/pages/clients/JobDetails";
+import JobDetail from "@/components/job/JobDetails";
 import EditJob from "@/pages/clients/EditJob";
 
 const ClientRoutes = () => (

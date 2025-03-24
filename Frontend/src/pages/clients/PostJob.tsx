@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { fetchSkills } from "@/api/admin/skillsApi";
 import { fetchCategories } from "@/api/admin/categoryApi";
 import { useNavigate } from "react-router-dom";
+import { Textarea } from "@/components/ui/textarea";
 
 const PostJob = () => {
 
@@ -48,7 +49,7 @@ const PostJob = () => {
         );
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement >) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -100,11 +101,11 @@ const PostJob = () => {
                     </div>
                     <div className="mt-5">
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Description</label>
-                        <Input
-                            type="text"
+                        <Textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
+                            rows={3}
                             className="text-xs placeholder:text-gray-500 mt-1.5 h-16 border border-gray-400 dark:border-gray-800"
                             placeholder="Eg: Looking for a designer experienced in Figma"
                         />

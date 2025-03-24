@@ -11,7 +11,7 @@ export interface IJob extends Document {
     skills: mongoose.Types.ObjectId[]
     applicants: number
     hiredFreelancer?: mongoose.Types.ObjectId
-    status: "Open" | "Closed" | "Completed";
+    status: "Open" | "Ongoing" | "Closed";
 }
 
 const JobSchema: Schema = new Schema<IJob>(
@@ -64,7 +64,7 @@ const JobSchema: Schema = new Schema<IJob>(
         status: { 
             type: String, 
             required: true, 
-            enum: ["Open", "Closed", "Completed"], 
+            enum: ["Open", "Ongoing", "Closed"], 
             default: "Open" 
         }
     },

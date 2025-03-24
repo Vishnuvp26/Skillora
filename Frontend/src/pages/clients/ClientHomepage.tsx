@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Job } from "@/types/Types";
-import JobsList from "@/components/JobsList/JobsList";
+import JobsList from "@/components/job/JobsList";
 import Spinner from "@/components/ui/Spinner";
 
 const ClientHomepage = () => {
@@ -21,7 +21,10 @@ const ClientHomepage = () => {
         const getMyJobs = async () => {
             try {
                 const response = await fetchMyJobs(userId);
-                setJobs(response.jobs || []);
+                const sortedJobs = (response.jobs || []).sort(
+                    (a: Job, b: Job) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                setJobs(sortedJobs);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -30,7 +33,7 @@ const ClientHomepage = () => {
         };
         getMyJobs();
     }, [userId]);
-
+    
     return (
         <div className="min-h-screen dark:bg-gray-950 flex flex-col items-center">
             <div className="w-full max-w-6xl px-6 mt-6">
@@ -57,7 +60,11 @@ const ClientHomepage = () => {
                     </div>
                 
                 ) : (
-                    <JobsList jobs={jobs} visibleJobs={visibleJobs} setVisibleJobs={setVisibleJobs} />
+                    <JobsList
+                        jobs={jobs}
+                        visibleJobs={visibleJobs}
+                        setVisibleJobs={setVisibleJobs}
+                    />
                 )}
             </div>
         </div>

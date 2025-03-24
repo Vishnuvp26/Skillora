@@ -1,4 +1,5 @@
 export const Messages = {
+    FAILED: "Failed to process the request",
     SERVER_ERROR: "Internel server error",
     USER_EXIST: "User already exist",
     USER_BLOCKED: "Your are blocked from Skillora",
@@ -47,10 +48,17 @@ export const Messages = {
     SKILLS_UNLISTED: "Skils unlisted successfully",
     ERROR_FETCHING_PROFILE: "Failed to fetch profile",
     ERROR_UPDATING_PROFILE: "Error updating proifle",
-    JOB_UPDATED: "Job has been updated",
     REQUIRED_ALL: "All feilds are required",
     ACCESS_DENIED: "You are not authorized to access this job.",
-    JOB_TITLE_REQUIRED: "Job title cannot be empty",
-    JOB_DESCRIPTION_REQUIRED: "Job description cannot be empty",
+    FREELANCER_ID_REQUIRED: "Freelancer ID is required",
+    ALREADY_APPLIED: "You have already applied for this job",
     JOB_RATE_LIMIT: "Job rate must be greater than zero",
+    JOB_DESCRIPTION_REQUIRED: "Job description cannot be empty",
+    JOB_TITLE_REQUIRED: "Job title cannot be empty",
+    JOB_ID_REQUIRED: "Job ID is required",
+    JOB_UPDATED: "Job has been updated",
+    JOB_APPLICATION_SUCCESS: "Job application submitted successfully",
+    JOB_CLOSED: "Job is closed, or hired someone",
+    JOB_APPLICATION_REQUIRED: "Job application id required or missing",
+    JOB_APPLICATION_CANCELLED: "Job application request has been cancelled"
 }

@@ -1,4 +1,3 @@
-import FreelancerNav from "@/components/freelancer/FreelancerNav";
 import { Button } from "@/components/ui/button";
 // import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TfiPencil } from "react-icons/tfi";
@@ -68,8 +67,7 @@ const FreelancerProfile = () => {
     };
 
     return (
-        <div className="min-h-screen dark:bg-gray-950 flex justify-center p-6">
-            <FreelancerNav />
+        <div className="min-h-screen dark:bg-gray-950 flex justify-center p-6 mt-5">
             <div className="w-full max-w-6xl bg-white dark:bg-gray-950 rounded-xl border border-gray-300 dark:border-gray-800 p-8 mt-16">
                 {/* SECTION 1 */}
                 <div className="relative flex flex-col md:flex-row justify-between items-center md:items-start">

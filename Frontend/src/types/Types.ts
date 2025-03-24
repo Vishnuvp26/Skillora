@@ -111,6 +111,7 @@ export interface Job {
     };
     skills: { _id: string; name: string }[];
     createdAt: Date;
+    applicants: number
 }
 
 export interface JobsListProps {
@@ -138,4 +139,20 @@ export type JobType = {
     skills: { _id: string; name: string }[];
     createdAt: string;
     applicants: number
+};
+
+export interface Job {
+    _id: string;
+    title: string;
+    description: string;
+    rate: number;
+    experienceLevel: string;
+};
+
+export interface Application {
+    _id: string;
+    jobId: Job;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
 };

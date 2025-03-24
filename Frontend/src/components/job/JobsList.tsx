@@ -1,4 +1,4 @@
-import { Eye, X } from "lucide-react";
+import { Eye, Users, X } from "lucide-react";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -6,8 +6,11 @@ import { JobsListProps } from "@/types/Types";
 import { IoPricetagOutline } from "react-icons/io5";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
 
 const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
+    const userRole = useSelector((state: RootState) => state.user.role)
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const descriptionLimit = 100;
@@ -23,7 +26,11 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
             {jobs.length > 0 ? (
                 <div className="flex flex-col gap-5 mt-1.5">
                     <div className="flex justify-between items-center flex-wrap gap-3">
-                        <h2 className="text-xl font-semibold">Your Jobs</h2>
+                        {userRole === "client" ? (
+                            <h2 className="text-xl font-semibold">Your Jobs</h2>
+                        ) : (
+                            <h2 className="text-xl font-semibold">Find Jobs</h2>
+                        )}
                         <div className="w-full sm:w-72 md:w-96 lg:max-w-[600px] relative">
                             <input
                                 type="text"
@@ -50,17 +57,35 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                             >
                                 <div className="flex justify-between items-center">
                                     <h5 className="font-semibold">{job.title}</h5>
-                                    <Eye className="w-5 h-5 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300" onClick={() => navigate(`/client/job/view-job/${job._id}`)}/>
+
+                                    <div className="flex items-center gap-3">
+                                        {userRole === "client" && job.applicants > 0 && (
+                                            <div className="flex items-center gap-1 text-gray-500 dark:text-gray-300">
+                                                <Users className="w-4 h-4" />
+                                                <span className="text-sm font-medium">{job.applicants}</span>
+                                            </div>
+                                        )}
+                                        <Eye
+                                            className="w-5 h-5 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300"
+                                            onClick={() =>
+                                                navigate(
+                                                    userRole === "client"
+                                                        ? `/client/job/view-job/${job._id}`
+                                                        : `/freelancer/job/view-job/${job._id}`
+                                                )
+                                            }
+                                        />
+                                    </div>
                                 </div>
-                                <p className="flex items-center text-sm text-gray-500 mt-3">
+                                <p className="flex items-center text-sm text-gray-600 mt-3">
                                     <IoPricetagOutline className="mr-2 text-yellow-600" />
                                     Budget: ₹{job.rate}
                                 </p>
-                                <p className="flex items-center text-sm text-gray-500 mt-1">
+                                <p className="flex items-center text-sm text-gray-600 mt-1">
                                     <SiLevelsdotfyi className="mr-2 text-green-600" />
                                     {job.experienceLevel}
                                 </p>
-                                <p className="text-sm text-gray-500 mt-1">Category: {job.category?.name}</p>
+                                <p className="text-sm text-gray-600 mt-1">Category: {job.category?.name}</p>
                                 <p className="text-gray-900 dark:text-gray-300 text-sm mt-1">
                                     {expanded === job._id
                                         ? job.description
@@ -76,16 +101,6 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                                         </span>
                                     )}
                                 </p>
-                                <div className="flex flex-wrap gap-2 mt-3">
-                                    {job.skills.map((skill) => (
-                                        <span
-                                            key={skill._id}
-                                            className="px-3 py-1 text-xs border rounded-full bg-gray-200 dark:bg-gray-800 dark:text-white text-gray-700"
-                                        >
-                                            {skill.name}
-                                        </span>
-                                    ))}
-                                </div>
                                 <p className="text-sm mt-3 text-gray-500">
                                     Posted on: {dayjs(job.createdAt).format("DD MMM YYYY")}
                                 </p>

@@ -25,6 +25,7 @@ const EditJob = () => {
         description: "",
         rate: "",
         experienceLevel: "",
+        status: "",
         location: "",
         category: "",
     });
@@ -39,6 +40,7 @@ const EditJob = () => {
                     description: job.description,
                     rate: job.rate.toString(),
                     experienceLevel: job.experienceLevel,
+                    status: job.status,
                     location: job.location,
                     category: job.category._id,
                 });
@@ -80,6 +82,7 @@ const EditJob = () => {
             description: formData.description,
             rate: Number(formData.rate),
             experienceLevel: formData.experienceLevel,
+            status: formData.status,
             location: formData.location,
             category: formData.category,
             skills: selectedSkills,
@@ -88,7 +91,7 @@ const EditJob = () => {
             const response = await updateJob(id!, jobData);
             console.log("Job updated successfully:", response);
             toast.success("Job updated successfully!");
-            setTimeout(() => navigate("/client/home"), 2000);
+            setTimeout(() => navigate("/client/home"), 1000);
         } catch (error: any) {
             console.error("Error updating job:", error);
             toast.error(error.error);
@@ -148,6 +151,19 @@ const EditJob = () => {
                                 <SelectItem value="Beginner">Beginner</SelectItem>
                                 <SelectItem value="Intermediate">Intermediate</SelectItem>
                                 <SelectItem value="Expert">Expert</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="mt-5">
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Job Status</label>
+                        <Select onValueChange={(value) => setFormData({ ...formData, status: value })} value={formData.status}>
+                            <SelectTrigger className="border-gray-400 dark:border-gray-800 h-11 mt-1.5">
+                                <SelectValue placeholder="Select job status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="Open">Open</SelectItem>
+                                <SelectItem value="Ongoing">Ongoing</SelectItem>
+                                <SelectItem value="Closed">Closed</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import FreelancerNav from "@/components/freelancer/FreelancerNav";
 import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/test2.png";
-import Footer from "@/components/landing/Footer";
 import heroImage2 from "@/assets/test3.png";
 import { ArrowUp } from "lucide-react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { useNavigate } from "react-router-dom";
 
 const FreelancerHomepage = () => {
     const userName = useSelector((state: RootState) => state.user.name);
@@ -25,9 +24,10 @@ const FreelancerHomepage = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    const navigate = useNavigate()
+
     return (
         <div className="min-h-screen dark:bg-gray-950">
-            <FreelancerNav />
             <div className="flex justify-between items-center p-6 mt-16">
                 <h1 className="text-2xl font-semibold">
                     <span className="text-black dark:text-white">Welcome, </span>
@@ -53,11 +53,10 @@ const FreelancerHomepage = () => {
                     <p className="mt-4 text-base text-gray-700 dark:text-gray-300">
                         Focus on your passion while Skillora connects you with top clients. Join our global network of skilled freelancers and work in a secure, hassle-free environment.
                     </p>
-                    <Button className="bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg mt-6
+                    <Button onClick={() => navigate('/freelancer/jobs')} className="bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg mt-6
                    dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:text-black">
                         Start Now
                     </Button>
-
                 </div>
             </section>
 
@@ -127,10 +126,6 @@ const FreelancerHomepage = () => {
                         </AccordionItem>
                     </Accordion>
                 </div>
-            </section>
-            
-            <section>
-                <Footer />
             </section>
 
             {/* Go to Top */}

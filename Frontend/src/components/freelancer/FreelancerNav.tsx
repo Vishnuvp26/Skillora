@@ -7,7 +7,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
 import { useDispatch } from "react-redux";
-// import { RootState } from "@/redux/store/store";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
@@ -64,10 +63,16 @@ const FreelancerNav: React.FC = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
-                            <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => navigate('/freelancer/jobs')}
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                            >
                                 Find Work
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => navigate('/freelancer/saved-jobs')}
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                            >
                                 Saved Jobs
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -80,11 +85,21 @@ const FreelancerNav: React.FC = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
-                            <DropdownMenuItem className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => navigate('/freelancer/jobs/applied-jobs')}
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                            >
+                                Applied Jobs
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onSelect={() => navigate('/freelancer/contracts')}
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                            >
                                 Active Contract
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
+
                     <Button variant="ghost">Messages</Button>
                 </div>
 

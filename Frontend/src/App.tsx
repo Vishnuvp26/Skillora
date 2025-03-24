@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
 import Spinner from "./components/ui/Spinner";
+import Scroll from "./components/scroll/Scroll";
 const AuthRoutes = lazy(() => import("@/routes/AuthRoutes"));
 const FreelancerRoutes = lazy(() => import("@/routes/FreelancerRoutes"));
 const ClientRoutes = lazy(() => import("@/routes/ClientRoutes"));
@@ -13,6 +14,7 @@ const App = () => {
         <ThemeProvider>
             <Toaster position="top-right" reverseOrder={false} />
             <Router>
+                <Scroll />
                 <Suspense fallback={<Spinner />}>
                     <Routes>
                         <Route path="/*" element={<AuthRoutes />} />

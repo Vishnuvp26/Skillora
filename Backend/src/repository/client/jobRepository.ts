@@ -20,6 +20,7 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
             .populate("skills", "name")
             .populate("clientId", "name email")
             .populate("hiredFreelancer", "name email")
+            .sort({ createdAt: -1 })
             .exec();
 
         console.log("POPULATED JOBS:", jobs);
@@ -57,15 +58,25 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
     };
 
     async getJobsByClientId(userId: string): Promise<IJob[]> {
-        console.log("Fetching jobs for client ID:", userId);
-    
         const jobs = await this.model.find({ clientId: new mongoose.Types.ObjectId(userId) })
             .populate("category", "name")
             .populate("skills", "name")
             .populate("hiredFreelancer", "name email")
             .exec();
-    
-        console.log("Jobs found:", jobs.length);
         return jobs;
     };
+
+    async incrementApplicants(jobId: string): Promise<void> {
+        await this.model.updateOne(
+            { _id: new mongoose.Types.ObjectId(jobId) },
+            { $inc: { applicants: 1 } }
+        );
+    } 
+    
+    async decrementApplicants(jobId: string): Promise<void> {
+        await this.model.updateOne(
+            { _id: new mongoose.Types.ObjectId(jobId) },
+            { $inc: { applicants: -1 } }
+        );
+    }
 };

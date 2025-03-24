@@ -2,6 +2,7 @@ import express from 'express';
 import { JobRepository } from '../../repository/client/jobRepository';
 import { JobService } from '../../services/client/jobService';
 import { JobController } from '../../controllers/client/jobController';
+import { authenticateToken, authorizeRoles } from '../../middlewares/authMiddleware';
 
 const router = express.Router()
 
@@ -16,6 +17,8 @@ router.get(
 
 router.post(
     "/create-job/:id",
+    authenticateToken,
+    authorizeRoles('client'),
     jobController.createJob.bind(jobController)
 );
 
@@ -31,6 +34,8 @@ router.get(
 
 router.put(
     "/update-job/:id",
+    authenticateToken,
+    authorizeRoles('client'),
     jobController.updateJob.bind(jobController)
 );
 

@@ -6,4 +6,6 @@ export interface IJobRepository {
     getJobs(): Promise<IJob[]>;
     getJobById(jobId: string): Promise<IJob | null>;
     getJobsByClientId(userId: string): Promise<IJob[]>;
+    incrementApplicants(jobId: string): Promise<void>;
+    decrementApplicants(jobId: string): Promise<void>;
 }

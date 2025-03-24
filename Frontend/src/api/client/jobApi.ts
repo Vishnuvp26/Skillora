@@ -18,9 +18,9 @@ export const fetchMyJobs = async (id: string) => {
     }
 };
 
-export const fetchAllJobs = async (id: string) => {
+export const fetchAllJobs = async () => {
     try {
-        const response = await axiosInstance.get(`/api/client/job/get-jobs/${id}`)
+        const response = await axiosInstance.get(`/api/client/job/get-jobs`)
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get all jobs"
@@ -44,3 +44,12 @@ export const updateJob = async (id: string, formData: any) => {
         throw error.response?.data || "Failed to edit job"
     }
 };
+
+export const showApplicants = async (jobId: string, clientId: string) => {
+    try {
+        const response = await axiosInstance.get(`api/client/job/applicants/${jobId}/${clientId}`);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to view applicants"
+    }
+}

@@ -1,0 +1,261 @@
+import { jobDetails, showApplicants } from "@/api/client/jobApi";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { IoPricetagOutline } from "react-icons/io5";
+import { SiLevelsdotfyi } from "react-icons/si";
+import dayjs from "dayjs";
+import Spinner from "@/components/ui/Spinner";
+import { Bookmark, FileEdit } from "lucide-react";
+import { JobType } from "@/types/Types";
+import { RootState } from "@/redux/store/store";
+import { useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import toast from "react-hot-toast";
+import { applyJob } from "@/api/freelancer/applyJobApi";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+const JobDetail = () => {
+    const userRole = useSelector((state: RootState) => state.user.role)
+    const userId = useSelector((state: RootState) => state.user._id);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [job, setJob] = useState<JobType | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [open, setOpen] = useState(false);
+    const [applicants, setApplicants] = useState<any[]>([]);
+
+    // const [isApplied, setIsApplied] = useState<boolean>(() => {
+    //     return localStorage.getItem(`applied_${id}_${userId}`) === "true";
+    // });
+
+    useEffect(() => {
+        const fetchJob = async () => {
+            try {
+                const response = await jobDetails(id!);
+                setJob(response.data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchJob();
+    }, [id]);
+
+    useEffect(() => {
+        if (userRole === "client" && id && userId) {
+            const fetchApplicants = async () => {
+                try {
+                    const response = await showApplicants(id, userId);
+                    setApplicants(response.applicants);
+                } catch (error) {
+                    console.error("Error fetching applicants:", error);
+                }
+            };
+            fetchApplicants();
+        }
+    }, [userRole, id, userId]);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
+                <Spinner />
+            </div>
+        );
+    };
+
+    if (!job) return <p>Job not found</p>;
+
+    const handleEdit = () => {
+        navigate(`/client/job/edit-job/${job?._id}`);
+    };
+
+    const handleApplyJob = async () => {
+        if (!job || !id) return;
+        if (userRole !== "freelancer") {
+            toast.error("Only freelancers can apply for jobs.");
+            return;
+        }
+    
+        try {
+            const response = await applyJob(id, userId);
+            toast.success(response.message);
+            setOpen(false);
+            localStorage.setItem(`applied_${id}_${userId}`, "true");
+        } catch (error: any) {
+            console.error("Error applying for job:", error);
+            toast.error(error.error);
+        }
+    };
+
+    return (
+        <div className="p-5 mt-16 max-w-6xl mx-auto">
+            <div className="rounded-lg p-6 bg-white dark:bg-gray-950">
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-2xl font-bold">{job.title}</h1>
+                    <div className="flex items-center gap-3">
+                        <span
+                            className={`px-3 py-1 text-sm rounded-full 
+                            ${job.status === "Open"
+                                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                                    : job.status === "Ongoing"
+                                        ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400"
+                                        : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                                }`}
+                        >
+                            {job.status}
+                        </span>
+
+                        {userRole === "client" && (
+                            <button
+                                onClick={handleEdit}
+                                className="flex items-center gap-2 px-3 py-1 text-sm rounded-lg 
+                                border border-gray-300 hover:border-gray-400 
+                                dark:border-gray-700 dark:hover:border-gray-600
+                                transition-colors duration-200"
+                            >
+                                <FileEdit className="w-4 h-4" />
+                                <span>Edit Job</span>
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    {/* Client Info */}
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                        <span className="font-medium">Posted by:</span>
+                        <span className="ml-2">{job.clientId?.name}</span>
+                    </div>
+
+                    {/* Main Details */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 py-4 border-y dark:border-gray-800">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <IoPricetagOutline className="mr-2 text-yellow-600" />
+                            <span>Budget: ₹{job.rate}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <SiLevelsdotfyi className="mr-2 text-green-600" />
+                            <span>{job.experienceLevel}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <span className="font-medium">Location:</span>
+                            <span className="ml-2">{job.location}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <span className="font-medium">Category:</span>
+                            <span className="ml-2">{job.category.name}</span>
+                        </div>
+                    </div>
+
+                    {/* Description */}
+                    <div className="space-y-2">
+                        <h2 className="text-lg font-semibold">Description</h2>
+                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                            {job.description}
+                        </p>
+                    </div>
+
+                    {/* Skills */}
+                    <div className="space-y-2">
+                        <h2 className="text-lg font-semibold">Required Skills</h2>
+                        <div className="flex flex-wrap gap-2">
+                            {job.skills.map((skill) => (
+                                <span
+                                    key={skill._id}
+                                    className="px-3 py-1 text-xs border rounded-full bg-gray-200 dark:bg-gray-800 dark:text-white text-gray-700"
+                                >
+                                    {skill.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex justify-between items-center text-sm text-gray-500 pt-4">
+                        <p>
+                            {userRole === "client" ? `Applications: ${job.applicants}` : `Posted on: ${dayjs(job.createdAt).format("DD MMM YYYY")}`}
+                        </p>
+                        {userRole === "client" && <p>Posted on: {dayjs(job.createdAt).format("DD MMM YYYY")}</p>}
+                    </div>
+
+                    <hr />
+                    
+                    {/* Applicants Section */}
+                    {userRole === "client" && applicants.length > 0 && (
+                        <div className="pt-6">
+                            <h2 className="text-lg font-semibold">Applicants</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-600">showing {applicants.length} out of {applicants.length}</p>
+                            <div className="space-y-4">
+                                {applicants.map((applicant) => (
+                                    <div
+                                        key={applicant._id}
+                                        className="p-4 border rounded-md bg-gray-100 dark:bg-gray-900 mt-4"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <img
+                                                src={applicant.freelancerId.profilePic || "/default-profile.png"}
+                                                alt={applicant.freelancerId.firstName}
+                                                className="w-12 h-12 rounded-full"
+                                            />
+                                            <div>
+                                                <h3 className="text-md font-medium">
+                                                    {applicant.freelancerId.firstName}
+                                                </h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                    {applicant.freelancerId.title || "No title provided"}
+                                                </p>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                    🏅 {applicant.freelancerId.experienceLevel}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Buttons for freelancers */}
+                    {userRole === "freelancer" && (
+                        <div className="flex flex-col sm:flex-row sm:justify-end items-center gap-3 mt-12 sm:mt-[0px]">
+                            <Button
+                                onClick={() => console.log("Save Job clicked")}
+                                className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-[#0077B6] text-[#0077B6] bg-transparent 
+                            hover:bg-[#0077B611] hover:text-[#0077B6] 
+                            dark:border-[#e2e2e2] dark:text-[#e2e2e2] dark:hover:bg-[#00ffe500] dark:hover:text-[#64f3bcbf] w-full sm:w-auto"
+                            >
+                                <Bookmark className="w-4 h-4" />
+                                Save Job
+                            </Button>
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        className="px-4 py-2 text-sm font-medium bg-[#0077B6] hover:bg-[#005f8c] text-white rounded-lg 
+                                        dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:text-black w-full sm:w-auto"
+                                    >
+                                        Apply This Job
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-[90%] sm:max-w-md rounded-lg p-6">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-lg font-semibold">Confirm Job Application</DialogTitle>
+                                        <DialogDescription>
+                                            Are you sure you want to apply for this job? Once applied, you won't be able to withdraw immediately.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter className="flex justify-end gap-3">
+                                        <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                                        <Button onClick={handleApplyJob}>
+                                            Confirm & Apply
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default JobDetail;
