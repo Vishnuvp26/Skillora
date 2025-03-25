@@ -49,6 +49,8 @@ export class ProfileRepository extends BaseRepository<IFreelancer> implements IP
                 profilePic: profileData.profilePic || existingProfile?.profilePic,
                 profileCompleted: true,
             };
+
+            console.log("📌 Updating profile with:", updateFields);
     
             return await this.model
                 .findOneAndUpdate({ userId }, { $set: updateFields }, { new: true, upsert: true })

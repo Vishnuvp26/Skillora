@@ -195,9 +195,13 @@ const JobDetail = () => {
                                                 src={applicant.freelancerId.profilePic || "/default-profile.png"}
                                                 alt={applicant.freelancerId.firstName}
                                                 className="w-12 h-12 rounded-full"
+                                                onClick={() => navigate(`/client/job/applied-freelancer/${applicant.freelancerId.userId}`)}
                                             />
                                             <div>
-                                                <h3 className="text-md font-medium">
+                                                <h3
+                                                    className="text-md font-medium cursor-pointer"
+                                                    onClick={() => navigate(`/client/job/applied-freelancer/${applicant.freelancerId.userId}`)}
+                                                >
                                                     {applicant.freelancerId.firstName}
                                                 </h3>
                                                 <p className="text-sm text-gray-600 dark:text-gray-400">

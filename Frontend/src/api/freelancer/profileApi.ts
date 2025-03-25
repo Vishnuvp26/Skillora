@@ -1,4 +1,4 @@
-import { IFreelancer } from "@/types/Types";
+// import { IFreelancer } from "@/types/Types";
 import Axios, { axiosInstance } from "../axios/axiosInstance"
 
 export const getProfile = async (id: string) => {
@@ -10,7 +10,7 @@ export const getProfile = async (id: string) => {
     }
 };
 
-export const updateProfile = async (id: string, profileData: Partial<IFreelancer>) => {
+export const updateProfile = async (id: string, profileData: any) => {
     try {
         const response = await Axios.put(`/api/freelancer/profile/update-profile/${id}`, profileData);
         return response.data;

@@ -29,7 +29,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         employmentHistory: profile?.employmentHistory?.length
             ? profile.employmentHistory
             : [{ company: "", position: "", duration: "" }],
-        socialLinks: profile?.linkedAccounts || { github: "", linkedIn: "", website: "" },
+        linkedAccounts: profile?.linkedAccounts || { github: "", linkedIn: "", website: "" },
         city: profile?.city || "",
         language: profile?.language || [],
     });
@@ -135,6 +135,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         if (Object.keys(validationErrors).length > 0) return;
 
         try {
+            console.log('FORM DATA BEFORE SUMBIT', formData);
             const updatedData = await updateProfile(userId, formData);
             console.log("Profile updated successfully:", updatedData);
             toast.success('Profile updted successfully')
@@ -342,9 +343,9 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                     <div>
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Social Links</label>
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <Input className="text-xs placeholder:text-xs" placeholder="GitHub" value={formData.socialLinks.github} onChange={(e) => setFormData((prev) => ({ ...prev, socialLinks: { ...prev.socialLinks, github: e.target.value } }))} />
-                            <Input className="text-xs placeholder:text-xs" placeholder="LinkedIn" value={formData.socialLinks.linkedIn} onChange={(e) => setFormData((prev) => ({ ...prev, socialLinks: { ...prev.socialLinks, linkedIn: e.target.value } }))} />
-                            <Input className="text-xs placeholder:text-xs" placeholder="Website" value={formData.socialLinks.website} onChange={(e) => setFormData((prev) => ({ ...prev, socialLinks: { ...prev.socialLinks, website: e.target.value } }))} />
+                            <Input className="text-xs placeholder:text-xs" placeholder="GitHub" value={formData.linkedAccounts.github} onChange={(e) => setFormData((prev) => ({ ...prev, linkedAccounts: { ...prev.linkedAccounts, github: e.target.value } }))} />
+                            <Input className="text-xs placeholder:text-xs" placeholder="LinkedIn" value={formData.linkedAccounts.linkedIn} onChange={(e) => setFormData((prev) => ({ ...prev, linkedAccounts: { ...prev.linkedAccounts, linkedIn: e.target.value } }))} />
+                            <Input className="text-xs placeholder:text-xs" placeholder="Website" value={formData.linkedAccounts.website} onChange={(e) => setFormData((prev) => ({ ...prev, linkedAccounts: { ...prev.linkedAccounts, website: e.target.value } }))} />
                         </div>
                     </div>
 

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { cancelApplication, viewAppliedJobs } from "@/api/freelancer/applyJobApi";
 import Spinner from "@/components/ui/Spinner";
-import { Eye, XCircle } from "lucide-react";
+import { Eye, X, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Application } from "@/types/Types";
@@ -73,9 +73,14 @@ const AppliedJobs = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
+                        {searchTerm && (
+                            <X
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 cursor-pointer hover:text-gray-700"
+                                onClick={() => setSearchTerm("")}
+                            />
+                        )}
                     </div>
                 </div>
-
                 {filteredApplications.length > 0 ? (
                     <div className="flex flex-col gap-5 mt-9">
                         {filteredApplications.slice(0, visibleJobs).map((application) => (
