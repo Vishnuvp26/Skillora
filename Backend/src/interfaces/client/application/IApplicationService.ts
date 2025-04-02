@@ -6,4 +6,5 @@ export interface IApplicationService {
     getFreelancerApplications(freelancerId: string): Promise<IApplication[]>;
     getJobApplicants(jobId: string, clientId: string): Promise<IApplication[]>;
     // getApplicantDetails(applicationId: string, clientId: string): Promise<IApplication>;
+    getApplicationDetail(jobId: string, freelancerId: string): Promise<IApplication | null>;
 };

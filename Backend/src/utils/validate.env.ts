@@ -31,4 +31,10 @@ export default function validateEnv() {
     if (!env.CLOUDINARY_API_SECRET) {
         throw new Error('CLOUDINARY_API_SECRET is not defined in env')
     }
+    if (!env.STRIPE_SECRET_KEY) {
+        throw new Error('STRIPE_SECRET_KEY is not defined in env')
+    }
+    if (!env.STRIPE_WEBHOOK_SECRET) {
+        throw new Error('STRIPE_WEBHOOK_SECRET is not defined in env')
+    }
 }

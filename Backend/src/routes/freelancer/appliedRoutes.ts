@@ -26,4 +26,9 @@ router.get(
     applicationController.getFreelancerApplication.bind(applicationController)
 );
 
+router.get(
+    "/applied-status/:jobId/:freelancerId",
+    applicationController.getJobApplicationDetails.bind(applicationController)
+)
+
 export default router;

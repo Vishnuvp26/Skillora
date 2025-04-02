@@ -11,6 +11,7 @@ import AdminLogin from "@/components/admin/AdminLogin";
 import AdminProtected from "@/components/protectedRoutes/AdminProtected";
 import NotFound from "@/components/error/NotFound";
 import { RootState } from "@/redux/store/store";
+import ContractDetails from "@/pages/admin/ContractDetails";
 
 const AdminRoutes = () => {
     const user = useSelector((state: RootState) => state.user);
@@ -51,6 +52,14 @@ const AdminRoutes = () => {
                 element={
                     <AdminProtected requiredRole="admin">
                         <Contracts />
+                    </AdminProtected>
+                } 
+            />
+            <Route 
+                path="/contracts/:contractId" 
+                element={
+                    <AdminProtected requiredRole="admin">
+                        <ContractDetails />
                     </AdminProtected>
                 } 
             />

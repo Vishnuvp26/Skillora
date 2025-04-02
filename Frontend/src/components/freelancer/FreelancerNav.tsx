@@ -6,10 +6,11 @@ import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
+import { RootState } from "@/redux/store/store";
 
 const FreelancerNav: React.FC = () => {
     
@@ -17,8 +18,8 @@ const FreelancerNav: React.FC = () => {
     if (!themeContext) return null;
     const { theme, toggleTheme } = themeContext;
 
-    // const userName = useSelector((state: RootState) => state.user.name);
-    // const userRole = useSelector((state: RootState) => state.user.role)
+    const userName = useSelector((state: RootState) => state.user.name);
+    const userRole = useSelector((state: RootState) => state.user.role)
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
@@ -120,18 +121,18 @@ const FreelancerNav: React.FC = () => {
                         <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
             
                             {/* User Info Section */}
-                            <div className="flex items-center border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
                                 {/* <img
                                     src="https://via.placeholder.com/40" // Replace with actual user image URL
                                     alt="User Avatar"
                                     className="w-10 h-10 rounded-full"
                                 /> */}
-                                {/* <div>
+                                <div>
                                     <p className="text-sm font-medium text-gray-900 dark:text-white" onClick={() => navigate('/freelancer/profile')}>
                                         {userName}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">{userRole}</p>
-                                </div> */}
+                                </div>
                             </div>
 
                             {/* Profile & Logout Options */}

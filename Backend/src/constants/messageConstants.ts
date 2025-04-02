@@ -60,5 +60,16 @@ export const Messages = {
     JOB_APPLICATION_SUCCESS: "Job application submitted successfully",
     JOB_CLOSED: "Job is closed, or hired someone",
     JOB_APPLICATION_REQUIRED: "Job application id required or missing",
-    JOB_APPLICATION_CANCELLED: "Job application request has been cancelled"
+    JOB_APPLICATION_CANCELLED: "Job application request has been cancelled",
+    MISSING_PARAMETERS: "Missing required parameters. Please provide all necessary fields.",
+    CONTRACT_CREATE: "Job contract has been created",
+    CONTRACT_CANCELLED: "Your job contract has been cancelled",
+    CONTRACT_APPROVE: "Contract has been approved",
+    CONTRACT_REJECTED: "Contract has been rejected",
+    CONTRACT_STATUS_UPDATED: "Contract status changed",
+    CONTRACT_STATUS_UPDATE_FAILED: "Contract status changing has failed",
+    CONTRACT_NOT_FOUND: "Contract not found or existed",
+    CONTRACT_EXIST: "Contract is already exist",
+    NO_JOB_FOUND: "Job not found",
+    FREELANCER_NOT_APPLIED: "Freelancers not applied",
 }

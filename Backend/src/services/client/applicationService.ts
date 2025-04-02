@@ -32,6 +32,7 @@ export class ApplicationService implements IApplicationService {
         const application: IApplication = {
             jobId: new mongoose.Types.ObjectId(jobId),
             freelancerId: new mongoose.Types.ObjectId(freelancerId),
+            isApplied: true,
             status: "Pending"
         } as IApplication;
 
@@ -77,4 +78,8 @@ export class ApplicationService implements IApplicationService {
     async getFreelancerApplications(freelancerId: string): Promise<IApplication[]> {
         return await this._applicationRepository.getApplicationsByFreelancer(freelancerId);
     };
+
+    async getApplicationDetail(jobId: string, freelancerId: string): Promise<IApplication | null> {
+        return await this._applicationRepository.findOne({jobId, freelancerId})
+    }
 };

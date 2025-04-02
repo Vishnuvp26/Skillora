@@ -3,6 +3,13 @@ import { IJobController } from "../../interfaces/client/job/IJobController";
 import { IJobService } from "../../interfaces/client/job/IJobService";
 import { HttpStatus } from "../../constants/statusContstants";
 import { Messages } from "../../constants/messageConstants";
+import mongoose from "mongoose";
+import { env } from "../../config/env.config";
+import Stripe from "stripe";
+
+const stripe = new Stripe(env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2025-02-24.acacia"
+});
 
 export class JobController implements IJobController {
     constructor(private _jobService: IJobService) { }
@@ -100,4 +107,70 @@ export class JobController implements IJobController {
             next(error)
         }
     };
+
+    async stripePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { jobId } = req.params;
+            const clientId = (req as any).user?.id;
+            const { title, rate, freelancerId } = req.body; 
+    
+            console.log("Client ID:", clientId);
+            console.log("Job ID:", jobId);
+            console.log("Title:", title);
+            console.log("Price:", rate);
+            console.log("Freelancer ID:", freelancerId); 
+    
+            if (!clientId) {
+                res.status(HttpStatus.UNAUTHORIZED).json({ message: "Client not found" });
+                return;
+            }
+    
+            if (!freelancerId) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: "Freelancer ID is required" });
+                return;
+            }
+    
+            if (!mongoose.Types.ObjectId.isValid(jobId)) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.INVALID_ID });
+                return;
+            }
+    
+            const job = await this._jobService.getJobById(jobId);
+            if (!job) {
+                res.status(HttpStatus.NOT_FOUND).json({ message: Messages.JOB_NOT_FOUND });
+                return;
+            }
+    
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ["card"],
+                line_items: [
+                    {
+                        price_data: {
+                            currency: "inr",
+                            product_data: {
+                                name: title
+                            },
+                            unit_amount: Math.round(rate * 100)
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: "payment",
+                success_url: `${env.CLIENT_URL}/client/contract/payment-success`,
+                cancel_url: `${env.CLIENT_URL}/client/jobs/home?cancelled=true`,
+                metadata: {
+                    jobId: jobId,
+                    clientId: clientId,
+                    freelancerId: freelancerId  
+                },
+            });
+    
+            console.log('✅ STRIPE SESSION CREATED');
+            res.json({ id: session.id });
+    
+        } catch (error) {
+            console.log('❌ Stripe payment error: ', error);
+            next(error);
+        }
+    };     
 }

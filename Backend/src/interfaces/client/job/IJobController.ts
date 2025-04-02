@@ -6,4 +6,5 @@ export interface IJobController {
     getJobs(req: Request, res: Response, next: NextFunction): Promise<void>;
     getJobById(req: Request, res: Response, next: NextFunction): Promise<void>;
     getClientJobs(req: Request, res: Response, next: NextFunction): Promise<void>;
+    stripePayment(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

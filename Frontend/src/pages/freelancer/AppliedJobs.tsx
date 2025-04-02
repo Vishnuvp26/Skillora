@@ -24,6 +24,7 @@ const AppliedJobs = () => {
             try {
                 const response = await viewAppliedJobs(userId);
                 setApplications(response.applications);
+                console.log('APPLICATIONS', response.applications);
             } catch (error) {
                 console.error("Failed to fetch applications:", error);
             } finally {
@@ -81,6 +82,7 @@ const AppliedJobs = () => {
                         )}
                     </div>
                 </div>
+
                 {filteredApplications.length > 0 ? (
                     <div className="flex flex-col gap-5 mt-9">
                         {filteredApplications.slice(0, visibleJobs).map((application) => (
@@ -138,16 +140,16 @@ const AppliedJobs = () => {
                                         </div>
                                     </TooltipProvider>
                                 </div>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     {application.jobId.description.slice(0, 100)}...
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Budget: ₹{application.jobId.rate}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Experience Level: {application.jobId.experienceLevel}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Status: {application.status}
                                 </p>
                             </div>
@@ -163,7 +165,7 @@ const AppliedJobs = () => {
                     </div>
                 ) : (
                     <div className="p-10 mt-4 flex flex-col items-center text-center bg-white dark:bg-gray-950">
-                        <p className="text-gray-600 mt-4">No applications found.</p>
+                        <p className="text-gray-700 dark:text-gray-400 mt-4">No applications found.</p>
                     </div>
                 )}
             </div>

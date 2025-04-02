@@ -26,3 +26,13 @@ export const viewAppliedJobs = async (freelancerId: string) => {
         throw error.response?.data || "Failed to get applied jobs"
     }
 };
+
+export const getApplicantStatus = async (jobId: string, freelancerId: string) => {
+    
+    try {
+        const response = await axiosInstance.get(`api/freelancer/jobs/applied-status/${jobId}/${freelancerId}`);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get applicant status"
+    }
+};

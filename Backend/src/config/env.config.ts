@@ -33,5 +33,11 @@ export const env = {
     },
     get CLOUDINARY_API_SECRET() {
         return process.env.CLOUDINARY_API_SECRET
+    },
+    get STRIPE_SECRET_KEY() {
+        return process.env.STRIPE_SECRET_KEY
+    },
+    get STRIPE_WEBHOOK_SECRET() {
+        return process.env.STRIPE_WEBHOOK_SECRET
     }
 };

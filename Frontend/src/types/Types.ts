@@ -156,3 +156,36 @@ export interface Application {
     createdAt: string;
     updatedAt: string;
 };
+
+export interface IContract {
+    _id: string;
+    contractId: string;
+    jobId: {
+        _id: string;
+        title: string;
+        description: string;
+        rate: number;
+        experienceLevel: string;
+        location: string;
+        status: string;
+    };
+    clientId: {
+        _id: string;
+        name: string;
+        email: string;
+        profilePic?: string;
+    };
+    freelancerId: {
+        _id: string;
+        name: string;
+        email: string;
+        profilePic?: string;
+    };
+    isApproved: boolean;
+    status: "Pending" | "Started" | "Ongoing" | "Complete" | "Canceled";
+    amount: number;
+    escrowPaid: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+};

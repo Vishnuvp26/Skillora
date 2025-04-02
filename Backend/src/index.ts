@@ -1,13 +1,14 @@
-import express, { Application } from "express";
+import express, { application, Application } from "express";
 import { env } from "process";
 import validateEnv from "./utils/validate.env";
 import connectDB from "./config/db.config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import routes from './routes/user/userRoutes'
-import adminRoutes from './routes/admin/adminRoute'
-import clientRoutes from './routes/client/clientRoutes'
-import freelancerRoutes from './routes/freelancer/freelancerRoutes'
+import routes from './routes/user/userRoutes';
+import adminRoutes from './routes/admin/adminRoute';
+import clientRoutes from './routes/client/clientRoutes';
+import freelancerRoutes from './routes/freelancer/freelancerRoutes';
+import webhookRoutes from './routes/client/webhookRoutes';
 import { errorHandler } from "./middlewares/errorMiddleware";
 import { logger, morganMiddleware } from "./middlewares/loggerMiddleware";
 
@@ -30,7 +31,7 @@ class App {
             allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
         }));
-        this.app.use(express.json());
+        // this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(morganMiddleware);
     }
@@ -40,6 +41,8 @@ class App {
     }
 
     private initializeRoutes(): void{
+        this.app.use('/webhook', express.raw({ type: "application/json" }), webhookRoutes);
+        this.app.use(express.json());
         this.app.use('/api/auth', routes);
         this.app.use('/api/admin', adminRoutes);
         this.app.use('/api/client', clientRoutes);

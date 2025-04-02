@@ -10,16 +10,31 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 
 const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
-    const userRole = useSelector((state: RootState) => state.user.role)
+    const userRole = useSelector((state: RootState) => state.user.role);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortOption, setSortOption] = useState<"budget" | "date" | null>(null);
+    const [filterExperience, setFilterExperience] = useState<string | null>(null);
     const descriptionLimit = 100;
 
-    const filteredJobs = jobs.filter((job) =>
-        job.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     const navigate = useNavigate();
+
+    const filteredJobs = jobs
+        .filter((job) =>
+            job.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .filter((job) =>
+            filterExperience ? job.experienceLevel === filterExperience : true
+        );
+
+    const sortedJobs = [...filteredJobs].sort((a, b) => {
+        if (sortOption === "budget") {
+            return b.rate - a.rate;
+        } else if (sortOption === "date") {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+        return 0;
+    });
 
     return (
         <div className="mt-10">
@@ -49,8 +64,44 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                         </div>
                     </div>
 
-                    {filteredJobs.length > 0 ? (
-                        filteredJobs.slice(0, visibleJobs).map((job) => (
+                    {/* Sort and Filter Options */}
+                    <div className="flex flex-wrap gap-4 mt-4">
+                        <select
+                            className="border p-2 rounded-lg text-sm dark:bg-gray-950 dark:text-white"
+                            value={sortOption || ""}
+                            onChange={(e) =>
+                                setSortOption(
+                                    e.target.value === "budget"
+                                        ? "budget"
+                                        : e.target.value === "date"
+                                            ? "date"
+                                            : null
+                                )
+                            }
+                        >
+                            <option value="">Sort By</option>
+                            <option value="budget">Budget</option>
+                            <option value="date">Posted Date</option>
+                        </select>
+
+                        <select
+                            className="border p-2 rounded-lg text-sm dark:bg-gray-950 dark:text-white"
+                            value={filterExperience || ""}
+                            onChange={(e) =>
+                                setFilterExperience(
+                                    e.target.value || null
+                                )
+                            }
+                        >
+                            <option value="">Filter by Experience</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+
+                    {sortedJobs.length > 0 ? (
+                        sortedJobs.slice(0, visibleJobs).map((job) => (
                             <div
                                 key={job._id}
                                 className="border rounded-lg p-5 bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-black transition duration-200"
@@ -77,15 +128,15 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                                         />
                                     </div>
                                 </div>
-                                <p className="flex items-center text-sm text-gray-600 mt-3">
+                                <p className="flex items-center text-sm text-gray-700 dark:text-gray-400 mt-3">
                                     <IoPricetagOutline className="mr-2 text-yellow-600" />
                                     Budget: ₹{job.rate}
                                 </p>
-                                <p className="flex items-center text-sm text-gray-600 mt-1">
+                                <p className="flex items-center text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     <SiLevelsdotfyi className="mr-2 text-green-600" />
                                     {job.experienceLevel}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">Category: {job.category?.name}</p>
+                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">Category: {job.category?.name}</p>
                                 <p className="text-gray-900 dark:text-gray-300 text-sm mt-1">
                                     {expanded === job._id
                                         ? job.description
@@ -101,6 +152,21 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                                         </span>
                                     )}
                                 </p>
+                                {job.skills && job.skills.length > 0 && (
+                                    <div className="mt-3">
+                                        <h6 className="text-sm font-semibold text-gray-700 dark:text-gray-400">Skills:</h6>
+                                        <div className="flex flex-wrap gap-2 mt-1">
+                                            {job.skills.map((skill: { _id: string; name: string }) => (
+                                                <span
+                                                    key={skill._id}
+                                                    className="px-2 py-1 text-xs bg-gray-200 text-gray-800 rounded-xl dark:bg-gray-800 dark:text-gray-200"
+                                                >
+                                                    {skill.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                                 <p className="text-sm mt-3 text-gray-500">
                                     Posted on: {dayjs(job.createdAt).format("DD MMM YYYY")}
                                 </p>
@@ -110,7 +176,7 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                         <div className="text-center text-gray-500 mt-4">No results found.</div>
                     )}
 
-                    {visibleJobs < filteredJobs.length && (
+                    {visibleJobs < sortedJobs.length && (
                         <Button
                             onClick={() => setVisibleJobs((prev) => prev + 5)}
                             className="mt-4 bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg 
@@ -123,7 +189,7 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                 </div>
             ) : (
                 <div className="p-10 mt-4 flex flex-col items-center text-center bg-white dark:bg-gray-950">
-                    <p className="text-gray-600 mt-4">No job posts or contracts in progress right now</p>
+                    <p className="text-gray-700 dark:text-gray-400 mt-4">No job posts or contracts in progress right now</p>
                 </div>
             )}
         </div>

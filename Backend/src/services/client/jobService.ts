@@ -77,5 +77,4 @@ export class JobService implements IJobService {
         }
         return this._jobRepository.getJobsByClientId(userId)
     }
-
 };

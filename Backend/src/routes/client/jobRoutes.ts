@@ -39,4 +39,11 @@ router.put(
     jobController.updateJob.bind(jobController)
 );
 
+router.post(
+    "/payment/:jobId",
+    authenticateToken,
+    authorizeRoles('client'),
+    jobController.stripePayment.bind(jobController)
+);
+
 export default router;
