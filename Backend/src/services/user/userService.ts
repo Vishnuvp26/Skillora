@@ -243,5 +243,28 @@ export class UserService implements IUserService {
                 status: user.status || "active",
             },
         };
+    };
+    
+    async resetPassword(email: string, currentPassword: string, newPassword: string, confirmPassword: string): Promise<{ status: number; message: string }> {
+        const user = await this.userRepository.findByEmail(email);
+    
+        if (!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND);
+        }
+    
+        const isPasswordValid = await comparePassword(currentPassword, user.password);
+        if (!isPasswordValid) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, "Current password is incorrect.");
+        }
+    
+        if (newPassword !== confirmPassword) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, "New password and confirm password do not match.");
+        }
+    
+        const hashedPassword = await hashPassword(newPassword);
+    
+        await this.userRepository.updatePassword(email, hashedPassword);
+    
+        return { status: HttpStatus.OK, message: "Password updated successfully." };
     };    
 };

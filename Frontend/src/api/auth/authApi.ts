@@ -65,3 +65,17 @@ export const googleLogin = async (token: string, role: "client" | "freelancer") 
         throw error.response?.data || "Google login failed";
     }
 };
+
+export const requestPasswordReset = async (data: { 
+    email: string; 
+    currentPassword: string; 
+    newPassword: string; 
+    confirmPassword: string; 
+}) => {
+    try {
+        const response = await axiosInstance.post("/api/auth/reset-password", data);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Password reset request failed";
+    }
+};

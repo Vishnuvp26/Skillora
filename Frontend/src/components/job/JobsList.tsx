@@ -1,20 +1,22 @@
 import { Eye, Users, X } from "lucide-react";
 import dayjs from "dayjs";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { JobsListProps } from "@/types/Types";
 import { IoPricetagOutline } from "react-icons/io5";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
+import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
 
 const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
     const userRole = useSelector((state: RootState) => state.user.role);
+    const userId = useSelector((state: RootState) => state.user._id);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState<"budget" | "date" | null>(null);
     const [filterExperience, setFilterExperience] = useState<string | null>(null);
+    const [appliedJobs, setAppliedJobs] = useState<{ [key: string]: boolean }>({});
     const descriptionLimit = 100;
 
     const navigate = useNavigate();
@@ -35,6 +37,29 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
         }
         return 0;
     });
+
+    useEffect(() => {
+        if (userRole === "freelancer") {
+            const fetchAppliedStatus = async () => {
+                try {
+                    const appliedStatuses = await Promise.all(
+                        sortedJobs.map(async (job) => {
+                            const response = await getApplicantStatus(job._id, userId);
+                            return { jobId: job._id, isApplied: response?.application?.isApplied };
+                        })
+                    );
+                    const statusMap: { [key: string]: boolean } = {};
+                    appliedStatuses.forEach(({ jobId, isApplied }) => {
+                        statusMap[jobId] = isApplied;
+                    });
+                    setAppliedJobs(statusMap);
+                } catch (error) {
+                    console.error("Error checking applied status", error);
+                }
+            };
+            fetchAppliedStatus();
+        }
+    }, [sortedJobs, userRole, userId]);
 
     return (
         <div className="mt-10">
@@ -116,6 +141,13 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                                                 <span className="text-sm font-medium">{job.applicants}</span>
                                             </div>
                                         )}
+                                        {/* Applied Badge for Freelancer */}
+                                        {userRole === "freelancer" && appliedJobs[job._id] && (
+                                            <span className="text-xs px-2 py-1 bg-green-200 text-green-800 rounded-lg dark:bg-green-700 dark:text-white">
+                                                Applied
+                                            </span>
+                                        )}
+
                                         <Eye
                                             className="w-5 h-5 text-gray-500 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300"
                                             onClick={() =>
@@ -177,14 +209,13 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                     )}
 
                     {visibleJobs < sortedJobs.length && (
-                        <Button
+                        <p
                             onClick={() => setVisibleJobs((prev) => prev + 5)}
-                            className="mt-4 bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg 
-                            dark:bg-transparent dark:border dark:border-[#00FFE5] dark:text-[#00FFE5] 
-                            dark:hover:bg-[#00FFE511] self-center"
+                            className="mt-4 text-blue-950 px-4 py-2 
+                            dark:bg-transparent  dark:text-[#00FFE5] self-center"
                         >
                             View More
-                        </Button>
+                        </p>
                     )}
                 </div>
             ) : (

@@ -14,6 +14,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import ViewContracts from "@/pages/clients/ViewContracts";
 import ClientContractDetails from "@/pages/clients/ClientContractDetails";
 import PaymentSuccessPage from "@/pages/clients/PaymentSuccessPage";
+import ResetPassword from "@/components/resetPassword/ResetPassword";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -94,6 +95,14 @@ const ClientRoutes = () => (
                 element={
                     <ProtectedRoutes requiredRole="client">
                         <PaymentSuccessPage />
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="profile-settings"
+                element={
+                    <ProtectedRoutes requiredRole="client">
+                        <ResetPassword />
                     </ProtectedRoutes>
                 }
             />

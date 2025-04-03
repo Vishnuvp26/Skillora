@@ -33,4 +33,5 @@ export interface IUserService {
         };
     }>;
     refreshAccessToken(token: string): Promise<string>;
+    resetPassword(email: string, currentPassword: string, newPassword: string, confirmPassword: string): Promise<{ status: number; message: string }>
 };

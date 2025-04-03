@@ -29,12 +29,12 @@ export class UserController implements IUserController {
 
     async resendOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log("[DEBUG] Resend OTP request received:", req.body); // Log request payload
+            console.log("[DEBUG] Resend OTP request received:", req.body);
             const { email } = req.body;
             const response = await this._userService.resendOtp(email);
             res.status(HttpStatus.OK).json({ message: response.message });
         } catch (error) {
-            console.log("[DEBUG] Resend OTP Error:", error); // Log errors
+            console.log("[DEBUG] Resend OTP Error:", error);
             next(error);
         }
     };    
@@ -106,5 +106,16 @@ export class UserController implements IUserController {
         } catch (error) {
             next(error);
         }
+    };
+
+    async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email, currentPassword, newPassword, confirmPassword } = req.body;
+            const response = await this._userService.resetPassword(email, currentPassword, newPassword, confirmPassword);
+            res.status(HttpStatus.OK).json({ message: response.message });
+        } catch (error) {
+            next(error);
+        }
     }
+    
 };

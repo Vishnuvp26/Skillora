@@ -6,34 +6,7 @@ import useMobile from "@/hooks/useMobile";
 import { contractDetails } from "@/api/freelancer/contractApi";
 import Spinner from "@/components/ui/Spinner";
 import dayjs from "dayjs";
-
-interface IContractDetails {
-    _id: string;
-    contractId: string;
-    status: string;
-    amount: number;
-    escrowPaid: boolean;
-    clientId: {
-        _id: string;
-        name: string;
-        email: string;
-    };
-    freelancerId: {
-        _id: string;
-        name: string;
-        email: string;
-    };
-    jobId: {
-        _id: string;
-        title: string;
-        description: string;
-        rate: number;
-    };
-    isApproved: boolean;
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
+import { IContractDetails } from "@/types/Types";
 
 const ContractDetails = () => {
     const { contractId } = useParams<{ contractId: string }>();

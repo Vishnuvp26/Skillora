@@ -57,21 +57,28 @@ export default class WebhookController {
                     const platformFee = paymentAmount * 0.10;
                     const freelancerEarning = paymentAmount - platformFee;
 
+                    const contract = await Contract.findOneAndUpdate(
+                        { clientId, jobId },
+                        { $set: { status: "Started", escrowPaid: true } },
+                        { new: true, upsert: true }
+                    );
+                    
+                    if (!contract) {
+                        console.error("❌ Contract not found or couldn't be created.");
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send("Contract not found");
+                        return;
+                    }
+                    
                     await Escrow.create({
                         clientId,
                         freelancerId,
                         jobId,
+                        contractId: contract._id,
                         amount: paymentAmount,
                         platformFee,
                         freelancerEarning,
                         status: "funded"
                     });
-
-                    await Contract.findOneAndUpdate(
-                        { clientId, jobId },
-                        { $set: { status: "Started", escrowPaid: true } },
-                        { new: true }
-                    );
                 
                     console.log(`✅ Contract status updated to "Started" for job ${jobId}`);
                     res.status(HttpStatus.OK).send("Escrow funded & contract started");

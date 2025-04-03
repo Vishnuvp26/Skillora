@@ -189,3 +189,31 @@ export interface IContract {
     createdAt: string;
     updatedAt: string;
 };
+
+export interface IContractDetails {
+    _id: string;
+    contractId: string;
+    status: string;
+    amount: number;
+    escrowPaid: boolean;
+    clientId: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+    freelancerId: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+    jobId: {
+        _id: string;
+        title: string;
+        description: string;
+        rate: number;
+    };
+    isApproved: boolean;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+}

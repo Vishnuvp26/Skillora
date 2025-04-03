@@ -40,4 +40,8 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     async findByEmail(email: string): Promise<T | null> {
         return await this.model.findOne({email})
     }
+
+    async updateOne(filter: object, updateData: object): Promise<void> {
+        await this.model.updateOne(filter, { $set: updateData });
+    }    
 }

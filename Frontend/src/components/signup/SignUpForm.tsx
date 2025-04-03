@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -164,8 +164,19 @@ const SignUpForm = () => {
                                 </a>
                             </div> */}
                             {error.general && <p className="text-sm text-red-500 text-center mt-2">{error.general}</p>}
-                            <Button className="w-full h-12" type="submit" disabled={loading}>
-                                {loading ? "Please wait..." : "Sign Up"}
+                            <Button
+                                className="w-full h-12 flex items-center justify-center gap-2"
+                                type="submit"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="animate-spin w-5 h-5" />
+                                        Please wait...
+                                    </>
+                                ) : (
+                                    "Sign Up"
+                                )}
                             </Button>
                             {loading && <p className="text-sm text-gray-500 text-center mt-2">Sending OTP, please wait...</p>}
                         </form>

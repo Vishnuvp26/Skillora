@@ -22,7 +22,6 @@ const AuthRoutes = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/otp" element={<Otp />} />
             <Route path="/select-role" element={<SelectRole />} />
-
             <Route element={<ProtectedRoute />}>
                 <Route path="/signup" element={<SignUp />} />
             </Route>

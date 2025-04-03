@@ -126,3 +126,28 @@ export const validateFreelancerForm = (formData: any) => {
 
     return errors;
 };
+
+// Reset password
+export const validatePassword = (password: string, confirmPassword?: string) => {
+    const errors: { password?: string; confirmPassword?: string } = {};
+
+    if (!password) {
+        errors.password = VALIDATION_MESSAGES.PASSWORD.REQUIRED;
+    } else {
+        if (password.length < 6) errors.password = VALIDATION_MESSAGES.PASSWORD.MIN_LENGTH;
+        else if (!/[A-Z]/.test(password)) errors.password = VALIDATION_MESSAGES.PASSWORD.UPPERCASE;
+        else if (!/[a-z]/.test(password)) errors.password = VALIDATION_MESSAGES.PASSWORD.LOWERCASE;
+        else if (!/\d/.test(password)) errors.password = VALIDATION_MESSAGES.PASSWORD.NUMBER;
+        else if (!/[@$!%*?&]/.test(password)) errors.password = VALIDATION_MESSAGES.PASSWORD.SPECIAL_CHAR;
+    }
+
+    if (confirmPassword !== undefined) {
+        if (!confirmPassword) {
+            errors.confirmPassword = VALIDATION_MESSAGES.CONFIRM_PASSWORD.REQUIRED;
+        } else if (password !== confirmPassword) {
+            errors.confirmPassword = VALIDATION_MESSAGES.CONFIRM_PASSWORD.MISMATCH;
+        }
+    }
+
+    return errors;
+};

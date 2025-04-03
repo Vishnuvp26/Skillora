@@ -21,5 +21,6 @@ router.post("/login", userController.login.bind(userController));
 router.post("/logout", userController.logout.bind(userController));
 router.post('/refresh-token', userController.refreshAccessToken.bind(userController))
 router.post('/google-login', userController.googleLogin.bind(userController));
+router.post("/reset-password", userController.resetPassword.bind(userController));
 
 export default router;

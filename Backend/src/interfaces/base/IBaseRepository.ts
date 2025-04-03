@@ -9,4 +9,5 @@ export interface IBaseRepository<T extends Document> {
     findByIdAndUpdate(id: string, data: Partial<T>): Promise<T | null>;
     findByIdAndDelete(id: string): Promise<T | null>;
     findByEmail(email: string): Promise<T | null>;
+    updateOne(filter: object, updateData: object): Promise<void>
 };

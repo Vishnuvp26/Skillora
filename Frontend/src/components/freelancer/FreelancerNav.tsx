@@ -139,7 +139,7 @@ const FreelancerNav: React.FC = () => {
                             <DropdownMenuItem onClick={() => navigate('/freelancer/profile')}>
                                 <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate('/freelancer/profile-settings')}>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={handleLogout} className="text-red-500">

@@ -10,4 +10,8 @@ export class UserRepository extends BaseRepository<Iuser> implements IUserReposi
     async findByEmail(email: string): Promise<Iuser | null> {
         return await this.findOne({email})
     }
+
+    async updatePassword(email: string, hashedPassword: string): Promise<void> {
+        await this.updateOne({ email }, { password: hashedPassword });
+    }    
 }

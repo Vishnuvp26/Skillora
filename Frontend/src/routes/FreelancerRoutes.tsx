@@ -12,6 +12,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import Contracts from "@/pages/freelancer/Contracts";
 import ContractDetails from "@/pages/freelancer/ContractDetails";
+import ResetPassword from "@/components/resetPassword/ResetPassword";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -74,6 +75,14 @@ const FreelancerRoutes = () => (
                 element={
                     <ProtectedRoutes requiredRole="freelancer">
                         <ContractDetails />
+                    </ProtectedRoutes>
+                }
+            />
+            <Route
+                path="profile-settings"
+                element={
+                    <ProtectedRoutes requiredRole="freelancer">
+                        <ResetPassword />
                     </ProtectedRoutes>
                 }
             />
