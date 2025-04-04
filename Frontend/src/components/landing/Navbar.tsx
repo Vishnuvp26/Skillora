@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
                     <Button onClick={() => navigate("/")}  variant="ghost">Home</Button>
                     <Button onClick={() => navigate("/login")} variant="ghost">Find Talent</Button>
                     <Button onClick={() => navigate("/login")} variant="ghost">Find Work</Button>
-                    <Button onClick={() => navigate("")} variant="ghost">About Us</Button>
+                    <Button onClick={() => navigate("/about-us")} variant="ghost">About Us</Button>
                 </div>
 
                 {/* Right: Login, Signup, and Dark Mode Toggle (Desktop Only) */}

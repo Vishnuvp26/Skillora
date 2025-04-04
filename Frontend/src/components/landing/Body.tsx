@@ -14,7 +14,7 @@ const Body = () => {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="flex flex-col lg:flex-row items-center justify-between w-[90%] lg:w-[80%] mx-auto mt-32 lg:mt-40"
+                className="flex flex-col lg:flex-row items-center justify-between w-[90%] lg:w-[80%] mx-auto mt-32 lg:mt-36"
             >
                 {/* Left Section: Text */}
                 <motion.div

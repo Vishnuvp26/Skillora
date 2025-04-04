@@ -7,6 +7,7 @@ import SelectRole from "@/pages/common/SelectRole";
 import SignUp from "@/pages/common/SignUp";
 import ProtectedRoute from "@/components/protectedRoutes/SelectProtected";
 import { RootState } from "@/redux/store/store";
+import About from "@/pages/common/About";
 
 const AuthRoutes = () => {
     const user = useSelector((state: RootState) => state.user);
@@ -25,6 +26,7 @@ const AuthRoutes = () => {
             <Route element={<ProtectedRoute />}>
                 <Route path="/signup" element={<SignUp />} />
             </Route>
+            <Route path="/about-us" element={<About/>} />
         </Routes>
     );
 };
