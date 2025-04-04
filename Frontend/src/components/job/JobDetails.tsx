@@ -236,8 +236,33 @@ const JobDetail = () => {
                             <span className="font-medium">Category:</span>
                             <span className="ml-2">{job.category.name}</span>
                         </div>
-                    </div>
+                        {job.startDate ? (
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                <span className="font-medium">Start Date:</span>
+                                <span className="ml-2">
+                                    {new Date(job.startDate).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </span>
 
+                            </div>
+                        ) : null}
+                        {job.endDate ? (
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                <span className="font-medium">End Date:</span>
+                                <span className="ml-2">
+                                    {new Date(job.endDate).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </span>
+
+                            </div>
+                        ) : null}
+                    </div>
                     {/* Description */}
                     <div className="space-y-2">
                         <h2 className="text-lg font-semibold">Description</h2>

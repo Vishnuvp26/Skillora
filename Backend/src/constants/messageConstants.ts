@@ -27,6 +27,8 @@ export const Messages = {
     INVALID_REQUEST: "Invalid Request",
     INVALID_CREDENTIALS: "Invalid password or email",
     INVALID_GOOGLE_TOKEN: "Invalid google id token",
+    INVALID_DATE_RANGE: "End date must be after start date",
+    INVALID_START_DATE: "Start date cannot be in the past",
     PASSWORD_RESET_SUCCESS: "Your password has been reset successfully",
     PASSWORD_RESET_FAILED: "Password reset failed, try again later",
     PASSWORD_REQUIRED: "Password is required",

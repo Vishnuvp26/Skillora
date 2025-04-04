@@ -1,4 +1,4 @@
-import { Eye, Users, X } from "lucide-react";
+import { ChevronDown, Eye, Users, X } from "lucide-react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { JobsListProps } from "@/types/Types";
@@ -211,10 +211,11 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                     {visibleJobs < sortedJobs.length && (
                         <p
                             onClick={() => setVisibleJobs((prev) => prev + 5)}
-                            className="mt-4 text-blue-950 px-4 py-2 
-                            dark:bg-transparent  dark:text-[#00FFE5] self-center"
+                             className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
+                            dark:bg-transparent dark:text-[#00FFE5] self-center cursor-pointer"
                         >
                             View More
+                            <ChevronDown className="w-4 h-4" />
                         </p>
                     )}
                 </div>

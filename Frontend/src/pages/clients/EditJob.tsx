@@ -28,7 +28,14 @@ const EditJob = () => {
         status: "",
         location: "",
         category: "",
+        startDate: "",
+        endDate: "",
     });
+
+    const formatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return "";
+        return new Date(dateString).toISOString().split("T")[0];
+    };
 
     useEffect(() => {
         const loadJobDetails = async () => {
@@ -43,6 +50,8 @@ const EditJob = () => {
                     status: job.status,
                     location: job.location,
                     category: job.category._id,
+                    startDate: formatDate(job.startDate),
+                    endDate: formatDate(job.endDate),
                 });
                 setSelectedSkills(job.skills.map((skill: any) => skill._id));
             } catch (error) {
@@ -86,6 +95,8 @@ const EditJob = () => {
             location: formData.location,
             category: formData.category,
             skills: selectedSkills,
+            startDate: formData.startDate,
+            endDate: formData.endDate
         };
         try {
             const response = await updateJob(id!, jobData);
@@ -224,6 +235,33 @@ const EditJob = () => {
                                 })}
                             </div>
                         )}
+                    </div>
+                    {/* Start Date and End Date */}
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm font-semibold text-gray-900 dark:text-white">
+                                Start Date
+                            </label>
+                            <Input
+                                type="date"
+                                name="startDate"
+                                value={formData.startDate}
+                                onChange={handleChange}
+                                className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-semibold text-gray-900 dark:text-white">
+                                End Date
+                            </label>
+                            <Input
+                                type="date"
+                                name="endDate"
+                                value={formData.endDate}
+                                onChange={handleChange}
+                                className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800"
+                            />
+                        </div>
                     </div>
                     {/* Action Buttons */}
                     <div className="flex justify-center md:justify-end gap-3 mt-8">

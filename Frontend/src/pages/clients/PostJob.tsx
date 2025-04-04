@@ -12,6 +12,7 @@ import { fetchSkills } from "@/api/admin/skillsApi";
 import { fetchCategories } from "@/api/admin/categoryApi";
 import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
 
 const PostJob = () => {
 
@@ -19,6 +20,7 @@ const PostJob = () => {
     const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const userId = useSelector((state: RootState) => state.user._id);
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -26,6 +28,8 @@ const PostJob = () => {
         experienceLevel: "",
         location: "",
         category: "",
+        startDate: "",
+        endDate: "",
     });
 
     useEffect(() => {
@@ -49,7 +53,7 @@ const PostJob = () => {
         );
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement >) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -57,6 +61,7 @@ const PostJob = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
         const jobData = {
             userId,
             title: formData.title,
@@ -66,6 +71,8 @@ const PostJob = () => {
             location: formData.location,
             category: formData.category,
             skills: selectedSkills,
+            startDate: formData.startDate ? new Date(formData.startDate) : undefined,
+            endDate: formData.endDate ? new Date(formData.endDate) : undefined,
         };
         console.log("Submitting job data:", jobData);
         try {
@@ -76,6 +83,8 @@ const PostJob = () => {
         } catch (error: any) {
             console.error("Error posting job:", error);
             toast.error(error.error)
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -89,7 +98,7 @@ const PostJob = () => {
             <CardContent>
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Title</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Title *</label>
                         <Input
                             type="text"
                             name="title"
@@ -100,7 +109,7 @@ const PostJob = () => {
                         />
                     </div>
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Description</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Description *</label>
                         <Textarea
                             name="description"
                             value={formData.description}
@@ -111,7 +120,7 @@ const PostJob = () => {
                         />
                     </div>
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Budget</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Budget *</label>
                         <Input
                             type="number"
                             name="rate"
@@ -123,7 +132,7 @@ const PostJob = () => {
                         />
                     </div>
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Experience Level</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Experience Level *</label>
                         <Select onValueChange={(value) => setFormData({ ...formData, experienceLevel: value })}>
                             <SelectTrigger className="border-gray-400 dark:border-gray-800 h-11 mt-1.5" >
                                 <SelectValue placeholder="Select experience level" />
@@ -136,7 +145,7 @@ const PostJob = () => {
                         </Select>
                     </div>
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Location</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Location *</label>
                         <Input
                             type="text"
                             name="location"
@@ -147,7 +156,7 @@ const PostJob = () => {
                         />
                     </div>
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Job Category</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Job Category *</label>
                         <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}>
                             <SelectTrigger className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800">
                                 <SelectValue placeholder="Select job category" />
@@ -164,7 +173,7 @@ const PostJob = () => {
 
                     {/* Skills Selection */}
                     <div className="mt-5">
-                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Skills Required</label>
+                        <label className="text-sm font-semibold text-gray-900 dark:text-white">Skills Required *</label>
                         <div className="border rounded-lg p-7 flex flex-wrap gap-5 mt-1.5 border-gray-400 dark:border-gray-800">
                             {skillsList.map((skill) => (
                                 <div key={skill.id} className="flex items-center space-x-1">
@@ -194,15 +203,50 @@ const PostJob = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* Start Date and End Date */}
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm font-semibold text-gray-900 dark:text-white">
+                                Start Date <span className="text-gray-500 text-sm">(optional)</span>
+                            </label>
+                            <Input
+                                type="date"
+                                name="startDate"
+                                value={formData.startDate}
+                                onChange={handleChange}
+                                className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm font-semibold text-gray-900 dark:text-white">
+                                End Date <span className="text-gray-500 text-sm">(optional)</span>
+                            </label>
+                            <Input
+                                type="date"
+                                name="endDate"
+                                value={formData.endDate}
+                                onChange={handleChange}
+                                className="text-xs placeholder:text-gray-500 mt-1.5 h-11 border border-gray-400 dark:border-gray-800"
+                            />
+                        </div>
+                    </div>
                     {/* Action Buttons */}
                     <div className="flex justify-center md:justify-end gap-3 mt-8">
                         <Button onClick={() => window.history.back()}
                             type="button" className="border border-[#DC2626] text-[#DC2626] bg-transparent hover:bg-[#DC262611]">
                             Cancel
                         </Button>
-                        <Button type="submit" className="border border-[#0077B6] text-[#0077B6] bg-transparent hover:bg-[#0077B611]">
-                            Submit
+                        <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className={`border border-[#0077B6] text-[#0077B6] bg-transparent hover:bg-[#0077B611] flex items-center justify-center gap-2 ${isLoading ? 'opacity-60 cursor-not-allowed' : ''
+                                }`}
+                        >
+                            {isLoading && <Loader2 className="animate-spin w-5 h-5" />}
+                            {isLoading ? 'Submitting...' : 'Submit'}
                         </Button>
+
                     </div>
                 </form>
             </CardContent>

@@ -91,13 +91,13 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[92vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
+        <div className="flex items-center justify-center min-h-[92vh] mt-[67px] sm:mt-[40px] md:mt-16 lg:mt-12">
             <motion.div
                 className="w-[90%] sm:w-[400px] min-h-[500px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }}
             >
-                <Card className="min-h-[530px] shadow-none">
+                <Card className="min-h-[530px] shadow-none sm:mt-[6px]">
                     <CardHeader>
                         <CardTitle className="text-center">Login</CardTitle>
                     </CardHeader>

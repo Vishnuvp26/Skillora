@@ -138,7 +138,9 @@ export type JobType = {
     status: string;
     skills: { _id: string; name: string }[];
     createdAt: string;
-    applicants: number
+    applicants: number;
+    startDate?: Date;
+    endDate?: Date;
 };
 
 export interface Job {

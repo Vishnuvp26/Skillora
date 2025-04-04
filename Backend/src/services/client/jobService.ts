@@ -16,6 +16,21 @@ export class JobService implements IJobService {
             throw createHttpError(HttpStatus.CONFLICT, Messages.REQUIRED_ALL)
         }
 
+        if (jobData.startDate && jobData.endDate && jobData.endDate < jobData.startDate) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INVALID_DATE_RANGE);
+        }
+
+        if (jobData.startDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const startDate = new Date(jobData.startDate);
+            startDate.setHours(0, 0, 0, 0);
+        
+            if (startDate < today) {
+                throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INVALID_START_DATE);
+            }
+        }        
+
         jobData.clientId = new mongoose.Types.ObjectId(userId);
         jobData.applicants = 0;
         jobData.status = "Open";
@@ -55,6 +70,21 @@ export class JobService implements IJobService {
 
         if (jobData.rate !== undefined && jobData.rate < 0) {
             throw createHttpError(HttpStatus.BAD_REQUEST, Messages.JOB_RATE_LIMIT)
+        }
+
+        if (jobData.startDate && jobData.endDate && jobData.endDate < jobData.startDate) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INVALID_DATE_RANGE);
+        }
+
+        if (jobData.startDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const startDate = new Date(jobData.startDate);
+            startDate.setHours(0, 0, 0, 0);
+        
+            if (startDate < today) {
+                throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INVALID_START_DATE);
+            }
         }
 
         if (existingJob.applicants > 0) {

@@ -72,7 +72,7 @@ const SignUpForm = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[90vh] mt-[80px] sm:mt-[40px] md:mt-16 lg:mt-14">
+        <div className="flex items-center justify-center min-h-[90vh] mt-[67px] sm:mt-[40px] md:mt-16 lg:mt-14">
             <motion.div
                 className="w-[90%] sm:w-[450px] md:w-[500px]"
                 initial={{ opacity: 0, y: 20 }}
