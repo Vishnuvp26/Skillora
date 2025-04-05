@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { FaGoogle } from "react-icons/fa";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {FormData} from '../../types/Types'
 import { registerUser } from "@/api/auth/authApi";
 import { validateRegistration } from "@/utils/validation";
 import loginImage from '../../assets/test3.png';
+import googleIcon from '../../assets/google.svg'
 
 const SignUpForm = () => {
     
@@ -40,7 +40,6 @@ const SignUpForm = () => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
         
-        // Live validation
         const { errors } = validateRegistration({ ...formData, [name]: value });
         setError((prev) => ({ ...prev, [name]: errors[name] || "" }));
     };
@@ -186,7 +185,7 @@ const SignUpForm = () => {
                                 <hr className="flex-grow border-gray-300 dark:border-gray-600" />
                             </div>
                             <Button variant="outline" className="w-full flex items-center justify-center h-12">
-                                <FaGoogle className="w-5 h-5 mr-2" />
+                                <img src={googleIcon} alt="Google" className="w-5 h-5 mr-2" />
                                 Continue with Google
                             </Button>
                             <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">

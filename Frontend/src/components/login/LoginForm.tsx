@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaGoogle } from "react-icons/fa";
+import googleIcon from '../../assets/google.svg'
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -160,7 +160,7 @@ const LoginForm = () => {
                             <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
                                 <DialogTrigger asChild>
                                     <Button variant="outline" className="w-full flex items-center justify-center h-12">
-                                        <FaGoogle className="w-5 h-5 mr-2 text-red-600" />
+                                        <img src={googleIcon} alt="Google" className="w-5 h-5 mr-2" />
                                         Continue with Google
                                     </Button>
                                 </DialogTrigger>
