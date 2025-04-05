@@ -74,4 +74,10 @@ export const Messages = {
     CONTRACT_EXIST: "Contract is already exist",
     NO_JOB_FOUND: "Job not found",
     FREELANCER_NOT_APPLIED: "Freelancers not applied",
+    CURRENT_PASSWORD_WRONG: "Current password is incorrect.",
+    PASSWORD_NOT_MATCH: "New password and confirm password do not match.",
+    GOOGLE_ACCOUNT: "This account is linked with Google. Cannot reset password.",
+    RESET_LINK_SENT: "Password reset link has been sent to your email.",
+    RESET_TOKEN_INVALID: "Reset token is invalid or has expired.",
+    RESET_TOKEN_REQUIRED: "Reset toeken is required"
 }

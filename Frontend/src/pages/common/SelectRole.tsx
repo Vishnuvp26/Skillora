@@ -24,7 +24,7 @@ const SelectRole = () => {
 
     return (
         <motion.div 
-            className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-950 px-4"
+            className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-950 px-4"
         >
             <SignUpNav />
             <h2 className="text-2xl font-bold mb-6 text-center">Join as a client or freelancer</h2>

@@ -7,4 +7,6 @@ export interface IUserController {
     login(req: Request, res: Response, next: NextFunction): Promise<void>
     refreshAccessToken(req: Request, res: Response, next: NextFunction): Promise<void>
     resetPassword(req: Request, res: Response, next: NextFunction): Promise<void>
+    forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void>
+    resetPasswordWithToken(req: Request, res: Response, next: NextFunction): Promise<void>
 };

@@ -4,7 +4,6 @@ import { UserService } from "../../services/user/userService";
 import { UserController } from "../../controllers/user/userController";
 import { ProfileRepository } from "../../repository/freelancer/profileRepository";
 import { CProfileRepository } from "../../repository/client/profileRepository";
-// import { validRegistration } from '../middlewares/validationMiddleware';
 
 const router = express.Router();
 
@@ -22,5 +21,7 @@ router.post("/logout", userController.logout.bind(userController));
 router.post('/refresh-token', userController.refreshAccessToken.bind(userController))
 router.post('/google-login', userController.googleLogin.bind(userController));
 router.post("/reset-password", userController.resetPassword.bind(userController));
+router.post("/forgot-password", userController.forgotPassword.bind(userController));
+router.post("/update-new-password", userController.resetPasswordWithToken.bind(userController));
 
 export default router;

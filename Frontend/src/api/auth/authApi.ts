@@ -79,3 +79,21 @@ export const requestPasswordReset = async (data: {
         throw error.response?.data || "Password reset request failed";
     }
 };
+
+export const forgotPassword = async (email: string) => {
+    try {
+        const response = await axiosInstance.post("/api/auth/forgot-password", { email });
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get forgot password"
+    }
+};
+
+export const resetPasswordWithToken = async (token: string, newPassword: string, confirmPassword: string) => {
+    try {
+        const response = await axiosInstance.post("/api/auth/update-new-password", { token, newPassword, confirmPassword });
+        return response.data
+    } catch (error: any) {
+        throw error.response?.data || "Failed to reset password"
+    }
+};

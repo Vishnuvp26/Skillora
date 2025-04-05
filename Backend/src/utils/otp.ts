@@ -36,7 +36,6 @@ export const verifyOtp = async (email: string, otp: string): Promise<{ success: 
     const storedOtp = await redisClient.get(email);
     
     if (!storedOtp) {
-        console.log(`[DEBUG] OTP expired or not found for ${email}`);
         return { success: false, message: "OTP has expired. Please request a new one." };
     }
 

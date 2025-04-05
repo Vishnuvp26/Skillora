@@ -10,6 +10,7 @@ import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from ".
 import { verifyGoogleToken } from "../../utils/googleAuth";
 import { IProfileRepository } from "../../interfaces/freelancer/profile/IProfileRepository";
 import { IProfileRepositoryClient } from "../../interfaces/client/profile/IProfileRepository";
+import { deleteResetToken, generateAndStoreResetToken, verifyResetToken } from "../../utils/resetPassToken";
 
 export class UserService implements IUserService {
     private userRepository: IUserRepository;
@@ -36,28 +37,20 @@ export class UserService implements IUserService {
     };
 
     async verifyOtpAndCreateUser(email: string, otp: string, userData: Partial<Iuser>): Promise<{ status: number; message: string }> {
-        console.log("Received Data:", { email, otp, userData });
-    
         const isValidOtp = await verifyOtp(email, otp);
-        console.log("OTP Verification Result:", isValidOtp);
     
         if (!isValidOtp.success) {
-            console.log(`[DEBUG] Invalid OTP. Aborting user creation.`);
             throw createHttpError(HttpStatus.BAD_REQUEST, isValidOtp.message || 'Otp validation fail in service');
         }
     
         if (!userData.password) {
-            console.log("Error: Password is undefined");
             throw createHttpError(HttpStatus.BAD_REQUEST, Messages.PASSWORD_REQUIRED);
         }
     
-        console.log("Hashing password for:", email);
         userData.password = await hashPassword(userData.password);
     
-        console.log("Creating user:", userData);
         const user = await this.userRepository.create(userData as Iuser);
     
-        console.log("Deleting OTP for:", email);
         await deleteOtp(email);
     
         if (userData.role === "freelancer") {
@@ -83,7 +76,6 @@ export class UserService implements IUserService {
         }
 
         if (userData.role === "client") {
-            console.log("Creating Client Profile for:", email);
             await this.clientRepository.create({
                 userId: user.id,
                 firstName: user.name,
@@ -254,17 +246,60 @@ export class UserService implements IUserService {
     
         const isPasswordValid = await comparePassword(currentPassword, user.password);
         if (!isPasswordValid) {
-            throw createHttpError(HttpStatus.BAD_REQUEST, "Current password is incorrect.");
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.CURRENT_PASSWORD_WRONG);
         }
     
         if (newPassword !== confirmPassword) {
-            throw createHttpError(HttpStatus.BAD_REQUEST, "New password and confirm password do not match.");
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.PASSWORD_NOT_MATCH);
         }
     
         const hashedPassword = await hashPassword(newPassword);
     
         await this.userRepository.updatePassword(email, hashedPassword);
     
-        return { status: HttpStatus.OK, message: "Password updated successfully." };
+        return { status: HttpStatus.OK, message: Messages.PASSWORD_RESET_SUCCESS };
     };    
+
+    async sendResetPasswordLink(email: string): Promise<{ message: string; }> {
+        const user = await this.userRepository.findByEmail(email);
+
+        if (!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND)
+        }
+
+        if (user.isGoogleAuth) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.GOOGLE_ACCOUNT)
+        }
+
+        await generateAndStoreResetToken(email);
+
+        return {message: Messages.RESET_LINK_SENT}
+    };
+
+    async resetPasswordWithToken(token: string, newPassword: string, confirmPassword: string): Promise<{ message: string; }> {
+        if (!token) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.RESET_TOKEN_REQUIRED)
+        }
+
+        if (newPassword !== confirmPassword) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.PASSWORD_NOT_MATCH)
+        }
+
+        const email = await verifyResetToken(token);
+        if (!email) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.RESET_TOKEN_INVALID)
+        }
+
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, Messages.USER_NOT_FOUND);
+        }
+
+        const hashedPassword = await hashPassword(newPassword);
+        await this.userRepository.updatePassword(email, hashedPassword);
+
+        await deleteResetToken(token);
+
+        return { message: Messages.PASSWORD_RESET_SUCCESS };
+    };
 };

@@ -2,7 +2,7 @@ import { Messages } from "../../constants/messageConstants";
 import { HttpStatus } from "../../constants/statusContstants";
 import { IUserController } from "../../interfaces/user/IUserController";
 import { IUserService } from "../../interfaces/user/IUserService";
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export class UserController implements IUserController {
     constructor(private _userService: IUserService) {}
@@ -10,7 +10,6 @@ export class UserController implements IUserController {
     async register(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const response = await this._userService.register(req.body);
-            console.log('Response', response)
             res.status(HttpStatus.OK).json({ message: response.message });
         } catch (error) {
             next(error);
@@ -34,7 +33,6 @@ export class UserController implements IUserController {
             const response = await this._userService.resendOtp(email);
             res.status(HttpStatus.OK).json({ message: response.message });
         } catch (error) {
-            console.log("[DEBUG] Resend OTP Error:", error);
             next(error);
         }
     };    
@@ -78,7 +76,6 @@ export class UserController implements IUserController {
         try {
             const refreshToken = req.cookies.refreshToken;
             const accessToken = await this._userService.refreshAccessToken(refreshToken)
-            console.log('accessREfreshToken', accessToken);
             res.status(HttpStatus.OK).json({accessToken})
         } catch (error) {
             next(error)
@@ -116,6 +113,25 @@ export class UserController implements IUserController {
         } catch (error) {
             next(error);
         }
-    }
-    
+    };
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email } = req.body;
+            const response = await this._userService.sendResetPasswordLink(email);
+            res.status(HttpStatus.OK).json({message: response.message})
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    async resetPasswordWithToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { token, newPassword, confirmPassword } = req.body;
+            const response = await this._userService.resetPasswordWithToken(token, newPassword, confirmPassword);
+            res.status(HttpStatus.OK).json({ message: response.message });
+        } catch (error) {
+            next(error);
+        }
+    };
 };

@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { GoogleLogin } from "@react-oauth/google";
+import loginImage from '../../assets/test3.png'
+import { Loader2 } from "lucide-react";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -91,85 +93,106 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[92vh] mt-[67px] sm:mt-[40px] md:mt-16 lg:mt-12">
-            <motion.div
-                className="w-[90%] sm:w-[400px] min-h-[500px]"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }}
-            >
-                <Card className="min-h-[530px] shadow-none sm:mt-[6px]">
-                    <CardHeader>
-                        <CardTitle className="text-center">Login</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+        <div className="flex flex-col md:flex-row items-center justify-center min-h-screen dark:bg-gray-950 bg-white gap-4 md:gap-0">
+            {/* Left Side - Image */}
+            <div className="hidden md:flex w-full md:w-1/2 h-full items-center justify-center">
+                <img src={loginImage} alt="Login illustration" className="max-w-full max-h-full object-contain" />
+            </div>
 
-                        <form className="space-y-6" onSubmit={handleSubmit}>
-                            <Input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email"
-                                className="h-12"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <Input
-                                type="password"
-                                placeholder="Enter your password"
-                                className="h-12"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            {/* <div className="text-right">
-                                <a href="#" className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline">
-                                    Forgot password?
-                                </a>
-                            </div> */}
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                            <Button className="w-full h-12" type="submit" disabled={loading}>
-                                {loading ? "Logging in..." : "Login"}
-                            </Button>
-                        </form>
-
-                        <div className="flex items-center my-6">
-                            <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-                            <span className="px-2 text-gray-500 dark:text-gray-400">OR</span>
-                            <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-                        </div>
-                        <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" className="w-full flex items-center justify-center h-12">
-                                    <FaGoogle className="w-5 h-5 mr-2" />
-                                    Continue with Google
+            {/* Right Side - Login Form */}
+            <div className="w-full md:w-1/2 flex items-center justify-center p-6">
+                <motion.div
+                    className="w-full max-w-md"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }}
+                >
+                    <Card className="shadow-none border-none">
+                        <CardHeader>
+                            <CardTitle className="text-center text-2xl font-medium">Login</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form className="space-y-6" onSubmit={handleSubmit}>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    className="h-12"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <Input
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    className="h-12"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <div className="text-right">
+                                    <Link
+                                        to="/forgot-password"
+                                        className="text-sm text-[#0077B6] dark:text-[#00FFE5] hover:underline"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                </div>
+                                {error && <p className="text-red-500 text-sm">{error}</p>}
+                                <Button
+                                    className="w-full h-12 flex items-center justify-center gap-2"
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="animate-spin w-5 h-5" />
+                                            Please wait...
+                                        </>
+                                    ) : (
+                                        "Login"
+                                    )}
                                 </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-[90%] sm:max-w-md mx-auto p-4">
-                                <DialogHeader>
-                                    <DialogTitle className="text-center">Select Your Role</DialogTitle>
-                                </DialogHeader>
-                                <RadioGroup onValueChange={(value) => setSelectedRole(value as "client" | "freelancer")}>
-                                    <div className="flex justify-between p-4">
-                                        <label className="flex items-center gap-2">
-                                            <RadioGroupItem value="client" />
-                                            Client
-                                        </label>
-                                        <label className="flex items-center gap-2">
-                                            <RadioGroupItem value="freelancer" />
-                                            Freelancer
-                                        </label>
-                                    </div>
-                                </RadioGroup>
-                                {selectedRole && (
-                                    <GoogleLogin onSuccess={handleGoogleLogin} onError={() => toast.error("Google Login Failed")} />
-                                )}
-                            </DialogContent>
-                        </Dialog>
-                        <p className="mt-6 text-center text-sm text-gray-700 dark:text-gray-300">
-                            Don’t have an account?
-                            <Link to="/select-role" className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Sign up</Link>
-                        </p>
-                    </CardContent>
-                </Card>
-            </motion.div>
+                            </form>
+                            
+                            <div className="flex items-center my-6">
+                                <hr className="flex-grow border-gray-300 dark:border-gray-600" />
+                                <span className="px-2 text-gray-500 dark:text-gray-400">OR</span>
+                                <hr className="flex-grow border-gray-300 dark:border-gray-600" />
+                            </div>
+                            <Dialog open={showRoleModal} onOpenChange={setShowRoleModal}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="w-full flex items-center justify-center h-12">
+                                        <FaGoogle className="w-5 h-5 mr-2 text-red-600" />
+                                        Continue with Google
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-[90%] sm:max-w-md mx-auto p-4">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-center">Select Your Role</DialogTitle>
+                                    </DialogHeader>
+                                    <RadioGroup onValueChange={(value) => setSelectedRole(value as "client" | "freelancer")}>
+                                        <div className="flex justify-between p-4">
+                                            <label className="flex items-center gap-2">
+                                                <RadioGroupItem value="client" />
+                                                Client
+                                            </label>
+                                            <label className="flex items-center gap-2">
+                                                <RadioGroupItem value="freelancer" />
+                                                Freelancer
+                                            </label>
+                                        </div>
+                                    </RadioGroup>
+                                    {selectedRole && (
+                                        <GoogleLogin onSuccess={handleGoogleLogin} onError={() => toast.error("Google Login Failed")} />
+                                    )}
+                                </DialogContent>
+                            </Dialog>
+                            <p className="mt-6 text-center text-sm text-gray-700 dark:text-gray-300">
+                                Don’t have an account?
+                                <Link to="/select-role" className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Sign up</Link>
+                            </p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            </div>
         </div>
     );
 };

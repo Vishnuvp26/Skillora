@@ -8,6 +8,8 @@ import SignUp from "@/pages/common/SignUp";
 import ProtectedRoute from "@/components/protectedRoutes/SelectProtected";
 import { RootState } from "@/redux/store/store";
 import About from "@/pages/common/About";
+import ForgotPass from "@/components/forgotPassword/ForgotPass";
+import NewPassword from "@/components/forgotPassword/NewPass";
 
 const AuthRoutes = () => {
     const user = useSelector((state: RootState) => state.user);
@@ -27,6 +29,8 @@ const AuthRoutes = () => {
                 <Route path="/signup" element={<SignUp />} />
             </Route>
             <Route path="/about-us" element={<About/>} />
+            <Route path="/forgot-password" element={<ForgotPass/>} />
+            <Route path="/reset-password" element={<NewPassword/>} />
         </Routes>
     );
 };
