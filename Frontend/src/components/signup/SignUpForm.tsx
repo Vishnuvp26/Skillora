@@ -10,7 +10,6 @@ import {FormData} from '../../types/Types'
 import { registerUser } from "@/api/auth/authApi";
 import { validateRegistration } from "@/utils/validation";
 import loginImage from '../../assets/test3.png';
-import googleIcon from '../../assets/google.svg'
 
 const SignUpForm = () => {
     
@@ -179,15 +178,11 @@ const SignUpForm = () => {
                                 {loading && <p className="text-sm text-gray-500 text-center mt-2">Sending OTP, please wait...</p>}
                             </form>
 
-                            <div className="flex items-center my-4">
+                            <div className="flex items-center my-4 mt-6">
                                 <hr className="flex-grow border-gray-300 dark:border-gray-600" />
                                 <span className="px-2 text-gray-500 dark:text-gray-400">OR</span>
                                 <hr className="flex-grow border-gray-300 dark:border-gray-600" />
                             </div>
-                            <Button variant="outline" className="w-full flex items-center justify-center h-12">
-                                <img src={googleIcon} alt="Google" className="w-5 h-5 mr-2" />
-                                Continue with Google
-                            </Button>
                             <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">
                                 Already have an account?
                                 <Link to='/login' className="text-[#0077B6] dark:text-[#00FFE5] font-medium hover:underline"> Login</Link>
