@@ -59,7 +59,7 @@ export default class WebhookController {
 
                     const contract = await Contract.findOneAndUpdate(
                         { clientId, jobId },
-                        { $set: { status: "Started", escrowPaid: true } },
+                        { $set: { escrowPaid: true } },
                         { new: true, upsert: true }
                     );
                     

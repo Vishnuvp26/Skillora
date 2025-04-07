@@ -51,13 +51,13 @@ const ClientNav: React.FC = () => {
                 </div>
 
                 {/* Navigation Links (Hidden on Mobile) */}
-                <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
+                <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-50">
                     <Button variant="ghost" onClick={() => navigate("/client/home")}>Home</Button>
                     {/* find work */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center gap-2">
-                                Hire Talent <ChevronDown className="w-4 h-4" />
+                                Hire Talent <ChevronDown className="w-4 h-4 text-gray-900 dark:text-gray-50" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
@@ -70,7 +70,7 @@ const ClientNav: React.FC = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex items-center gap-2">
-                                Manage Work <ChevronDown className="w-4 h-4" />
+                                Manage Work <ChevronDown className="w-4 h-4 text-gray-900 dark:text-gray-50" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
@@ -82,7 +82,7 @@ const ClientNav: React.FC = () => {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="ghost">Messages</Button>
+                    <Button variant="ghost" className="text-gray-900 dark:text-gray-50">Messages</Button>
                 </div>
 
                 {/* Right Side: Dark Mode & Profile Dropdown */}

@@ -1,8 +1,6 @@
 import Axios, { axiosInstance } from "../axios/axiosInstance"
 
 export const approveContract = async (contractId: string, freelancerId: string) => {
-    console.log('CONTRACT ID: ', contractId);
-    console.log('FREELANCER ID: ', freelancerId);
     try {
         const response = await Axios.post(`/api/freelancer/contract/approve-contract/${contractId}/${freelancerId}`);
         return response.data;
@@ -26,5 +24,14 @@ export const contractDetails = async (contractId: string) => {
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get contract details"
+    }
+};
+
+export const updateWorkStatus = async (contractId: string, status: string) => {
+    try {
+        const response = await Axios.put(`/api/freelancer/contract/update-status/${contractId}`, { status });
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to update work status";
     }
 };

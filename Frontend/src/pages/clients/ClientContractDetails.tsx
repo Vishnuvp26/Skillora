@@ -5,9 +5,15 @@ import { IContract } from "@/types/Types";
 import dayjs from "dayjs";
 import { contractDetails } from "@/api/freelancer/contractApi";
 import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness, XCircleIcon } from "lucide-react";
+import { Wallet, XCircleIcon } from "lucide-react";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import Axios from "@/api/axios/axiosInstance";
+import ProgressBar from "@/components/progress/ProgressBar";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { DialogClose } from "@radix-ui/react-dialog";
+import { EscrowFaqAccordion } from "@/components/accordion/EscrowFaqAccordion";
+import { ContractApprovalMarquee } from "@/components/alerts/ContractApprovalAlerts";
+import { EscrowPendingAlert } from "@/components/alerts/EscrowPendingAlert";
 
 const ClientContractDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -15,7 +21,7 @@ const ClientContractDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const stripe = useStripe()
+    const stripe = useStripe();
     const elements = useElements();
 
     useEffect(() => {
@@ -61,27 +67,24 @@ const ClientContractDetails = () => {
     }
 
     const handleCheckout = async (freelancerId: string) => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         setLoading(true);
         try {
             if (!stripe || !elements || !id || !contract) return;
-    
-            console.log('JOB ID:', id);
-            console.log('FREELANCER ID:', freelancerId);
-    
+
             const response = await Axios.post(`/api/client/job/payment/${contract.jobId._id}`, {
                 title: contract.jobId.title,
                 rate: contract.jobId.rate,
-                freelancerId: freelancerId
+                freelancerId: freelancerId,
             });
-    
+
             const { id: sessionId } = response.data;
-    
+
             const { error } = await stripe!.redirectToCheckout({ sessionId });
-    
+
             if (error) {
                 console.log("Error redirecting to checkout page", error);
             }
-    
         } catch (error) {
             console.log("Error redirecting to checkout page", error);
         } finally {
@@ -91,20 +94,17 @@ const ClientContractDetails = () => {
 
     return (
         <div className="p-5 mt-16 max-w-6xl mx-auto">
-            {!contract.isApproved && (
-                <div className="bg-yellow-100 dark:bg-gray-900 text-yellow-800 dark:text-yellow-300 py-2 px-4 rounded mb-4 text-center text-xs font-semibold">
-                    Your contract is pending approval! The freelancer must accept it before you can proceed. Please wait for confirmation.
-                </div>
-            )}
+            {!contract.isApproved && <ContractApprovalMarquee />}
+            {!contract.escrowPaid && <EscrowPendingAlert />}
             <div className="rounded-lg p-6 bg-white dark:bg-gray-950">
                 <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">Skillora Client Contract</h1>
                 <div className="space-y-6">
                     <div className="flex justify-between items-center">
-                        <p className="text-base text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Contract ID:</span> {contract.contractId}
+                        <p className="text-base text-gray-800 dark:text-gray-400">
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Contract ID:</span> {contract.contractId}
                         </p>
-                        <p className="text-base text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Status:</span> {contract.status}
+                        <p className="text-base text-gray-800 dark:text-gray-400">
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Status:</span> {contract.status}
                         </p>
                     </div>
 
@@ -113,37 +113,37 @@ const ClientContractDetails = () => {
 
                         {/* Freelancer Info */}
                         <div className="space-y-2">
-                            <h3 className="text-medium font-semibold dark:text-teal-500 text-cyan-800">FREELANCER</h3>
-                            <p className="text-base text-gray-600 dark:text-gray-400">
-                                <span className="font-medium">Name:</span> {contract.freelancerId.name}
+                            <h3 className="text-medium font-semibold dark:text-teal-500 text-cyan-700">Freelancer</h3>
+                            <p className="text-base text-gray-800 dark:text-gray-400">
+                                <span className="font-medium text-gray-950 dark:text-gray-200">Name:</span> {contract.freelancerId.name}
                             </p>
-                            <p className="text-base text-gray-600 dark:text-gray-400">
-                                <span className="font-medium">Email:</span> {contract.freelancerId.email}
+                            <p className="text-base text-gray-800 dark:text-gray-400">
+                                <span className="font-medium text-gray-950 dark:text-gray-200">Email:</span> {contract.freelancerId.email}
                             </p>
                         </div>
 
                         {/* Client Info */}
                         <div className="space-y-2">
-                            <h3 className="text-medium font-semibold dark:text-teal-500 text-cyan-800">CLIENT</h3>
-                            <p className="text-base text-gray-600 dark:text-gray-400">
-                                <span className="font-medium">Name:</span> {contract.clientId.name}
+                            <h3 className="text-medium font-semibold dark:text-teal-500 text-cyan-700">Client</h3>
+                            <p className="text-base text-gray-800 dark:text-gray-400">
+                                <span className="font-medium text-gray-950 dark:text-gray-200">Name:</span> {contract.clientId.name}
                             </p>
-                            <p className="text-base text-gray-600 dark:text-gray-400">
-                                <span className="font-medium">Email:</span> {contract.clientId.email}
+                            <p className="text-base text-gray-800 dark:text-gray-400">
+                                <span className="font-medium text-gray-950 dark:text-gray-200">Email:</span> {contract.clientId.email}
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-4">
                         <h2 className="text-lg font-semibold border-b pb-2">Job Details</h2>
-                        <p className="text-base text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Title:</span> {contract.jobId.title}
+                        <p className="text-base text-gray-800 dark:text-gray-400">
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Title:</span> {contract.jobId.title}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Description:</span> {contract.jobId.description}
+                        <p className="text-sm text-gray-800 dark:text-gray-400">
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Description:</span> {contract.jobId.description}
                         </p>
-                        <p className="text-base text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Rate:</span> ₹{contract.jobId.rate}
+                        <p className="text-base text-gray-800 dark:text-gray-400">
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Rate:</span> ₹{contract.jobId.rate}
                         </p>
                     </div>
 
@@ -151,28 +151,59 @@ const ClientContractDetails = () => {
                         <h2 className="text-lg font-semibold border-b pb-2">Additional Details</h2>
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             <div className="space-y-2">
-                                <p className="text-base text-gray-600 dark:text-gray-400">
-                                    <span className="font-medium">Budget:</span> ₹{contract.amount}
+                                <p className="text-base text-gray-800 dark:text-gray-400">
+                                    <span className="font-medium text-gray-950 dark:text-gray-200">Budget:</span> ₹{contract.amount}
                                 </p>
-                                <p className="text-base text-gray-600 dark:text-gray-400">
-                                    <span className="font-medium">Created At:</span> {dayjs(contract.createdAt).format("DD MMM YYYY")}
+                                <p className="text-base text-gray-800 dark:text-gray-400">
+                                    <span className="font-medium text-gray-950 dark:text-gray-200">Created At:</span> {dayjs(contract.createdAt).format("DD MMM YYYY")}
                                 </p>
                             </div>
                             {contract.isApproved && !contract.escrowPaid && (
                                 <div className="flex gap-4 mt-4 md:mt-0">
-                                    <Button
-                                        className="border border-[#0077B6] text-[#0077B6] bg-transparent 
-                                        hover:bg-[#0076b60f] hover:text-[#0077B6] 
-                                        dark:border-[#7b7b7b] dark:text-[#ffffff] dark:hover:bg-[#00FFE511] dark:hover:text-[#4a93e1] 
-                                        py-2 px-4 rounded transition duration-200"
-                                        onClick={() => handleCheckout(contract.freelancerId._id)}
-                                    >
-                                        <BriefcaseBusiness className="w-5 h-5" /> Hire
-                                    </Button>
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                className="border border-[#0077B6] text-[#0077B6] bg-transparent 
+                                                hover:bg-[#0076b60f] hover:text-[#0077B6] 
+                                                dark:border-[#32a376] dark:text-[#ffffff] dark:hover:bg-[#25765626] dark:hover:text-[#48c391] 
+                                                py-2 px-4 rounded transition duration-200"
+                                            >
+                                                <Wallet className="w-5 h-5 mr-2" /> Pay Now
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-w-[90%] sm:max-w-md mx-auto rounded">
+                                            <DialogHeader>
+                                                <DialogTitle>Confirm Payment</DialogTitle>
+                                            </DialogHeader>
+                                            <DialogDescription>
+                                                Are you sure you want to proceed with the payment? This action will initiate the escrow process.
+                                            </DialogDescription>
+                                            <DialogFooter className="flex justify-end gap-3">
+                                                <DialogClose asChild>
+                                                    <Button variant="outline">Cancel</Button>
+                                                </DialogClose>
+                                                <DialogClose asChild>
+                                                    <Button
+                                                        onClick={() => handleCheckout(contract.freelancerId._id)}
+                                                    >
+                                                        Yes, Pay Now
+                                                    </Button>
+                                                </DialogClose>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
                             )}
                         </div>
+                        {!contract.escrowPaid && <EscrowFaqAccordion />}
                     </div>
+                    {/* Progress Bar */}
+                    {contract.escrowPaid && (
+                        <div className="mt-8">
+                            <h2 className="text-lg font-semibold border-b pb-2">Work Progress</h2>
+                            <ProgressBar workStatus={contract.status} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

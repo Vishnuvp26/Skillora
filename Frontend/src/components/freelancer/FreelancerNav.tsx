@@ -52,7 +52,7 @@ const FreelancerNav: React.FC = () => {
                 </div>
 
                 {/* Navigation Links (Hidden on Mobile) */}
-                <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-300">
+                <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-50">
                     <Button variant="ghost" onClick={() => navigate("/freelancer/home")}>
                         Home
                     </Button>
@@ -66,13 +66,13 @@ const FreelancerNav: React.FC = () => {
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                             <DropdownMenuItem
                                 onSelect={() => navigate('/freelancer/jobs')}
-                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer text-gray-900 dark:text-gray-50"
                             >
                                 Find Work
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onSelect={() => navigate('/freelancer/saved-jobs')}
-                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
+                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer text-gray-900 dark:text-gray-50"
                             >
                                 Saved Jobs
                             </DropdownMenuItem>
@@ -101,7 +101,7 @@ const FreelancerNav: React.FC = () => {
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    <Button variant="ghost">Messages</Button>
+                    <Button variant="ghost" className="text-gray-900 dark:text-gray-50">Messages</Button>
                 </div>
 
                 {/* Right Side: Dark Mode & Profile Dropdown */}

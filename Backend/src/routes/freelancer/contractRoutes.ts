@@ -24,4 +24,9 @@ router.get(
     contractController.viewContractDetails.bind(contractController)
 );
 
+router.put(
+    "/update-status/:contractId",
+    contractController.updateContractStatus.bind(contractController)
+);
+
 export default router;

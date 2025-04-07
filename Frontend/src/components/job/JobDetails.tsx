@@ -11,6 +11,7 @@ import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
+import { BiSolidBadgeCheck } from "react-icons/bi";
 import { applyJob, getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { createContract, deleteContract, isContractCreated } from "@/api/client/contractApi";
@@ -178,7 +179,7 @@ const JobDetail = () => {
         <div className="p-5 mt-16 max-w-6xl mx-auto">
             <div className="rounded-lg p-6 bg-white dark:bg-gray-950">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-                    <h1 className="text-xl sm:text-2xl font-bold">{job.title}</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold text-gray-950 dark:text-gray-200">{job.title}</h1>
 
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <span
@@ -214,31 +215,34 @@ const JobDetail = () => {
                 <div className="space-y-4">
                     {/* Client Info */}
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <span className="font-medium">Posted by:</span>
-                        <span className="ml-2">{job.clientId?.name}</span>
+                        <span className="text-gray-950 dark:text-gray-200 font-semibold">Posted by:</span>
+                        <span className="ml-2 flex items-center text-gray-900 dark:text-gray-200">
+                            {job.clientId?.name}
+                            <BiSolidBadgeCheck  className="w-4 h-4 ml-1 text-blue-600" />
+                        </span>
                     </div>
 
                     {/* Main Details */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 py-4 border-y dark:border-gray-800">
                         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                             <IoPricetagOutline className="mr-2 text-yellow-600" />
-                            <span>Budget: ₹{job.rate}</span>
+                            <span className="text-gray-950 dark:text-gray-200">Budget: ₹{job.rate}</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                             <SiLevelsdotfyi className="mr-2 text-green-600" />
-                            <span>{job.experienceLevel}</span>
+                            <span className="text-gray-900 dark:text-gray-200">{job.experienceLevel}</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Location:</span>
-                            <span className="ml-2">{job.location}</span>
+                            <span className="font-semibold text-gray-950 dark:text-gray-200">Location:</span>
+                            <span className="ml-2 text-gray-900 dark:text-gray-200">{job.location}</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <span className="font-medium">Category:</span>
-                            <span className="ml-2">{job.category.name}</span>
+                            <span className="font-semibold text-gray-950 dark:text-gray-200">Category:</span>
+                            <span className="ml-2 text-gray-900 dark:text-gray-200">{job.category.name}</span>
                         </div>
                         {job.startDate ? (
                             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                <span className="font-medium">Start Date:</span>
+                                <span className="font-semibold">Start Date:</span>
                                 <span className="ml-2">
                                     {new Date(job.startDate).toLocaleDateString("en-US", {
                                         year: "numeric",
@@ -285,9 +289,9 @@ const JobDetail = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="flex justify-between items-center text-sm text-gray-500 pt-4">
+                    <div className="flex justify-between items-center text-sm text-gray-600 pt-4">
                         <p>
-                            {userRole === "client" ? `Applications: ${job.applicants}` : `Posted on: ${dayjs(job.createdAt).format("DD MMM YYYY")}`}
+                            {userRole === "client" ? `Applications Recieved: ${job.applicants}` : `Posted on: ${dayjs(job.createdAt).format("DD MMM YYYY")}`}
                         </p>
                         {userRole === "client" && <p>Posted on: {dayjs(job.createdAt).format("DD MMM YYYY")}</p>}
                     </div>

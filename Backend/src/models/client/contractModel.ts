@@ -6,11 +6,15 @@ export interface IContract extends Document {
     clientId: mongoose.Types.ObjectId;
     freelancerId: mongoose.Types.ObjectId;
     isApproved: boolean;
-    status: "Pending"| "Started" | "Ongoing" | "Complete" | "Canceled";
+    status: "Pending"| "Started" | "Ongoing" | "Completed" | "Canceled";
     amount: number;
     escrowPaid: boolean;
     isDeleted: boolean;
-}
+    cancelReason?: string;
+    canceledBy?: "Client" | "Freelancer";
+    cancelReasonDescription?: string;
+};
+
 const ContractSchema: Schema = new Schema<IContract>({
     contractId: {
         type: String,
@@ -37,7 +41,7 @@ const ContractSchema: Schema = new Schema<IContract>({
     },
     status: { 
         type: String, 
-        enum: ["Pending", "Started", "Ongoing", "Complete", "Canceled"], 
+        enum: ["Pending", "Started", "Ongoing", "Completed", "Canceled"], 
         default: "Pending" 
     },
     amount: {
@@ -47,6 +51,19 @@ const ContractSchema: Schema = new Schema<IContract>({
     escrowPaid: {
         type: Boolean,
         default: false
+    },
+    canceledBy: {
+        type: String,
+        enum: ["Client", "Freelancer"],
+        default: null
+    },
+    cancelReason: {
+        type: String,
+        default: ""
+    },
+    cancelReasonDescription: {
+        type: String,
+        default: ""
     },
     isDeleted: {
         type: Boolean,

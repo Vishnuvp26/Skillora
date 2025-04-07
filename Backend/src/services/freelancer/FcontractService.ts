@@ -32,22 +32,35 @@ export class FreelancerContractService implements IFreelancerContractService {
 
     async updateContractStatus(
         contractId: string, 
-        status: "Pending"| "Started" | "Ongoing" | "Complete" | "Canceled"
+        status: IContract["status"]
     ): Promise<IContract> {
-
+    
         const contract = await this._contractRepository.getContractById(contractId);
+    
         if (!contract) {
             throw createHttpError(HttpStatus.NOT_FOUND, Messages.CONTRACT_NOT_FOUND);
         }
     
+        const validTransitions: Record<IContract["status"], IContract["status"][]> = {
+            Pending: ["Started", "Canceled"],
+            Started: ["Ongoing", "Canceled"],
+            Ongoing: ["Completed", "Canceled"],
+            Completed: [],
+            Canceled: []
+        };
+    
+        if (!validTransitions[contract.status].includes(status)) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, `Invalid status transition from ${contract.status} to ${status}`);
+        }
+    
         const updatedContract = await this._contractRepository.updateContract(contractId, { status });
-
+    
         if (!updatedContract) {
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, Messages.CONTRACT_STATUS_UPDATE_FAILED);
         }
-
+    
         return updatedContract;
-    };
+    };    
 
     async getFreelancerContracts(freelancerId: string): Promise<IContract[]> {
         return await this._contractRepository.getContractsByFreelancer(freelancerId);

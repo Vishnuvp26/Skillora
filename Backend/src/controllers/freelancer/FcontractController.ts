@@ -26,40 +26,40 @@ export class FreelancerContractController implements IFreelancerContractControll
 
     async updateContractStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          const contractId = req.params.contractId;
-          const status = req.body.status;
-    
-          if (!contractId || !status) {
-            res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });
-            return;
-          }
-    
-          const contract = await this._freelancerContractService.updateContractStatus(contractId, status);
-          res.status(HttpStatus.OK).json({ 
-            message: Messages.CONTRACT_STATUS_UPDATED, 
-            contract 
-          });
+            const contractId = req.params.contractId;
+            const status = req.body.status;
+
+            if (!contractId || !status) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });
+                return;
+            }
+
+            const contract = await this._freelancerContractService.updateContractStatus(contractId, status);
+            res.status(HttpStatus.OK).json({
+                message: Messages.CONTRACT_STATUS_UPDATED,
+                contract
+            });
         } catch (error) {
-          next(error);
+            next(error)
         }
     };
 
     async getFreelancerContracts(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          const freelancerId = req.params.freelancerId;
-    
-          if (!freelancerId) {
-            res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.USER_NOT_FOUND });
-            return;
-          }
-    
-          const contracts = await this._freelancerContractService.getFreelancerContracts(freelancerId);
-          res.status(HttpStatus.OK).json({ 
-            count: contracts.length,
-            contracts 
-          });
+            const freelancerId = req.params.freelancerId;
+
+            if (!freelancerId) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.USER_NOT_FOUND });
+                return;
+            }
+
+            const contracts = await this._freelancerContractService.getFreelancerContracts(freelancerId);
+            res.status(HttpStatus.OK).json({
+                count: contracts.length,
+                contracts
+            });
         } catch (error) {
-          next(error);
+            next(error)
         }
     };
 
@@ -84,4 +84,4 @@ export class FreelancerContractController implements IFreelancerContractControll
             next(error);
         }
     };
-};
+}
