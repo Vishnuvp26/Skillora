@@ -77,7 +77,8 @@ export default class WebhookController {
                         amount: paymentAmount,
                         platformFee,
                         freelancerEarning,
-                        status: "funded"
+                        status: "funded",
+                        transactionType: "credit"
                     });
                 
                     console.log(`✅ Contract status updated to "Started" for job ${jobId}`);

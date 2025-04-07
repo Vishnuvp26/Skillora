@@ -11,6 +11,7 @@ export interface IEscrow extends Document {
     status: "funded" | "released" | "refunded" | "canceled";
     createdAt: Date;
     updatedAt: Date;
+    transactionType: "credit" | "debit";
 }
 
 const EscrowSchema: Schema = new Schema<IEscrow>(
@@ -48,7 +49,12 @@ const EscrowSchema: Schema = new Schema<IEscrow>(
             type: String,
             enum: ["funded", "released", "refunded", "canceled"],
             required: true
-        }
+        },
+        transactionType: {
+            type: String,
+            enum: ["credit", "debit"],
+            required: true,
+          },          
     },
     {
         timestamps: true
@@ -56,4 +62,4 @@ const EscrowSchema: Schema = new Schema<IEscrow>(
 );
 
 const Escrow = mongoose.model<IEscrow>("EscrowWallet", EscrowSchema);
-export default Escrow
+export default Escrow;
