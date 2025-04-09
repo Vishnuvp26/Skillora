@@ -11,6 +11,7 @@ import { removeUser } from "@/redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/redux/store/store";
+import { useLocation } from "react-router-dom";
 
 const ClientNav: React.FC = () => {
     
@@ -23,8 +24,9 @@ const ClientNav: React.FC = () => {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
@@ -52,7 +54,13 @@ const ClientNav: React.FC = () => {
 
                 {/* Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-50">
-                    <Button variant="ghost" onClick={() => navigate("/client/home")}>Home</Button>
+                    <Button
+                        variant="ghost"
+                        onClick={() => navigate("/client/home")}
+                        className={location.pathname === "/client/home" ? "text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent" : ""}
+                    >
+                        Home
+                    </Button>
                     {/* find work */}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -82,7 +90,13 @@ const ClientNav: React.FC = () => {
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="ghost" className="text-gray-900 dark:text-gray-50">Messages</Button>
+                    <Button
+                        onClick={() => navigate('/client/messages')}
+                        variant="ghost"
+                        className={location.pathname === "/client/messages" ? "text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent" : ""}
+                    >
+                        Messages
+                    </Button>
                 </div>
 
                 {/* Right Side: Dark Mode & Profile Dropdown */}
@@ -173,16 +187,16 @@ const ClientNav: React.FC = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/client/contracts')}>
                             Active Contract
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/client/home')}>
                             My Jobs
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button variant="ghost">Messages</Button>
+                <Button onClick={() => navigate('/client/messages')} variant="ghost">Messages</Button>
 
                 {/* Dark Mode Toggle */}
                 <Button variant="ghost" onClick={toggleTheme}>
@@ -212,10 +226,10 @@ const ClientNav: React.FC = () => {
                         </div>
 
                         {/* Profile & Logout Options */}
-                        <DropdownMenuItem onClick={() => navigate("/client/home")}>
+                        <DropdownMenuItem onClick={() => navigate("/client/profile")}>
                             <User className="w-4 h-4 mr-2" /> Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate("/client/profile-settings")}>
                             <Settings className="w-4 h-4 mr-2" /> Profile Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleLogout} className="text-red-500">

@@ -19,7 +19,7 @@ export class ContractRepository extends BaseRepository<IContract> implements ICo
             isDeleted: false
         })
             .populate('jobId')
-            .populate('freelancerId', 'name email, profilePic')
+            .populate('freelancerId', 'name email profilePic')
             .sort({ createdAt: -1 });
     };
 

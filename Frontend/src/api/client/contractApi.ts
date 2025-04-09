@@ -30,6 +30,7 @@ export const isContractCreated = async (jobId: string, clientId: string) => {
 export const getClientContracts = async (clientId: string) => {
     try {
         const response = await Axios.get(`api/client/contract/get-contracts/${clientId}`);
+        console.log('CLIENT CONTRACT FETCHED IN AXIOS', response.data);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get clients contracts"

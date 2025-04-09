@@ -11,17 +11,22 @@ import freelancerRoutes from './routes/freelancer/freelancerRoutes';
 import webhookRoutes from './routes/client/webhookRoutes';
 import { errorHandler } from "./middlewares/errorMiddleware";
 import { logger, morganMiddleware } from "./middlewares/loggerMiddleware";
+import http from 'http';
+import { initSocket } from './utils/socket';
 
 class App {
     public app: Application;
+    public server: http.Server;
 
     constructor() {
-        validateEnv()
+        validateEnv();
         this.app = express();
+        this.server = http.createServer(this.app);
 
         this.initializeMiddlewares()
         this.initializeDatabase()
         this.initializeRoutes()
+        this.initializeSocket()
     }
 
     private initializeMiddlewares(): void {
@@ -50,10 +55,15 @@ class App {
         this.app.use(errorHandler);
     }
 
+    private initializeSocket(): void {
+        initSocket(this.server);
+    }
+
     public listen() {
-        this.app.listen(env.PORT, () => {
-            logger.info(`Server running on http://localhost:${env.PORT}`)
-            console.log(`Server running on http://localhost:${env.PORT}`);
+        const PORT = env.PORT
+        this.server.listen(PORT, () => {
+            logger.info(`Server running on http://localhost:${PORT}`);
+            console.log(`Server running on http://localhost:${PORT}`);
         });
     }
 };

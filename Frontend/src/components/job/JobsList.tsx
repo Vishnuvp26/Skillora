@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
     const userRole = useSelector((state: RootState) => state.user.role);
@@ -91,45 +92,45 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
 
                     {/* Sort and Filter Options */}
                     <div className="flex flex-wrap gap-4 mt-4">
-                        <select
-                            className="border p-2 rounded-lg text-sm dark:bg-gray-950 dark:text-white"
-                            value={sortOption || ""}
-                            onChange={(e) =>
-                                setSortOption(
-                                    e.target.value === "budget"
-                                        ? "budget"
-                                        : e.target.value === "date"
-                                            ? "date"
-                                            : null
-                                )
-                            }
-                        >
-                            <option value="">Sort By</option>
-                            <option value="budget">Budget</option>
-                            <option value="date">Posted Date</option>
-                        </select>
+                        {/* Sort Select */}
+                        <Select
+                            value={sortOption ?? "sort"}
+                            onValueChange={(value) => setSortOption(value as "budget" | "date" | null)}
 
-                        <select
-                            className="border p-2 rounded-lg text-sm dark:bg-gray-950 dark:text-white"
-                            value={filterExperience || ""}
-                            onChange={(e) =>
-                                setFilterExperience(
-                                    e.target.value || null
-                                )
+                        >
+                            <SelectTrigger className="w-[180px] text-sm dark:bg-gray-950 dark:text-white">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="sort" disabled>Sort By</SelectItem>
+                                <SelectItem value="budget">Budget</SelectItem>
+                                <SelectItem value="date">Posted Date</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {/* Experience Filter Select */}
+                        <Select
+                            value={filterExperience ?? "experience"}
+                            onValueChange={(value) =>
+                                setFilterExperience(value === "experience" ? null : value)
                             }
                         >
-                            <option value="">Filter by Experience</option>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Expert">Expert</option>
-                        </select>
+                            <SelectTrigger className="w-[200px] text-sm dark:bg-gray-950 dark:text-white">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="experience" disabled>Filter by Experience</SelectItem>
+                                <SelectItem value="Beginner">Beginner</SelectItem>
+                                <SelectItem value="Intermediate">Intermediate</SelectItem>
+                                <SelectItem value="Expert">Expert</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {sortedJobs.length > 0 ? (
                         sortedJobs.slice(0, visibleJobs).map((job) => (
                             <div
                                 key={job._id}
-                                className="border rounded-lg p-5 bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-black transition duration-200"
+                                className="border rounded-lg p-5 bg-gray-100 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-950 transition duration-200"
                             >
                                 <div className="flex justify-between items-center">
                                     <h5 className="font-semibold">{job.title}</h5>
@@ -211,7 +212,7 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                     {visibleJobs < sortedJobs.length && (
                         <p
                             onClick={() => setVisibleJobs((prev) => prev + 5)}
-                             className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
+                            className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
                             dark:bg-transparent dark:text-[#00FFE5] self-center cursor-pointer"
                         >
                             View More

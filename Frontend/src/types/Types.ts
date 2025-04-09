@@ -218,4 +218,31 @@ export interface IContractDetails {
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
-}
+};
+
+export interface MessageType {
+    _id: string;
+    senderId: string;
+    receiverId: string;
+    message: string;
+    createdAt: string;
+    isRead?: boolean;
+    readAt?: Date;
+};
+
+export interface ContractType {
+    _id: string;
+    clientId: string | { _id: string; name?: string; email?: string; profilePic?: string };
+    freelancerId: string | { _id: string; name?: string; email?: string; profilePic?: string };
+    status: string;
+    isDeleted: boolean;
+};
+
+export interface ConversationType {
+    _id: string;
+    clientId: string;
+    freelancerId: string;
+    updatedAt: string;
+    unreadCount: number;
+    otherUserId: string;
+};

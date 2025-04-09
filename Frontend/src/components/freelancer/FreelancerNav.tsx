@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
 import { RootState } from "@/redux/store/store";
+import { useLocation } from "react-router-dom";
 
 const FreelancerNav: React.FC = () => {
     
@@ -23,6 +24,7 @@ const FreelancerNav: React.FC = () => {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
+    const location = useLocation()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -53,7 +55,11 @@ const FreelancerNav: React.FC = () => {
 
                 {/* Navigation Links (Hidden on Mobile) */}
                 <div className="hidden lg:flex gap-6 text-gray-900 dark:text-gray-50">
-                    <Button variant="ghost" onClick={() => navigate("/freelancer/home")}>
+                    <Button
+                        variant="ghost"
+                        onClick={() => navigate("/freelancer/home")}
+                        className={location.pathname === "/freelancer/home" ? "text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent" : ""}
+                    >
                         Home
                     </Button>
                     {/* find work */}
@@ -101,7 +107,13 @@ const FreelancerNav: React.FC = () => {
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    <Button variant="ghost" className="text-gray-900 dark:text-gray-50">Messages</Button>
+                    <Button
+                        onClick={() => navigate('/freelancer/messages')}
+                        variant="ghost"
+                        className={location.pathname === "/freelancer/messages" ? "text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent" : ""}
+                    >
+                        Messages
+                        </Button>
                 </div>
 
                 {/* Right Side: Dark Mode & Profile Dropdown */}
@@ -209,7 +221,7 @@ const FreelancerNav: React.FC = () => {
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button variant="ghost">Messages</Button>
+                <Button onClick={() => navigate('/freelancer/messages')} variant="ghost">Messages</Button>
 
                 {/* Dark Mode Toggle */}
                 <Button variant="ghost" onClick={toggleTheme}>
