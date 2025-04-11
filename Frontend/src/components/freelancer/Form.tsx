@@ -13,6 +13,7 @@ import { updateProfile } from "@/api/freelancer/profileApi";
 import toast from "react-hot-toast";
 import { Plus, X } from "lucide-react";
 import { validateFreelancerForm } from "@/utils/validation";
+import { Textarea } from "../ui/textarea";
 
 const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, onUpdate }) => {
 
@@ -55,7 +56,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         loadData();
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
@@ -180,12 +181,11 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                     {/* Bio */}
                     <div>
                         <label className="text-sm font-semibold text-gray-900 dark:text-white">Bio</label>
-                        <Input
-                            type="text"
+                        <Textarea
                             name="bio"
                             value={formData.bio}
                             onChange={handleChange}
-                            className="text-xs placeholder:text-xs"
+                            className="text-xs placeholder:text-xs mt-2"
                             placeholder="Eg: Tell us about yourself"
                         />
                     </div>

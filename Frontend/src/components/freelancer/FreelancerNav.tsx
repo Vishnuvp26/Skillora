@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -38,6 +38,10 @@ const FreelancerNav: React.FC = () => {
             console.error("Logout failed:", error);
         }
     };
+
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
 
     return (
         <>
@@ -80,7 +84,7 @@ const FreelancerNav: React.FC = () => {
                                 onSelect={() => navigate('/freelancer/saved-jobs')}
                                 className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer text-gray-900 dark:text-gray-50"
                             >
-                                Saved Jobs
+                                Saved Work
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -96,7 +100,7 @@ const FreelancerNav: React.FC = () => {
                                 onSelect={() => navigate('/freelancer/jobs/applied-jobs')}
                                 className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer"
                             >
-                                Applied Jobs
+                                Applied Works
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onSelect={() => navigate('/freelancer/contracts')}
@@ -150,6 +154,9 @@ const FreelancerNav: React.FC = () => {
                             {/* Profile & Logout Options */}
                             <DropdownMenuItem onClick={() => navigate('/freelancer/profile')}>
                                 <User className="w-4 h-4 mr-2" /> Profile
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate('/freelancer/earnings')}>
+                                <DollarSign  className="w-4 h-4 mr-2" /> Earnings
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/freelancer/profile-settings')}>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
@@ -239,11 +246,6 @@ const FreelancerNav: React.FC = () => {
             
                         {/* User Info Section */}
                         <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
-                            {/* <img
-                                    src="https://via.placeholder.com/40" // Replace with actual user image URL
-                                    alt="User Avatar"
-                                    className="w-10 h-10 rounded-full"
-                                /> */}
                             <div>
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">Freelancer</p>
@@ -251,8 +253,14 @@ const FreelancerNav: React.FC = () => {
                         </div>
 
                         {/* Profile & Logout Options */}
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/freelancer/profile')}>
                             <User className="w-4 h-4 mr-2" /> Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/freelancer/earnings')}>
+                            <DollarSign className="w-4 h-4 mr-2" /> Earnings
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/freelancer/profile-settings')}>
+                            <Settings className="w-4 h-4 mr-2" /> Profile Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleLogout} className="text-red-500">
                             <LogOut className="w-4 h-4 mr-2" /> Logout

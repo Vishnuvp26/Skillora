@@ -37,7 +37,8 @@ export const initSocket = (server: HTTPServer) => {
                     $or: [
                         { status: 'Pending' },
                         { status: 'Started' },
-                        { status: 'Ongoing' }
+                        { status: 'Ongoing' },
+                        {status: 'Completed'}
                     ]
                 });
 

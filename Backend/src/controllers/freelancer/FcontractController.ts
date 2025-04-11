@@ -84,4 +84,24 @@ export class FreelancerContractController implements IFreelancerContractControll
             next(error);
         }
     };
+
+    async getCompletedContracts(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { freelancerId } = req.params;
+    
+            if (!freelancerId) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });
+                return;
+            }
+    
+            const contracts = await this._freelancerContractService.getCompletedContracts(freelancerId);
+            
+            res.status(HttpStatus.OK).json({
+                count: contracts.length,
+                contracts
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

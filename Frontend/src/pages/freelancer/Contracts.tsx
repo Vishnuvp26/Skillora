@@ -71,7 +71,7 @@ const Contracts = () => {
                         {filteredContracts.slice(0, visibleContracts).map((contract) => (
                             <div
                                 key={contract._id}
-                                className="border rounded-lg p-5 bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-black transition duration-200"
+                                className="border rounded-lg p-5 bg-gray-100 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-950 transition duration-200"
                             >
                                 <div className="flex justify-between items-center">
                                     <h5 className="font-semibold">{contract.jobId.title}</h5>
@@ -83,8 +83,19 @@ const Contracts = () => {
                                 <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Budget: ₹{contract.amount}
                                 </p>
-                                <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
-                                    Contract: {contract.status}
+                                <p className="text-sm mt-1 text-gray-700 dark:text-gray-400">
+                                    Contract:{" "}
+                                    <span
+                                        className={
+                                            contract.status === "Canceled"
+                                                ? "text-red-600 dark:text-red-400"
+                                                : contract.status === "Completed"
+                                                    ? "text-green-600 dark:text-green-500"
+                                                    : "text-gray-700 dark:text-gray-400"
+                                        }
+                                    >
+                                        {contract.status}
+                                    </span>
                                 </p>
                                 <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Client: {contract.clientId.name}

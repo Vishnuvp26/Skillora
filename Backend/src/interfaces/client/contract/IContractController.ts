@@ -7,4 +7,5 @@ export interface IContractController {
     cancelContract(req: Request, res: Response, next: NextFunction): Promise<void>;
     isContractExist(req: Request, res: Response, next: NextFunction): Promise<void>;
     getAllContractsForAdmin(req: Request, res: Response, next: NextFunction): Promise<void>;
+    requestFundRelease(req: Request, res: Response, next: NextFunction): Promise<void>;
 };

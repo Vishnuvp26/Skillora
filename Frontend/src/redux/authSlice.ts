@@ -33,9 +33,14 @@ const userSlice = createSlice({
             return initialState;
         },
         setAccessToken: (state, action) => {
-            Cookies.set("accessToken", action.payload.accessToken, { expires: 7 });
-            return { ...state, ...action.payload };
-        }
+            if (action.payload.accessToken) {
+                Cookies.set("accessToken", action.payload.accessToken, { expires: 7 });
+                state.accessToken = action.payload.accessToken;
+            } else {
+                Cookies.remove("accessToken");
+                state.accessToken = null;
+            }
+        }        
     },
 });
 

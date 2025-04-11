@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IEscrow extends Document {
+    _id: string;
     clientId: mongoose.Types.ObjectId;
     freelancerId: mongoose.Types.ObjectId;
     contractId: mongoose.Types.ObjectId;
@@ -54,7 +55,7 @@ const EscrowSchema: Schema = new Schema<IEscrow>(
             type: String,
             enum: ["credit", "debit"],
             required: true,
-          },          
+        },
     },
     {
         timestamps: true

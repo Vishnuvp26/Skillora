@@ -13,6 +13,7 @@ export interface IContract extends Document {
     cancelReason?: string;
     canceledBy?: "Client" | "Freelancer";
     cancelReasonDescription?: string;
+    releaseFundStatus: "NotRequested" | "Requested" | "Approved";
 };
 
 const ContractSchema: Schema = new Schema<IContract>({
@@ -64,6 +65,11 @@ const ContractSchema: Schema = new Schema<IContract>({
     cancelReasonDescription: {
         type: String,
         default: ""
+    },
+    releaseFundStatus: {
+        type: String,
+        enum: ["NotRequested", "Requested", "Approved"],
+        default: "NotRequested"
     },
     isDeleted: {
         type: Boolean,

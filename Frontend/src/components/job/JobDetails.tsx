@@ -403,7 +403,7 @@ const JobDetail = () => {
                             dark:border-[#e2e2e2] dark:text-[#e2e2e2] dark:hover:bg-[#00ffe500] dark:hover:text-[#64f3bcbf] w-full sm:w-auto"
                             >
                                 <Bookmark className="w-4 h-4" />
-                                Save Job
+                                Save Work
                             </Button>
                             <Dialog open={open} onOpenChange={setOpen}>
                                 <DialogTrigger asChild>
@@ -412,15 +412,15 @@ const JobDetail = () => {
                                             className="px-4 py-2 text-sm font-medium bg-[#0077B6] hover:bg-[#005f8c] text-white rounded-lg 
                                         dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:text-black w-full sm:w-auto"
                                         >
-                                            {isApplied ? "Applied" : "Apply This Job"}
+                                            {isApplied ? "Applied" : "Apply This Work"}
                                         </Button>
                                     )}
                                 </DialogTrigger>
                                 <DialogContent className="max-w-[90%] sm:max-w-md rounded-lg p-6">
                                     <DialogHeader>
-                                        <DialogTitle className="text-lg font-semibold">Confirm Job Application</DialogTitle>
+                                        <DialogTitle className="text-lg font-semibold">Confirm Application</DialogTitle>
                                         <DialogDescription>
-                                            Are you sure you want to apply for this job? Once applied, you won't be able to withdraw immediately.
+                                            Are you sure you want to apply for this work? Once applied, you won't be able to withdraw immediately.
                                         </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter className="flex justify-end gap-3">

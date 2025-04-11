@@ -184,12 +184,16 @@ export interface IContract {
         profilePic?: string;
     };
     isApproved: boolean;
-    status: "Pending" | "Started" | "Ongoing" | "Complete" | "Canceled";
+    status: "Pending" | "Started" | "Ongoing" | "Completed" | "Canceled";
     amount: number;
     escrowPaid: boolean;
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
+    cancelReason?: string;
+    canceledBy?: "Client" | "Freelancer";
+    cancelReasonDescription?: string;
+    releaseFundStatus: "NotRequested" | "Requested" | "Approved";
 };
 
 export interface IContractDetails {
@@ -218,6 +222,7 @@ export interface IContractDetails {
     isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
+    releaseFundStatus: "NotRequested" | "Requested" | "Approved";
 };
 
 export interface MessageType {
@@ -245,4 +250,22 @@ export interface ConversationType {
     updatedAt: string;
     unreadCount: number;
     otherUserId: string;
+};
+
+export interface Transaction {
+    _id: string;
+    amount: number;
+    description: string;
+    type: "credit" | "debit";
+    date: string;
+};
+  
+  export interface Wallet {
+    _id: string;
+    userId: string;
+    balance: number;
+    transactions: Transaction[];
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
 };

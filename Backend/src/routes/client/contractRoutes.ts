@@ -23,6 +23,8 @@ router.post(
 
 router.delete(
     "/cancel-contract/:contractId",
+    authenticateToken,
+    authorizeRoles('client'),
     contractController.cancelContract.bind(contractController)
 );
 
@@ -39,6 +41,13 @@ router.get(
 router.get(
     "/all-contracts",
     contractController.getAllContractsForAdmin.bind(contractController)
-)
+);
+
+router.patch(
+    "/release-fund/:contractId",
+    authenticateToken,
+    authorizeRoles('client'),
+    contractController.requestFundRelease.bind(contractController)
+);
 
 export default router;

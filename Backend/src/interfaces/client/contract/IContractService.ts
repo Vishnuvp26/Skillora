@@ -6,4 +6,5 @@ export interface IContractService {
     cancelContract(contractId: string): Promise<void>;
     isContractExist(jobId: string, freelancerId: string): Promise<IContract | null>;
     getAllContracts(): Promise<IContract[]>;
+    requestFundRelease(contractId: string): Promise<boolean>;
 };

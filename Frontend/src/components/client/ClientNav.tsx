@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -36,7 +36,11 @@ const ClientNav: React.FC = () => {
         } catch (error) {
             console.error("Logout failed:", error);
         }
-    };   
+    };
+    
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
 
     return (
         <>
@@ -70,7 +74,7 @@ const ClientNav: React.FC = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
                             <DropdownMenuItem onClick={() => navigate('/client/post-job')} className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
-                                Post Job
+                                Post Work
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -86,7 +90,7 @@ const ClientNav: React.FC = () => {
                                 Active Contract
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/client/home')} className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer">
-                                My Jobs
+                                My Works
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -126,6 +130,9 @@ const ClientNav: React.FC = () => {
                             {/* Profile & Logout Options */}
                             <DropdownMenuItem onClick={() => navigate("/client/profile")}>
                                 <User className="w-4 h-4 mr-2" /> Profile
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate('/client/earnings')}>
+                                <DollarSign className="w-4 h-4 mr-2" /> Earnings
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate("/client/profile-settings")}>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
@@ -214,20 +221,14 @@ const ClientNav: React.FC = () => {
             
                         {/* User Info Section */}
                         <div className="flex items-center p-3 border-b border-gray-200 dark:border-gray-700">
-                            {/* <img
-                                src="https://via.placeholder.com/40" // Replace with actual user image URL
-                                alt="User Avatar"
-                                className="w-10 h-10 rounded-full"
-                            /> */}
-                            {/* <div>
-                                <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">Client</p>
-                            </div> */}
                         </div>
 
                         {/* Profile & Logout Options */}
                         <DropdownMenuItem onClick={() => navigate("/client/profile")}>
                             <User className="w-4 h-4 mr-2" /> Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/client/earnings')}>
+                            <DollarSign className="w-4 h-4 mr-2" /> Earnings
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate("/client/profile-settings")}>
                             <Settings className="w-4 h-4 mr-2" /> Profile Settings

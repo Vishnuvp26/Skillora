@@ -3,6 +3,7 @@ import { ApplicationRepository } from '../../repository/client/applicationReposi
 import { JobRepository } from '../../repository/client/jobRepository';
 import { ApplicationService } from '../../services/client/applicationService';
 import { ApplicationController } from '../../controllers/client/applicationController';
+import { authenticateToken, authorizeRoles } from '../../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -13,11 +14,15 @@ const applicationController = new ApplicationController(applicationService);
 
 router.post(
     "/apply-job/:jobId/:freelancerId",
+    authenticateToken,
+    authorizeRoles('freelancer'),
     applicationController.applyForJob.bind(applicationController)
-)
+);
 
 router.delete(
     "/cancel-application/:applicationId/:freelancerId",
+    authenticateToken,
+    authorizeRoles('freelancer'),
     applicationController.cancelApplication.bind(applicationController)
 );
 
@@ -29,6 +34,6 @@ router.get(
 router.get(
     "/applied-status/:jobId/:freelancerId",
     applicationController.getJobApplicationDetails.bind(applicationController)
-)
+);
 
 export default router;

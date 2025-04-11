@@ -1,4 +1,4 @@
-import { setAccessToken } from '@/redux/authSlice';
+import { removeUser, setAccessToken } from '@/redux/authSlice';
 import axios from 'axios'
 import store from '../../redux/store/store';
 import { refreshToken } from '../auth/authApi';
@@ -45,6 +45,8 @@ Axios.interceptors.response.use(
                 originalReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
                 return Axios(originalReq);
             } catch (refreshError) {
+                store.dispatch(removeUser());
+                window.location.href = "/login";
                 return Promise.reject(refreshError);
             }
         }

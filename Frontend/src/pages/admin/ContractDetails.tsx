@@ -7,12 +7,21 @@ import { contractDetails } from "@/api/freelancer/contractApi";
 import Spinner from "@/components/ui/Spinner";
 import dayjs from "dayjs";
 import { IContractDetails } from "@/types/Types";
+import { releaseFundToFreelancer } from "@/api/admin/escrowApi";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import toast from "react-hot-toast";
+import { Handshake, Loader2, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ContractDetails = () => {
     const { contractId } = useParams<{ contractId: string }>();
     const isMobile = useMobile();
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
     const [contract, setContract] = useState<IContractDetails | null>(null);
+    const [requestStatus, setRequestStatus] = useState<string | null>(null);
+    const [isReleasing, setIsReleasing] = useState(false);
+    const [isReleased, setIsReleased] = useState(false);
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,6 +29,7 @@ const ContractDetails = () => {
             try {
                 const response = await contractDetails(contractId!);
                 setContract(response.contract);
+                setRequestStatus(response.contract.releaseFundStatus);
             } catch (error) {
                 console.error("Failed to fetch contract details:", error);
             } finally {
@@ -31,6 +41,21 @@ const ContractDetails = () => {
     }, [contractId]);
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+
+    const releaseFund = async () => {
+        setIsReleasing(true);
+        try {
+            await releaseFundToFreelancer(contract!._id);
+            setIsReleased(true);
+            setOpen(false);
+            toast.success("Payment successfully released to the freelancer!");
+        } catch (err) {
+            console.error("Fund release failed", err);
+            toast.error("Failed to release payment. Please try again.");
+        } finally {
+            setIsReleasing(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-zinc-800 flex">
@@ -110,8 +135,58 @@ const ContractDetails = () => {
                                                 <span className="font-medium">Created At:</span> {dayjs(contract.createdAt).format("DD MMM YYYY")}
                                             </p>
                                         </div>
+
+                                        {contract?.releaseFundStatus === "Requested" && (
+                                            <Dialog open={open} onOpenChange={setOpen}>
+                                                <DialogTrigger asChild>
+                                                    <Button
+                                                        disabled={isReleased || requestStatus === "Released"}
+                                                        className={`group mt-4 text-sm px-5 py-2 rounded-full flex items-center gap-2 text-white transition-all duration-300 shadow-md ${isReleased || requestStatus === "Released"
+                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                : "bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-500 dark:to-indigo-500 hover:from-purple-700 hover:to-indigo-700 dark:hover:from-purple-600 dark:hover:to-indigo-600"
+                                                            }`}
+                                                    >
+                                                        {isReleased || requestStatus === "Released" ? (
+                                                            <>
+                                                                <Wallet className="w-4 h-4" />
+                                                                Released
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <Handshake className="w-4 h-4 transition-transform group-hover:scale-110" />
+                                                                Pay Freelancer
+                                                            </>
+                                                        )}
+                                                    </Button>
+
+                                                </DialogTrigger>
+
+                                                <DialogContent className="sm:max-w-md">
+                                                    <DialogHeader>
+                                                        <DialogTitle>Confirm Final Fund Release</DialogTitle>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            This will release the escrowed funds to the freelancer. Are you sure you want to proceed?
+                                                        </p>
+                                                    </DialogHeader>
+                                                    <DialogFooter>
+                                                        <Button variant="outline" onClick={() => setOpen(false)}>
+                                                            Cancel
+                                                        </Button>
+                                                        <Button
+                                                            onClick={releaseFund} // ✅ FIXED HERE
+                                                            disabled={isReleasing}
+                                                            className="bg-green-600 hover:bg-green-700 text-white transition-all flex items-center gap-2"
+                                                        >
+                                                            {isReleasing && <Loader2 className="w-4 h-4 animate-spin" />}
+                                                            {isReleasing ? "Processing..." : "Confirm & Release"}
+                                                        </Button>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
+                                        )}
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     ) : (

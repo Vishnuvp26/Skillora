@@ -6,4 +6,5 @@ export interface IFreelancerContractRepository extends IBaseRepository<IContract
     getContractByJobId(jobId: string): Promise<IContract | null>;
     getContractById(contractId: string): Promise<IContract | null>;
     updateContract(contractId: string, updateData: Partial<IContract>): Promise<IContract | null>;
+    getCompletedContractsByFreelancer(freelancerId: string): Promise<IContract[]>;
 };

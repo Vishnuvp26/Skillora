@@ -35,3 +35,12 @@ export const updateWorkStatus = async (contractId: string, status: string) => {
         throw error.response?.data || "Failed to update work status";
     }
 };
+
+export const getCompletedWorks = async (freelancerId: string) => {
+    try {
+        const response = await Axios.get(`api/freelancer/contract/completed-works/${freelancerId}`);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get completed works"
+    }
+};

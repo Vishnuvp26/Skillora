@@ -29,6 +29,7 @@ export const Messages = {
     INVALID_GOOGLE_TOKEN: "Invalid google id token",
     INVALID_DATE_RANGE: "End date must be after start date",
     INVALID_START_DATE: "Start date cannot be in the past",
+    INVALID_AMOUNT: "Invalid amount",
     PASSWORD_RESET_SUCCESS: "Your password has been reset successfully",
     PASSWORD_RESET_FAILED: "Password reset failed, try again later",
     PASSWORD_REQUIRED: "Password is required",
@@ -79,5 +80,16 @@ export const Messages = {
     GOOGLE_ACCOUNT: "This account is linked with Google. Cannot reset password.",
     RESET_LINK_SENT: "Password reset link has been sent to your email.",
     RESET_TOKEN_INVALID: "Reset token is invalid or has expired.",
-    RESET_TOKEN_REQUIRED: "Reset toeken is required"
+    RESET_TOKEN_REQUIRED: "Reset toeken is required",
+    FUND_RELEASED: "Fund has been released",
+    REFUND_PROCESSED: "Refund has been processed",
+    REFUND_NOT_ALLOWED: "Refund not allowed for a finished contract",
+    PAYMENT_REQUEST_PROCESSED: "Freelancer payment release request has recieved",
+    ESCROW_NOT_FOUND: "Escrow not found for the contract id",
+    PAYMENT_REQUEST_NOT_VALID: "Payment request not valid",
+    WORK_NOT_COMPLETED: "You can request release only after work completion.",
+    FUNDS_ADDED: "Fund has been added to user wallet",
+    FUND_RELEASE_REQUEST: "Fund release requested successfully.",
+    ALREADY_FUNDED: "Funds have already been released for this contract.",
+    ALREADY_REFUNDED: "Refund has already given"
 }

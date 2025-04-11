@@ -81,5 +81,22 @@ export class ContractController implements IContractController {
         } catch (error) {
             next(error)
         }
-    }
+    };
+
+    async requestFundRelease(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { contractId } = req.params;
+    
+            if (!contractId) {
+                res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });
+                return;
+            }
+    
+            await this._contractService.requestFundRelease(contractId);
+    
+            res.status(HttpStatus.OK).json({ message: Messages.FUND_RELEASE_REQUEST });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

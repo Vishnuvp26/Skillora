@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-// import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { TfiPencil } from "react-icons/tfi";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
@@ -11,8 +10,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import FreelancerProfileForm from "../../components/freelancer/Form";
 import { useEffect, useState } from "react";
-import { IFreelancer } from "@/types/Types";
+import { IContract, IFreelancer } from "@/types/Types";
 import { getProfile, uploadProfileImage } from "@/api/freelancer/profileApi";
+import { getCompletedWorks } from "@/api/freelancer/contractApi";
 
 // const projects = [
 //     { id: 1, src: pic1, title: "Ecommerce" },
@@ -26,8 +26,10 @@ const FreelancerProfile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [profile, setProfile] = useState<IFreelancer | null>(null);
+    const [completedWorks, setCompletedWorks] = useState<IContract[]>([]);
 
-    console.log("GOOGLE PIC", profile?.profilePic)
+    const [expanded, setExpanded] = useState<string | null>(null);
+    const descriptionLimit = 50;
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -41,6 +43,20 @@ const FreelancerProfile = () => {
             }
         }
         fetchProfile()
+    }, [userId]);
+
+    useEffect(() => {
+        const fetchCompletedWorks = async () => {
+            if (!userId) return;
+            try {
+                const response = await getCompletedWorks(userId);
+                setCompletedWorks(response.contracts || []);
+            } catch (error) {
+                console.error("Error fetching completed works:", error);
+            }
+        };
+    
+        fetchCompletedWorks();
     }, [userId]);
 
     const handleProfileUpdate = (updatedProfile: IFreelancer) => {
@@ -288,6 +304,43 @@ const FreelancerProfile = () => {
                         </div>
                     </>
                 )}
+                <div className="mt-10">
+                    <h2 className="text-xl font-semibold mb-4">Completed Works ({completedWorks.length})</h2>
+                    {completedWorks.length === 0 ? (
+                        <p className="text-gray-500">No completed works yet.</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {completedWorks.map((contract) => (
+                                <div key={contract._id} className="p-4 border rounded-md shadow-sm bg-white dark:bg-gray-900">
+                                    <h3 className="text-lg font-semibold text-primary">{contract.jobId.title}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                                        {expanded === contract._id
+                                            ? contract.jobId.description
+                                            : `${contract.jobId.description.slice(0, descriptionLimit)}${contract.jobId.description.length > descriptionLimit ? '...' : ''}`
+                                        }
+                                        {contract.jobId.description.length > descriptionLimit && (
+                                            <span
+                                                onClick={() => setExpanded(expanded === contract._id ? null : contract._id)}
+                                                className="ml-2 text-blue-500 cursor-pointer hover:underline text-xs"
+                                            >
+                                                {expanded === contract._id ? "View Less" : "View More"}
+                                            </span>
+                                        )}
+                                    </p>
+                                    <p className="text-sm mt-1">
+                                        <span className="font-medium">Client : </span> {contract.clientId.name} ({contract.clientId.email})
+                                    </p>
+                                    <p className="text-sm">
+                                        <span className="font-medium">Budget : </span> &#8377;{contract.jobId.rate}
+                                    </p>
+                                    <p className="text-sm">
+                                    <span className="font-medium">Work status : </span>{contract.status}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

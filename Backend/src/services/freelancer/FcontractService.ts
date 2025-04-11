@@ -80,4 +80,8 @@ export class FreelancerContractService implements IFreelancerContractService {
             { path: "freelancerId", select: "name email profilePic" }
         ]);
     };     
+
+    async getCompletedContracts(freelancerId: string): Promise<IContract[]> {
+        return await this._contractRepository.getCompletedContractsByFreelancer(freelancerId);
+    };    
 }

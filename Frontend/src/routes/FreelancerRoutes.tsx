@@ -14,6 +14,7 @@ import Contracts from "@/pages/freelancer/Contracts";
 import ContractDetails from "@/pages/freelancer/ContractDetails";
 import ResetPassword from "@/components/resetPassword/ResetPassword";
 import Chat from "@/pages/common/Chat";
+import Earnings from "@/pages/freelancer/Earnings";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -98,6 +99,14 @@ const FreelancerRoutes = () => {
                     element={
                         <ProtectedRoutes requiredRole="freelancer">
                             <Chat />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="earnings"
+                    element={
+                        <ProtectedRoutes requiredRole="freelancer">
+                            <Earnings />
                         </ProtectedRoutes>
                     }
                 />

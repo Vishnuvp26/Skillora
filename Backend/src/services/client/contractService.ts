@@ -85,5 +85,21 @@ export class ContractService implements IContractService {
 
     async getAllContracts(): Promise<IContract[]> {
         return await this._contractRepository.findAllContracts();
-    }    
+    };
+
+    async requestFundRelease(contractId: string): Promise<boolean> {
+        const contract = await this._contractRepository.findById(contractId);
+
+        if (!contract) {
+            throw createHttpError(HttpStatus.NOT_FOUND, Messages.CONTRACT_NOT_FOUND);
+        }
+
+        if (contract.status !== "Completed") {
+            throw createHttpError(HttpStatus.BAD_REQUEST, Messages.WORK_NOT_COMPLETED)
+        }
+
+        contract.releaseFundStatus = "Requested";
+        await contract.save();
+        return true;
+    };
 }

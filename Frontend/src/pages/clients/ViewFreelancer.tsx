@@ -1,18 +1,22 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProfile } from "@/api/freelancer/profileApi";
-import { IFreelancer } from "@/types/Types";
+import { IContract, IFreelancer } from "@/types/Types";
 import { IoLocationOutline } from "react-icons/io5";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 import { LuGlobe } from "react-icons/lu";
 import Spinner from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/button";
+import { getCompletedWorks } from "@/api/freelancer/contractApi";
 
 const ViewFreelancer = () => {
     const { freelancerId } = useParams();
     const [profile, setProfile] = useState<IFreelancer | null>(null);
     const [loading, setLoading] = useState(true);
+    const [completedWorks, setCompletedWorks] = useState<IContract[]>([]);
+    const [expanded, setExpanded] = useState<string | null>(null);
+    const descriptionLimit = 50;
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -27,6 +31,20 @@ const ViewFreelancer = () => {
             }
         };
         fetchProfile();
+    }, [freelancerId]);
+
+    useEffect(() => {
+        const fetchCompletedWorks = async () => {
+            if (!freelancerId) return;
+            try {
+                const response = await getCompletedWorks(freelancerId);
+                setCompletedWorks(response.contracts || []);
+            } catch (error) {
+                console.error("Error fetching completed works:", error);
+            }
+        };
+        
+        fetchCompletedWorks();
     }, [freelancerId]);
 
     if (loading) {
@@ -135,6 +153,27 @@ const ViewFreelancer = () => {
                                     )}
                             </div>
                         </div>
+                        <div>
+                            <h3 className="font-semibold font-sans">Work Experience</h3>
+                            <p className="text-gray-600 dark:text-gray-400">
+                                {profile?.employmentHistory && profile.employmentHistory.length > 0 ? (
+                                    profile.employmentHistory.map((job, index) => (
+                                        <div key={job._id || index}>
+                                            <div>
+                                                <h3 className="font-semibold font-sans">{job.company}</h3>
+                                                <p className="text-gray-600 dark:text-gray-400">{job.position}</p>
+                                                <p className="text-gray-600 dark:text-gray-400">{job.duration}</p>
+                                            </div>
+                                            {index < profile.employmentHistory.length - 1 && (
+                                                <hr className="border-gray-300 dark:border-gray-900 mt-6" />
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-gray-600 dark:text-gray-400">No employment history provided</p>
+                                )}
+                            </p>
+                        </div>
                     </div>
 
                     <div className="w-px bg-gray-300 dark:bg-gray-900"></div>
@@ -160,6 +199,44 @@ const ViewFreelancer = () => {
                             ))}
                         </div>
                     </div>
+                    
+                </div>
+                <div className="mt-10">
+                    <h2 className="text-xl font-semibold mb-4">Completed Works ({completedWorks.length})</h2>
+                    {completedWorks.length === 0 ? (
+                        <p className="text-gray-500">No completed works yet.</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {completedWorks.map((contract) => (
+                                <div key={contract._id} className="p-4 border rounded-md shadow-sm bg-gray-200 dark:bg-gray-900">
+                                    <h3 className="text-lg font-semibold text-primary">{contract.jobId.title}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                                        {expanded === contract._id
+                                            ? contract.jobId.description
+                                            : `${contract.jobId.description.slice(0, descriptionLimit)}${contract.jobId.description.length > descriptionLimit ? '...' : ''}`
+                                        }
+                                        {contract.jobId.description.length > descriptionLimit && (
+                                            <span
+                                                onClick={() => setExpanded(expanded === contract._id ? null : contract._id)}
+                                                className="ml-2 text-blue-500 cursor-pointer hover:underline text-xs"
+                                            >
+                                                {expanded === contract._id ? "View Less" : "View More"}
+                                            </span>
+                                        )}
+                                    </p>
+                                    <p className="text-sm mt-1">
+                                        <span className="font-medium">Client : </span> {contract.clientId.name} ({contract.clientId.email})
+                                    </p>
+                                    <p className="text-sm">
+                                        <span className="font-medium">Budget : </span> &#8377;{contract.jobId.rate}
+                                    </p>
+                                    <p className="text-sm">
+                                        <span className="font-medium">Work status : </span>{contract.status}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

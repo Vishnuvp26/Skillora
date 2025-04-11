@@ -16,6 +16,7 @@ import ClientContractDetails from "@/pages/clients/ClientContractDetails";
 import PaymentSuccessPage from "@/pages/clients/PaymentSuccessPage";
 import ResetPassword from "@/components/resetPassword/ResetPassword";
 import Chat from "@/pages/common/Chat";
+import Earnings from "@/pages/freelancer/Earnings";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -119,6 +120,14 @@ const ClientRoutes = () => {
                     element={
                         <ProtectedRoutes requiredRole="client">
                             <Chat />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="earnings"
+                    element={
+                        <ProtectedRoutes requiredRole="client">
+                            <Earnings />
                         </ProtectedRoutes>
                     }
                 />

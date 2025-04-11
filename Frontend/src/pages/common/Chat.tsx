@@ -111,7 +111,7 @@ const Chat = () => {
                 const activeContracts = contracts.filter(
                     (contract) =>
                         !contract.isDeleted &&
-                        ["Pending", "Started", "Ongoing"].includes(contract.status)
+                        ["Pending", "Started", "Ongoing", "Completed"].includes(contract.status)
                 );
 
                 if (activeContracts.length === 0) {

@@ -41,4 +41,15 @@ export class FreelancerContractRepository extends BaseRepository<IContract> impl
             { new: true }
         );
     };
+
+    async getCompletedContractsByFreelancer(freelancerId: string): Promise<IContract[]> {
+        return await this.model.find({
+            freelancerId,
+            status: "Completed",
+            isDeleted: false
+        }).populate([
+            { path: "jobId", select: "title description rate" },
+            { path: "clientId", select: "name email profilePic" },
+        ]);
+    };
 };

@@ -7,9 +7,11 @@ import { contractDetails, approveContract, updateWorkStatus } from "@/api/freela
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { XCircleIcon } from "lucide-react";
+import { TbBriefcaseOff } from "react-icons/tb";
 import { deleteContract } from "@/api/client/contractApi";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import ProgressBar from "@/components/progress/ProgressBar";
 
 const ContractDetails = () => {
@@ -43,6 +45,8 @@ const ContractDetails = () => {
         };
         fetchContract();
     }, [id]);
+
+    console.log('ct', contract)
 
     const handleApprove = async () => {
         if (!contract) return;
@@ -114,15 +118,18 @@ const ContractDetails = () => {
     return (
         <div className="p-5 mt-16 max-w-6xl mx-auto">
             <div className="rounded-lg p-6 bg-white dark:bg-gray-950">
-                <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">Skillora Freelancer Contract</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">Skillora Contract</h1>
                 <div className="space-y-6">
                     {/* Contract Details */}
                     <div className="flex justify-between items-center">
                         <p className="text-base text-gray-800 dark:text-gray-400">
                             <span className="font-medium text-gray-950 dark:text-gray-200">Contract ID:</span> {contract.contractId}
                         </p>
-                        <p className="text-base text-gray-800 dark:text-gray-400">
-                            <span className="font-medium text-gray-950 dark:text-gray-200">Status:</span> {contract.status}
+                        <p
+                            className={`text-base dark:text-gray-400 ${contract.status === "Canceled" ? "text-red-600 dark:text-red-500 font-semibold" : "text-gray-800"
+                                }`}
+                        >
+                            <span className="font-medium text-gray-950 dark:text-gray-200">Status:</span> {workStatus}
                         </p>
                     </div>
 
@@ -175,9 +182,9 @@ const ContractDetails = () => {
                                 <p className="text-base text-gray-800 dark:text-gray-400">
                                     <span className="font-medium text-gray-800 dark:text-gray-200">Budget:</span> ₹{contract.amount}
                                 </p>
-                                <p className="text-base text-gray-800 dark:text-gray-400">
+                                {/* <p className="text-base text-gray-800 dark:text-gray-400">
                                     <span className="font-medium text-gray-800 dark:text-gray-200">Escrow Paid:</span> {contract.escrowPaid ? "Yes" : "No"}
-                                </p>
+                                </p> */}
                                 <p className="text-base text-gray-800 dark:text-gray-400">
                                     <span className="font-medium text-gray-800 dark:text-gray-200">Created At:</span> {dayjs(contract.createdAt).format("DD MMM YYYY")}
                                 </p>
@@ -258,7 +265,7 @@ const ContractDetails = () => {
                             </div>
                         </div>
                     </div>
-                    {contract.escrowPaid && (
+                    {contract.escrowPaid && contract.status !== "Canceled" && (
                         <div className="space-y-4 mt-8 pt-4">
                             <h2 className="text-lg font-semibold border-b pb-2">Update Work Status</h2>
                             <div className="flex items-center gap-4">
@@ -284,6 +291,29 @@ const ContractDetails = () => {
                             {/* Progress Bar */}
                             <ProgressBar workStatus={workStatus} />
                         </div>
+                    )}
+
+                    {contract.canceledBy === "Client" && (
+                        <div className="rounded-lg p-6 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm mt-8">
+                        <div className="flex items-center gap-3">
+                            <TbBriefcaseOff className="text-red-600 w-6 h-6" />
+                            <h2 className="text-lg font-medium text-gray-900 dark:text-white">Contract Canceled</h2>
+                        </div>
+                        <div className="mt-3 space-y-2 text-gray-800 dark:text-gray-300">
+                            <p className="text-base text-gray-800 dark:text-gray-400">
+                                <span className="font-medium text-gray-800 dark:text-gray-200">Canceled By:</span> {contract.canceledBy}
+                            </p>
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value="cancel-info">
+                                    <AccordionTrigger className="text-gray-800 dark:text-gray-200">View Info</AccordionTrigger>
+                                    <AccordionContent className="text-gray-700 dark:text-gray-400">
+                                        <p><span className="font-medium text-gray-800 dark:text-gray-200">Reason:</span> {contract.cancelReason}</p>
+                                        <p><span className="font-medium text-gray-800 dark:text-gray-200">Details:</span> {contract.cancelReasonDescription}</p>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                        </div>
+                    </div>
                     )}
                 </div>
             </div>

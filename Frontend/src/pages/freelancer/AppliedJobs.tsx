@@ -9,6 +9,7 @@ import { Eye, X, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Application } from "@/types/Types";
+import toast from "react-hot-toast";
 
 const AppliedJobs = () => {
     const userId = useSelector((state: RootState) => state.user._id);
@@ -23,8 +24,10 @@ const AppliedJobs = () => {
         const fetchApplications = async () => {
             try {
                 const response = await viewAppliedJobs(userId);
-                setApplications(response.applications);
-                console.log('APPLICATIONS', response.applications);
+                const sortedJobs = (response.applications || []).sort(
+                    (a: Application, b: Application) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                setApplications(sortedJobs);
             } catch (error) {
                 console.error("Failed to fetch applications:", error);
             } finally {
@@ -45,6 +48,7 @@ const AppliedJobs = () => {
             setApplications((prev) =>
                 prev.filter((application) => application._id !== applicationId)
             );
+            toast.success("Job application canceled successfully!");
         } catch (error) {
             console.error("Failed to cancel job application:", error);
         } finally {

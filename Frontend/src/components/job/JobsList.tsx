@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "../ui/button";
 
 const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
     const userRole = useSelector((state: RootState) => state.user.role);
@@ -68,14 +69,14 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                 <div className="flex flex-col gap-5 mt-1.5">
                     <div className="flex justify-between items-center flex-wrap gap-3">
                         {userRole === "client" ? (
-                            <h2 className="text-xl font-semibold">Your Jobs</h2>
+                            <h2 className="text-xl font-semibold">Your Works</h2>
                         ) : (
-                            <h2 className="text-xl font-semibold">Find Jobs</h2>
+                            <h2 className="text-xl font-semibold">Find Works</h2>
                         )}
                         <div className="w-full sm:w-72 md:w-96 lg:max-w-[600px] relative">
                             <input
                                 type="text"
-                                placeholder="Search jobs..."
+                                placeholder="Search works..."
                                 className="w-full border p-2.5 pl-3 pr-8 rounded-lg text-sm dark:bg-gray-950 dark:text-white 
                                 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600"
                                 value={searchTerm}
@@ -221,8 +222,20 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                     )}
                 </div>
             ) : (
-                <div className="p-10 mt-4 flex flex-col items-center text-center bg-white dark:bg-gray-950">
-                    <p className="text-gray-700 dark:text-gray-400 mt-4">No job posts or contracts in progress right now</p>
+                <div className="px-6 py-16 sm:p-24 mt-10 flex flex-col items-center text-center bg-white dark:bg-gray-950 rounded-xl shadow-sm">
+                    <p className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
+                        No Work Posts Yet
+                    </p>
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-2">
+                        You haven’t posted any jobs yet. Start by creating your first one!
+                    </p>
+
+                    <Button
+                        onClick={() => navigate("/client/post-job")}
+                        className="mt-6 px-5 py-2 sm:px-6 sm:py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 dark:from-purple-500 dark:to-indigo-500 rounded-full transition-all"
+                    >
+                        Get Started
+                    </Button>
                 </div>
             )}
         </div>
