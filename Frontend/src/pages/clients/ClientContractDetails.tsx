@@ -17,6 +17,7 @@ import { EscrowPendingAlert } from "@/components/alerts/EscrowPendingAlert";
 import { releaseFundRequest } from "@/api/client/contractApi";
 import toast from "react-hot-toast";
 import { refundToClient } from "@/api/admin/escrowApi";
+import { RateFreelancerDialog } from "@/components/client/RateFreelancerDialog";
 
 const ClientContractDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -31,7 +32,7 @@ const ClientContractDetails = () => {
     const [cancelReason, setCancelReason] = useState("");
     const [cancelDescription, setCancelDescription] = useState("");
     const [isCanceling, setIsCanceling] = useState(false);
-
+    const [hasReviewed, setHasReviewed] = useState(false);
 
     const stripe = useStripe();
     const elements = useElements();
@@ -222,8 +223,8 @@ const ClientContractDetails = () => {
                                     <DialogTrigger asChild>
                                         <Button
                                             className="border border-[#DC2626] text-[#DC2626] bg-transparent 
-                hover:bg-[#DC262611] hover:text-[#DC2626] 
-                dark:border-[#FF5252] dark:text-[#ffff] dark:hover:bg-[#FF525211] dark:hover:text-[#ffff] -ml-2 mt-2"
+                                            hover:bg-[#DC262611] hover:text-[#DC2626] 
+                                            dark:border-[#FF5252] dark:text-[#ffff] dark:hover:bg-[#FF525211] dark:hover:text-[#ffff] -ml-2 mt-2"
                                         >
                                             Cancel Contract
                                         </Button>
@@ -279,6 +280,16 @@ const ClientContractDetails = () => {
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>
+                            )}
+
+                            {/* Review Rating section */}
+                            {contract.status === "Completed" && !hasReviewed && (
+                                <RateFreelancerDialog
+                                    clientId={contract.clientId._id}
+                                    contractId={contract._id}
+                                    freelancerId={contract.freelancerId._id}
+                                    onSuccess={() => setHasReviewed(true)}
+                                />
                             )}
 
                         </div>

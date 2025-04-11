@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProfile } from "@/api/freelancer/profileApi";
-import { IContract, IFreelancer } from "@/types/Types";
+import { IContract, IFreelancer, Review } from "@/types/Types";
 import { IoLocationOutline } from "react-icons/io5";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
@@ -9,6 +9,8 @@ import { LuGlobe } from "react-icons/lu";
 import Spinner from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/button";
 import { getCompletedWorks } from "@/api/freelancer/contractApi";
+import { getFreelancerReviews } from "@/api/client/reviewApi";
+import { Star } from "lucide-react";
 
 const ViewFreelancer = () => {
     const { freelancerId } = useParams();
@@ -16,6 +18,7 @@ const ViewFreelancer = () => {
     const [loading, setLoading] = useState(true);
     const [completedWorks, setCompletedWorks] = useState<IContract[]>([]);
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const descriptionLimit = 50;
 
     useEffect(() => {
@@ -45,6 +48,20 @@ const ViewFreelancer = () => {
         };
         
         fetchCompletedWorks();
+    }, [freelancerId]);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            if (!freelancerId) return;
+            try {
+                const response = await getFreelancerReviews(freelancerId);
+                setReviews(response.data);
+            } catch (error) {
+                console.error("Failed to fetch reviews", error);
+            }
+        };
+        
+        fetchReviews();
     }, [freelancerId]);
 
     if (loading) {
@@ -233,6 +250,48 @@ const ViewFreelancer = () => {
                                     <p className="text-sm">
                                         <span className="font-medium">Work status : </span>{contract.status}
                                     </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div className="mt-6">
+                    <h2 className="text-lg font-semibold mb-4">Client Reviews</h2>
+
+                    {reviews.length === 0 ? (
+                        <p className="text-gray-500">No reviews yet.</p>
+                    ) : (
+                        <div className="space-y-6">
+                            {reviews.map((review) => (
+                                <div key={review._id} className="border p-4 rounded-lg shadow-sm">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <img
+                                            src={
+                                                review.clientId.profilePic ||
+                                                "https://ui-avatars.com/api/?name=" + encodeURIComponent(review.clientId.name)
+                                            }
+                                            alt={review.clientId.name}
+                                            className="w-8 h-8 rounded-full"
+                                        />
+
+                                        <span className="font-medium">{review.clientId.name}</span>
+                                    </div>
+
+                                    <div className="flex gap-1 mb-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`w-4 h-4 ${i < Math.floor(review.rating) ? "text-yellow-500" : "text-gray-300"}`}
+                                                fill={i < Math.floor(review.rating) ? "#facc15" : "none"}
+                                            />
+                                        ))}
+                                        {review.rating % 1 !== 0 && (
+                                            <Star className="w-4 h-4 text-yellow-400" fill="url(#half)" />
+                                        )}
+                                    </div>
+
+                                    <p className="text-sm dark:text-gray-300 text-gray-700">{review.description}</p>
+                                    <p className="text-xs text-gray-400 mt-1">{new Date(review.createdAt).toLocaleDateString()}</p>
                                 </div>
                             ))}
                         </div>

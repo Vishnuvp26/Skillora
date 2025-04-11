@@ -102,4 +102,8 @@ export class ContractService implements IContractService {
         await contract.save();
         return true;
     };
+
+    async getContractById(contractId: string): Promise<IContract | null> {
+        return await this._contractRepository.findById(contractId);
+    };      
 }

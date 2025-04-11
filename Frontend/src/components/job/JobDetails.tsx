@@ -15,6 +15,7 @@ import { BiSolidBadgeCheck } from "react-icons/bi";
 import { applyJob, getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { createContract, deleteContract, isContractCreated } from "@/api/client/contractApi";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const JobDetail = () => {
     const userRole = useSelector((state: RootState) => state.user.role)
@@ -218,7 +219,7 @@ const JobDetail = () => {
                         <span className="text-gray-950 dark:text-gray-200 font-semibold">Posted by:</span>
                         <span className="ml-2 flex items-center text-gray-900 dark:text-gray-200">
                             {job.clientId?.name}
-                            <BiSolidBadgeCheck  className="w-4 h-4 ml-1 text-blue-600" />
+                            <BiSolidBadgeCheck className="w-4 h-4 ml-1 text-blue-600" />
                         </span>
                     </div>
 
@@ -310,12 +311,21 @@ const JobDetail = () => {
                                         className="p-4 border rounded-md bg-gray-100 dark:bg-gray-900 mt-4"
                                     >
                                         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-3">
-                                            <img
-                                                src={applicant.freelancerId.profilePic || "/default-profile.png"}
-                                                alt={applicant.freelancerId.firstName}
-                                                className="w-12 h-12 rounded-full"
-                                                onClick={() => navigate(`/client/job/applied-freelancer/${applicant.freelancerId.userId}`)}
-                                            />
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <img
+                                                            src={applicant.freelancerId.profilePic || "/default-profile.png"}
+                                                            alt={applicant.freelancerId.firstName}
+                                                            className="w-12 h-12 rounded-full cursor-pointer hover:ring-2 hover:ring-primary hover:scale-105 transition duration-200"
+                                                            onClick={() => navigate(`/client/job/applied-freelancer/${applicant.freelancerId.userId}`)}
+                                                        />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>View Profile</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
                                             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                                                 <h3
                                                     className="text-md font-medium cursor-pointer"

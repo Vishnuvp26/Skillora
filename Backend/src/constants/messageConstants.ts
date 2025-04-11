@@ -91,5 +91,6 @@ export const Messages = {
     FUNDS_ADDED: "Fund has been added to user wallet",
     FUND_RELEASE_REQUEST: "Fund release requested successfully.",
     ALREADY_FUNDED: "Funds have already been released for this contract.",
-    ALREADY_REFUNDED: "Refund has already given"
+    ALREADY_REFUNDED: "Refund has already given",
+    REVIEW_CREATED: "Review created successfully",
 }

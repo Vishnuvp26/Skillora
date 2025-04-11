@@ -269,3 +269,14 @@ export interface Transaction {
     createdAt: string;
     updatedAt: string;
 };
+
+export interface Review {
+    _id: string;
+    rating: number;
+    description: string;
+    clientId: {
+      name: string;
+      profilePic?: string;
+    };
+    createdAt: string;
+};
