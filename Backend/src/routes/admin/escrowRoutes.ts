@@ -44,6 +44,15 @@ router.put(
 
 router.get(
     "/transactions",
+    authenticateToken,
+    authorizeRoles('admin'),
+    escrowController.getAdminTransactions.bind(escrowController)
+);
+
+router.get(
+    "/sales-report",
+    authenticateToken,
+    authorizeRoles('admin'),
     escrowController.getAdminTransactions.bind(escrowController)
 );
 

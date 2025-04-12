@@ -52,3 +52,12 @@ export const getAdminTransactions = async () => {
         throw error.response?.data || "Failed to get admin transactions"
     }
 };
+
+export const generateSalesReport = async () => {
+    try {
+        const response = await Axios.get('/api/admin/escrow/sales-report');
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get sales report";
+    }
+};

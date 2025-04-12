@@ -96,33 +96,37 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                         {/* Sort Select */}
                         <Select
                             value={sortOption ?? "sort"}
-                            onValueChange={(value) => setSortOption(value as "budget" | "date" | null)}
-
+                            onValueChange={(value) => {
+                                setSortOption(value === "clear" ? null : (value as "budget" | "date"));
+                            }}
                         >
                             <SelectTrigger className="w-[180px] text-sm dark:bg-gray-950 dark:text-white">
-                                <SelectValue />
+                                <SelectValue placeholder="Sort By" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="sort" disabled>Sort By</SelectItem>
                                 <SelectItem value="budget">Budget</SelectItem>
                                 <SelectItem value="date">Posted Date</SelectItem>
+                                <SelectItem value="clear">Clear Sort</SelectItem>
                             </SelectContent>
                         </Select>
+
                         {/* Experience Filter Select */}
                         <Select
                             value={filterExperience ?? "experience"}
                             onValueChange={(value) =>
-                                setFilterExperience(value === "experience" ? null : value)
+                                setFilterExperience(value === "experience" || value === "clear" ? null : value)
                             }
                         >
                             <SelectTrigger className="w-[200px] text-sm dark:bg-gray-950 dark:text-white">
-                                <SelectValue />
+                                <SelectValue placeholder="Filter by Experience" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="experience" disabled>Filter by Experience</SelectItem>
                                 <SelectItem value="Beginner">Beginner</SelectItem>
                                 <SelectItem value="Intermediate">Intermediate</SelectItem>
                                 <SelectItem value="Expert">Expert</SelectItem>
+                                <SelectItem value="clear">Clear Filter</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

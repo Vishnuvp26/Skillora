@@ -6,5 +6,5 @@ export interface IEscrowRepository extends IBaseRepository<IEscrow> {
     getTotalRevenue(): Promise<number>;
     updateEscrow(id: string, updateData: Partial<IEscrow>): Promise<IEscrow | null>;
     getAdminTransactions(): Promise<IEscrow[]>;
-    
+    getMonthlySalesReport(): Promise<any[]>;
 };

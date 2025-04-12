@@ -202,4 +202,8 @@ export class EscrowService implements IEscrowService {
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, Messages.FAILED);
         }
     };
+
+    async getMonthlySalesReport(): Promise<any[]> {
+        return this._escrowRepository.getMonthlySalesReport();
+    };
 };

@@ -41,4 +41,54 @@ export class EscrowRepository extends BaseRepository<IEscrow> implements IEscrow
             .populate('contractId')
             .sort({ createdAt: -1 });
     };
+
+    async getMonthlySalesReport(): Promise<any[]> {
+        return this.model.aggregate([
+            {
+                $match: {
+                    status: "released"
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" }
+                    },
+                    totalRevenue: { $sum: "$amount" },
+                    platformEarnings: { $sum: "$platformFee" },
+                    freelancerEarnings: { $sum: "$freelancerEarning" },
+                    totalTransactions: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    "_id.year": 1,
+                    "_id.month": 1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $concat: [
+                            { $toString: "$_id.year" },
+                            "-",
+                            {
+                                $cond: [
+                                    { $lt: ["$_id.month", 10] },
+                                    { $concat: ["0", { $toString: "$_id.month" }] },
+                                    { $toString: "$_id.month" }
+                                ]
+                            }
+                        ]
+                    },
+                    totalRevenue: 1,
+                    platformEarnings: 1,
+                    freelancerEarnings: 1,
+                    totalTransactions: 1
+                }
+            }
+        ]);
+    };
 }

@@ -94,4 +94,13 @@ export class EscrowController implements IEscrowController {
             next(error);
         }
     };
+
+    async getSalesReport(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+          const report = await this._escrowService.getMonthlySalesReport();
+          res.status(HttpStatus.OK).json({ data: report });
+        } catch (error) {
+          next(error);
+        }
+    };
 }

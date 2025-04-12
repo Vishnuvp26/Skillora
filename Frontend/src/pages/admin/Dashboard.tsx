@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import useMobile from "@/hooks/useMobile";
-import { escrowBalance, totalRevenue } from "@/api/admin/escrowApi";
+import { escrowBalance, generateSalesReport, totalRevenue } from "@/api/admin/escrowApi";
 import Spinner from "@/components/ui/Spinner";
 import { GiMoneyStack } from "react-icons/gi";
 import { FaUserTie } from "react-icons/fa";
 import { GrUserWorker } from "react-icons/gr";
 import { fetchClients, fetchFreelancers } from "@/api/admin/adminApi";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const Dashboard = () => {
     const isMobile = useMobile();
@@ -18,23 +19,28 @@ const Dashboard = () => {
     const [freelancerCount, setFreelancerCount] = useState<number>(0);
     const [clientCount, setClientCount] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
+    const [salesReport, setSalesReport] = useState<any[]>([]);
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [escrowRes, clientsRes, freelancersRes, revenueRes] = await Promise.all([
+                const [escrowRes, clientsRes, freelancersRes, revenueRes, salesRes] = await Promise.all([
                     escrowBalance(),
                     fetchClients(),
                     fetchFreelancers(),
-                    totalRevenue()
+                    totalRevenue(),
+                    generateSalesReport()
                 ]);
+
+                console.log('Sales Report Response:', salesRes);
     
                 setEscrowAmount(escrowRes.data);
                 setRevenue(revenueRes.data);
                 setClientCount(clientsRes.data.length);
                 setFreelancerCount(freelancersRes.data.length);
+                setSalesReport(salesRes.data);
             } catch (err: any) {
                 setError(err.message || "Something went wrong");
             } finally {
@@ -44,6 +50,15 @@ const Dashboard = () => {
     
         fetchDashboardData();
     }, []);
+
+    const formattedSalesData = salesReport.map((item: any) => {
+        return {
+            month: new Date(item.createdAt).toLocaleString('default', { month: 'short', year: 'numeric' }),
+            totalRevenue: item.amount.toFixed(2),
+            freelancerEarnings: item.freelancerEarning.toFixed(2),
+            platformEarnings: item.platformFee.toFixed(2),
+        };
+    });
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-black flex">
@@ -117,6 +132,22 @@ const Dashboard = () => {
                                         {freelancerCount}
                                     </p>
                                 </div>
+                            </div>
+                            {/* Sales Revenue Chart */}
+                            <div className="bg-gray-200 dark:bg-zinc-800 rounded-xl shadow-md p-6 flex flex-col w-11/12">
+                                <h2 className="text-gray-700 dark:text-gray-400 mb-4">Monthly Sales Report</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <LineChart data={formattedSalesData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="month" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="totalRevenue" stroke="#8884d8" />
+                                        <Line type="monotone" dataKey="freelancerEarnings" stroke="#82ca9d" />
+                                        <Line type="monotone" dataKey="platformEarnings" stroke="#ff7300" />
+                                    </LineChart>
+                                </ResponsiveContainer>
                             </div>
                         </div>
                     )}

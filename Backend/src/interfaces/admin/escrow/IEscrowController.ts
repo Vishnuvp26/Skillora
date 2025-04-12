@@ -7,5 +7,5 @@ export interface IEscrowController {
     releaseFundsToFreelancer(req: Request, res: Response, next: NextFunction): Promise<void>;
     refundToClient(req: Request, res: Response, next: NextFunction): Promise<void>;
     processFreelancerPaymentRequest(req: Request, res: Response, next: NextFunction): Promise<void>;
-    // getSalesReport(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getSalesReport(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
