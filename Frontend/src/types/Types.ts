@@ -280,3 +280,17 @@ export interface Review {
     };
     createdAt: string;
 };
+
+export interface AdminTransaction {
+    _id: string;
+    amount: number;
+    platformFee: number;
+    createdAt: string;
+    transactionType: "credit" | "debit";
+    status: "funded" | "released" | "refunded" | "canceled";
+    clientId: {
+        _id: string;
+        name: string;
+        email: string;
+    };
+};

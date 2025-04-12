@@ -1,8 +1,5 @@
-import { Messages } from "../../constants/messageConstants";
-import { HttpStatus } from "../../constants/statusContstants";
 import { IEscrowRepository } from "../../interfaces/admin/escrow/IEscrowRepository";
 import Escrow, { IEscrow } from "../../models/admin/escrowModel";
-import { createHttpError } from "../../utils/httpError";
 import { BaseRepository } from "../base/baseRepository";
 
 export class EscrowRepository extends BaseRepository<IEscrow> implements IEscrowRepository {
@@ -32,5 +29,16 @@ export class EscrowRepository extends BaseRepository<IEscrow> implements IEscrow
         const totalRevenue = result.length > 0 ? result[0].totalRevenue : 0;
     
         return totalRevenue;
+    };
+
+    async getAdminTransactions(): Promise<IEscrow[]> {
+        return await this.model.find({
+            transactionType: "credit",
+            status: { $in: ["funded", "released", "refunded", "released"] }
+        })
+            .populate('clientId', 'name email')
+            .populate('freelancerId', 'name email')
+            .populate('contractId')
+            .sort({ createdAt: -1 });
     };
 }

@@ -82,4 +82,16 @@ export class EscrowController implements IEscrowController {
             next(error);
         }
     };
+
+    async getAdminTransactions(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const transactions = await this._escrowService.getAdminTransactions();
+            res.status(HttpStatus.OK).json({ 
+                count: transactions.length, 
+                data: transactions 
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

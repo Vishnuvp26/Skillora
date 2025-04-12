@@ -194,4 +194,12 @@ export class EscrowService implements IEscrowService {
 
         return updatedEscrow as IEscrow;
     };
+
+    async getAdminTransactions(): Promise<IEscrow[]> {
+        try {
+            return await this._escrowRepository.getAdminTransactions();
+        } catch (error) {
+            throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, Messages.FAILED);
+        }
+    };
 };

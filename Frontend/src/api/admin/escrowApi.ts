@@ -43,3 +43,12 @@ export const refundToClient = async (
         throw error.response?.data || "Failed to process refund";
     }
 };
+
+export const getAdminTransactions = async () => {
+    try {
+        const response = await Axios.get('/api/admin/escrow/transactions');
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get admin transactions"
+    }
+};
