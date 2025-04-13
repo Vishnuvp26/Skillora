@@ -8,6 +8,6 @@ export class SkillsRepository extends BaseRepository<ISkills> implements ICatego
     }
 
     async findByName(name: string): Promise<ISkills | null> {
-        return await this.findOne({ name })
+        return await this.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
     }
 };

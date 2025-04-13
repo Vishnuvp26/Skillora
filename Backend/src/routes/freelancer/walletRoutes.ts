@@ -13,14 +13,14 @@ const walletController = new WalletController(walletService);
 router.get(
     "/earnings/:userId",
     authenticateToken,
-    authorizeRoles('freelancer'),
+    authorizeRoles('freelancer', 'client'),
     walletController.getWallet.bind(walletController)
 );
 
 router.get(
     "/transactions/:walletId",
     authenticateToken,
-    authorizeRoles('freelancer'),
+    authorizeRoles('freelancer', 'client'),
     walletController.getUserTransactions.bind(walletController)
 );
 

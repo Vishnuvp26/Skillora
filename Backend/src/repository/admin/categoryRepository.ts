@@ -8,6 +8,6 @@ export class CategoryRepository extends BaseRepository<ICategory> implements ICa
     }
 
     async findByName(name: string): Promise<ICategory | null> {
-        return await this.findOne({ name });
+        return await this.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
     }    
 }
