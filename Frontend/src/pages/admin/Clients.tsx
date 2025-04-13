@@ -10,6 +10,8 @@ import { UserType } from "@/types/Types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"; 
+import { Button } from "@/components/ui/button";
 
 const Clients = () => {
     const isMobile = useMobile();
@@ -18,6 +20,8 @@ const Clients = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState<UserType[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectClient, setselectClient] = useState<UserType | null>(null);
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
@@ -44,6 +48,11 @@ const Clients = () => {
         } catch (error) {
             console.error("Failed to update client status:", error);
         }
+    };
+
+    const handleStatusChange = (freelancer: UserType) => {
+        setselectClient(freelancer);
+        setIsDialogOpen(true);
     };
     
     const filteredClients = clients.filter((client) =>
@@ -101,14 +110,14 @@ const Clients = () => {
                                                 {dayjs(client.joinedAt).format("DD MMM YYYY")}
                                             </TableCell>
                                             <TableCell>{client.status}</TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell key={client._id} className="text-center">
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger>
                                                             <div className="inline-block">
                                                                 <Switch
                                                                     checked={client.status === "blocked"}
-                                                                    onCheckedChange={() => toggleClientStatus(client._id, client.status === "blocked")}
+                                                                    onCheckedChange={() => handleStatusChange(client)}
                                                                 />
 
                                                             </div>
@@ -119,6 +128,35 @@ const Clients = () => {
                                                     </Tooltip>
                                                 </TooltipProvider>
                                             </TableCell>
+                                            {selectClient && (
+                                                <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
+                                                    <DialogContent>
+                                                        <DialogHeader>
+                                                            <DialogTitle>{selectClient.status === 'active' ? 'Block Freelancer' : 'Unblock Freelancer'}</DialogTitle>
+                                                            <DialogDescription>
+                                                                Are you sure you want to {selectClient.status === 'active' ? 'block' : 'unblock'} this freelancer?
+                                                            </DialogDescription>
+                                                        </DialogHeader>
+                                                        <DialogFooter>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    toggleClientStatus(selectClient._id, selectClient.status === 'blocked');
+                                                                    setIsDialogOpen(false);
+                                                                }}
+                                                                className="btn btn-danger"
+                                                            >
+                                                                Confirm
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() => setIsDialogOpen(false)}
+                                                                className="btn btn-secondary"
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </DialogFooter>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            )}
                                         </TableRow>
                                     ))
                                 ) : (

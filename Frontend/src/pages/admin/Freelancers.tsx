@@ -10,6 +10,8 @@ import { UserType } from "@/types/Types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"; 
+import { Button } from "@/components/ui/button";
 
 const Freelancer = () => {
     const isMobile = useMobile();
@@ -18,6 +20,8 @@ const Freelancer = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [freelancers, setFreelancers] = useState<UserType[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedFreelancer, setSelectedFreelancer] = useState<UserType | null>(null);
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
@@ -44,6 +48,11 @@ const Freelancer = () => {
         } catch (error) {
             console.error("Failed to update freelancer status:", error);
         }
+    };
+
+    const handleStatusChange = (freelancer: UserType) => {
+        setSelectedFreelancer(freelancer);
+        setIsDialogOpen(true);
     };
     
     const filteredFreelancers = freelancers.filter((freelancer) =>
@@ -101,24 +110,52 @@ const Freelancer = () => {
                                                 {dayjs(freelancer.joinedAt).format("DD MMM YYYY")}
                                             </TableCell>
                                             <TableCell>{freelancer.status}</TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell key={freelancer._id} className="text-center">
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger>
                                                             <div className="inline-block">
                                                                 <Switch
                                                                     checked={freelancer.status === "blocked"}
-                                                                    onCheckedChange={() => toggleFreelancerStatus(freelancer._id, freelancer.status === "blocked")}
+                                                                    onCheckedChange={() => handleStatusChange(freelancer)}
                                                                 />
-
                                                             </div>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
-                                                            {freelancer.status == 'active' ? 'Block' : 'Unblock'}
+                                                            {freelancer.status === 'active' ? 'Block' : 'Unblock'}
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
                                             </TableCell>
+                                            {selectedFreelancer && (
+                                                <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
+                                                    <DialogContent>
+                                                        <DialogHeader>
+                                                            <DialogTitle>{selectedFreelancer.status === 'active' ? 'Block Freelancer' : 'Unblock Freelancer'}</DialogTitle>
+                                                            <DialogDescription>
+                                                                Are you sure you want to {selectedFreelancer.status === 'active' ? 'block' : 'unblock'} this freelancer?
+                                                            </DialogDescription>
+                                                        </DialogHeader>
+                                                        <DialogFooter>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    toggleFreelancerStatus(selectedFreelancer._id, selectedFreelancer.status === 'blocked');
+                                                                    setIsDialogOpen(false);
+                                                                }}
+                                                                className="btn btn-danger"
+                                                            >
+                                                                Confirm
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() => setIsDialogOpen(false)}
+                                                                className="btn btn-secondary"
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </DialogFooter>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            )}
                                         </TableRow>
                                     ))
                                 ) : (
