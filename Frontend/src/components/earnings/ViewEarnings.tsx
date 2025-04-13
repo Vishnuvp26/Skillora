@@ -22,7 +22,7 @@ const ViewEarnings = () => {
     const itemsPerPage = 5;
 
     // Sorting
-    const [sortAsc, setSortAsc] = useState(true);
+    const [sortAsc, setSortAsc] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
