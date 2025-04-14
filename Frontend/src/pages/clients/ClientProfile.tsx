@@ -67,7 +67,7 @@ const ClientProfile = () => {
                             ) : (
                                 <>
                                     <img
-                                        src={profile?.profilePic || ""}
+                                        src={profile?.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                                         alt="Profile"
                                         className="w-28 h-28 rounded-full border border-gray-300 dark:border-gray-700 object-cover"
                                     />

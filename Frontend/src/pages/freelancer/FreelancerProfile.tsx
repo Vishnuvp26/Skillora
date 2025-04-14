@@ -4,8 +4,8 @@ import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 import { LuGlobe } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
-// import pic1 from '../../assets/portfolio1.png';
-// import pic2 from '../../assets/portfolio2.png';
+import pic1 from '../../assets/portfolio1.png';
+import pic2 from '../../assets/portfolio2.png';
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import FreelancerProfileForm from "../../components/freelancer/Form";
@@ -15,11 +15,12 @@ import { getProfile, uploadProfileImage } from "@/api/freelancer/profileApi";
 import { getCompletedWorks } from "@/api/freelancer/contractApi";
 import { getFreelancerReviews } from "@/api/client/reviewApi";
 import { Star } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-// const projects = [
-//     { id: 1, src: pic1, title: "Ecommerce" },
-//     { id: 2, src: pic2, title: "Booking" },
-// ];
+const projects = [
+    { id: 1, src: pic1, title: "Ecommerce" },
+    { id: 2, src: pic2, title: "Booking" },
+];
 
 const FreelancerProfile = () => {
     const userEmail = useSelector((state: RootState) => state.user.email);
@@ -121,7 +122,7 @@ const FreelancerProfile = () => {
                             ) : (
                                 <>
                                     <img
-                                        src={profile?.profilePic || ""}
+                                        src={profile?.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                                         alt="Profile"
                                         className="w-28 h-28 rounded-full border border-gray-300 dark:border-gray-700 object-cover"
                                     />
@@ -254,7 +255,7 @@ const FreelancerProfile = () => {
                                 </p>
                                 {/* <hr className="my-6 border-gray-300 dark:border-gray-900" /> */}
                                 {/* PORTFOLIO */}
-                                {/* <h2 className="text-xl font-bold text-black dark:text-white mt-10">Portfolio</h2>
+                                <h2 className="text-xl font-bold text-black dark:text-white mt-10">Portfolio</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
                                     {projects.map((project) => (
                                         <Dialog key={project.id}>
@@ -281,7 +282,7 @@ const FreelancerProfile = () => {
                                             </DialogContent>
                                         </Dialog>
                                     ))}
-                                </div> */}
+                                </div>
 
                                 {/* SKILLS */}
                                 <hr className="my-6 border-gray-300 dark:border-gray-900" />
@@ -319,87 +320,85 @@ const FreelancerProfile = () => {
                                 )}
                             </div>
                         </div>
+                        <div className="mt-10">
+                            <h2 className="text-xl font-semibold mb-4">Completed Works ({completedWorks.length})</h2>
+                            {completedWorks.length === 0 ? (
+                                <p className="text-gray-500">No completed works yet.</p>
+                            ) : (
+                                <div className="space-y-4">
+                                    {completedWorks.map((contract) => (
+                                        <div key={contract._id} className="p-4 border rounded-md shadow-sm bg-white dark:bg-gray-900">
+                                            <h3 className="text-lg font-semibold text-primary">{contract.jobId.title}</h3>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                                                {expanded === contract._id
+                                                    ? contract.jobId.description
+                                                    : `${contract.jobId.description.slice(0, descriptionLimit)}${contract.jobId.description.length > descriptionLimit ? '...' : ''}`
+                                                }
+                                                {contract.jobId.description.length > descriptionLimit && (
+                                                    <span
+                                                        onClick={() => setExpanded(expanded === contract._id ? null : contract._id)}
+                                                        className="ml-2 text-blue-500 cursor-pointer hover:underline text-xs"
+                                                    >
+                                                        {expanded === contract._id ? "View Less" : "View More"}
+                                                    </span>
+                                                )}
+                                            </p>
+                                            <p className="text-sm mt-1">
+                                                <span className="font-medium">Client : </span> {contract.clientId.name} ({contract.clientId.email})
+                                            </p>
+                                            <p className="text-sm">
+                                                <span className="font-medium">Budget : </span> &#8377;{contract.jobId.rate}
+                                            </p>
+                                            <p className="text-sm">
+                                                <span className="font-medium">Work status : </span>{contract.status}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-6">
+                            <h2 className="text-lg font-semibold mb-4">Client Reviews</h2>
+
+                            {reviews.length === 0 ? (
+                                <p className="text-gray-500">No reviews yet.</p>
+                            ) : (
+                                <div className="space-y-6">
+                                    {reviews.map((review) => (
+                                        <div key={review._id} className="border p-4 rounded-lg shadow-sm">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <img
+                                                    src={
+                                                        "https://www.w3schools.com/howto/img_avatar.png"
+                                                    }
+                                                    alt={review.clientId.name}
+                                                    className="w-8 h-8 rounded-full"
+                                                />
+                                                <span className="font-medium">{review.clientId.name}</span>
+                                            </div>
+
+                                            <div className="flex gap-1 mb-1">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star
+                                                        key={i}
+                                                        className={`w-4 h-4 ${i < Math.floor(review.rating) ? "text-yellow-500" : "text-gray-300"}`}
+                                                        fill={i < Math.floor(review.rating) ? "#facc15" : "none"}
+                                                    />
+                                                ))}
+                                                {review.rating % 1 !== 0 && (
+                                                    <Star className="w-4 h-4 text-yellow-400" fill="url(#half)" />
+                                                )}
+                                            </div>
+
+                                            <p className="text-sm dark:text-gray-300 text-gray-700">{review.description}</p>
+                                            <p className="text-xs text-gray-400 mt-1">{new Date(review.createdAt).toLocaleDateString()}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </>
                 )}
-                <div className="mt-10">
-                    <h2 className="text-xl font-semibold mb-4">Completed Works ({completedWorks.length})</h2>
-                    {completedWorks.length === 0 ? (
-                        <p className="text-gray-500">No completed works yet.</p>
-                    ) : (
-                        <div className="space-y-4">
-                            {completedWorks.map((contract) => (
-                                <div key={contract._id} className="p-4 border rounded-md shadow-sm bg-white dark:bg-gray-900">
-                                    <h3 className="text-lg font-semibold text-primary">{contract.jobId.title}</h3>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                                        {expanded === contract._id
-                                            ? contract.jobId.description
-                                            : `${contract.jobId.description.slice(0, descriptionLimit)}${contract.jobId.description.length > descriptionLimit ? '...' : ''}`
-                                        }
-                                        {contract.jobId.description.length > descriptionLimit && (
-                                            <span
-                                                onClick={() => setExpanded(expanded === contract._id ? null : contract._id)}
-                                                className="ml-2 text-blue-500 cursor-pointer hover:underline text-xs"
-                                            >
-                                                {expanded === contract._id ? "View Less" : "View More"}
-                                            </span>
-                                        )}
-                                    </p>
-                                    <p className="text-sm mt-1">
-                                        <span className="font-medium">Client : </span> {contract.clientId.name} ({contract.clientId.email})
-                                    </p>
-                                    <p className="text-sm">
-                                        <span className="font-medium">Budget : </span> &#8377;{contract.jobId.rate}
-                                    </p>
-                                    <p className="text-sm">
-                                        <span className="font-medium">Work status : </span>{contract.status}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-                <div className="mt-6">
-                    <h2 className="text-lg font-semibold mb-4">Client Reviews</h2>
-
-                    {reviews.length === 0 ? (
-                        <p className="text-gray-500">No reviews yet.</p>
-                    ) : (
-                        <div className="space-y-6">
-                            {reviews.map((review) => (
-                                <div key={review._id} className="border p-4 rounded-lg shadow-sm">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <img
-                                            src={
-                                                review.clientId.profilePic ||
-                                                "https://ui-avatars.com/api/?name=" + encodeURIComponent(review.clientId.name)
-                                            }
-                                            alt={review.clientId.name}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-
-                                        <span className="font-medium">{review.clientId.name}</span>
-                                    </div>
-
-                                    <div className="flex gap-1 mb-1">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className={`w-4 h-4 ${i < Math.floor(review.rating) ? "text-yellow-500" : "text-gray-300"}`}
-                                                fill={i < Math.floor(review.rating) ? "#facc15" : "none"}
-                                            />
-                                        ))}
-                                        {review.rating % 1 !== 0 && (
-                                            <Star className="w-4 h-4 text-yellow-400" fill="url(#half)" />
-                                        )}
-                                    </div>
-
-                                    <p className="text-sm dark:text-gray-300 text-gray-700">{review.description}</p>
-                                    <p className="text-xs text-gray-400 mt-1">{new Date(review.createdAt).toLocaleDateString()}</p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
             </div>
         </div>
     );
