@@ -90,6 +90,15 @@ const Chat = () => {
         };
     }, [userId]);
 
+    const getLastMessage = (userId: string) => {
+        const convo = conversations.find(c => c.otherUserId === userId);
+        return {
+            message: convo?.lastMessage || "No messages yet",
+            time: convo?.updatedAt
+                ? new Date(convo.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : ""
+        };
+    };
     // Initialize chat
     useEffect(() => {
         const initChat = async () => {
@@ -207,6 +216,18 @@ const Chat = () => {
     useEffect(() => {
         socket.on("messageSent", (savedMessage: MessageType) => {
             setMessages((prev) => [...prev, savedMessage]);
+            setConversations((prevConversations) => {
+                return prevConversations.map((conversation) => {
+                    if (conversation._id === savedMessage.conversationId) {
+                        return {
+                            ...conversation,
+                            lastMessage: savedMessage.message,
+                            lastMessageAt: savedMessage.createdAt,
+                        };
+                    }
+                    return conversation;
+                });
+            });
         });
 
         socket.on("newMessage", (incomingMessage: MessageType) => {
@@ -276,6 +297,8 @@ const Chat = () => {
             receiverId,
             message: newMessage.trim(),
         });
+
+        socket.emit("getConversations", userId);
 
         setNewMessage("");
     };
@@ -352,8 +375,8 @@ const Chat = () => {
                 ) : error ? (
                     <div className="flex flex-col items-center justify-center h-screen text-center space-y-4">
                         <TbMessageOff className="w-10 h-10 text-gray-400" />
-                            <p className="text-gray-500">{error}</p>
-                            <span onClick={() => navigate(-1)} className="hover:underline cursor-pointer">Go back</span>
+                        <p className="text-gray-500">{error}</p>
+                        <span onClick={() => navigate(-1)} className="hover:underline cursor-pointer">Go back</span>
                     </div>
                 ) : (
                     <div className="flex-1 overflow-y-auto">
@@ -390,7 +413,14 @@ const Chat = () => {
                                             </div>
                                             <div>
                                                 <h4 className="dark:text-white font-medium">{freelancer.name}</h4>
-                                                <p className="text-xs dark:text-gray-400 text-gray-600">Freelancer</p>
+                                                <p className="text-sm dark:text-gray-400 text-gray-600">
+                                                    {getLastMessage(freelancer._id).message}
+                                                    {getLastMessage(freelancer._id).message !== "No messages yet" && (
+                                                        <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[freelancer._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                            {getLastMessage(freelancer._id).time}
+                                                        </span>
+                                                    )}
+                                                </p>
                                             </div>
                                             {unreadCounts[freelancer._id] > 0 && (
                                                 <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">
@@ -423,7 +453,14 @@ const Chat = () => {
                                             </div>
                                             <div>
                                                 <h4 className="dark:text-white text-gray-900 font-medium">{client.name}</h4>
-                                                <p className="text-xs dark:text-gray-400 text-gray-600">Client</p>
+                                                <p className="text-sm dark:text-gray-400 text-gray-600">
+                                                    {getLastMessage(client._id).message}
+                                                    {getLastMessage(client._id).message !== "No messages yet" && (
+                                                        <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[client._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                            {getLastMessage(client._id).time}
+                                                        </span>
+                                                    )}
+                                                </p>
                                             </div>
                                             {unreadCounts[client._id] > 0 && (
                                                 <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">

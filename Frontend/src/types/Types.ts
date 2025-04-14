@@ -233,6 +233,7 @@ export interface MessageType {
     createdAt: string;
     isRead?: boolean;
     readAt?: Date;
+    conversationId: string
 };
 
 export interface ContractType {
@@ -250,6 +251,7 @@ export interface ConversationType {
     updatedAt: string;
     unreadCount: number;
     otherUserId: string;
+    lastMessage: string;
 };
 
 export interface Transaction {

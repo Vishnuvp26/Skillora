@@ -34,12 +34,6 @@ export const initSocket = (server: HTTPServer) => {
                     clientId,
                     freelancerId,
                     isDeleted: false,
-                    $or: [
-                        { status: 'Pending' },
-                        { status: 'Started' },
-                        { status: 'Ongoing' },
-                        {status: 'Completed'}
-                    ]
                 });
 
                 // console.log(`Contract found between ${freelancerId} and ${clientId} = ${contract}`)
@@ -205,9 +199,13 @@ export const initSocket = (server: HTTPServer) => {
         socket.on('deleteMessage', async ({ messageId, userId }) => {
             try {
                 const message = await Message.findById(messageId);
-        
                 if (!message) {
                     return socket.emit('messageError', { message: 'Message not found' });
+                }
+        
+                const conversation = await Conversation.findById(message.conversationId);
+                if (!conversation) {
+                    return socket.emit('messageError', { message: 'Conversation not found' });
                 }
         
                 if (message.senderId.toString() !== userId) {
@@ -216,6 +214,9 @@ export const initSocket = (server: HTTPServer) => {
         
                 message.message = 'This message was deleted';
                 await message.save();
+        
+                conversation.lastMessage = 'You deleted this message';
+                await conversation.save();
         
                 const receiverSocketId = activeUsers.get(message.receiverId.toString());
                 const senderSocketId = activeUsers.get(message.senderId.toString());
@@ -236,7 +237,7 @@ export const initSocket = (server: HTTPServer) => {
                 console.error('Error deleting message:', error);
                 socket.emit('messageError', { message: 'Failed to delete message' });
             }
-        });        
+        });                
 
         socket.on('disconnect', () => {
             for (const [userId, socketId] of activeUsers.entries()) {
