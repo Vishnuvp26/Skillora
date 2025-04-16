@@ -107,7 +107,7 @@ const Clients = () => {
                                             <TableCell>{client.name}</TableCell>
                                             <TableCell>{client.email}</TableCell>
                                             <TableCell>
-                                                {dayjs(client.joinedAt).format("DD MMM YYYY")}
+                                                {dayjs(client.createdAt).format("DD MMM YYYY")}
                                             </TableCell>
                                             <TableCell>{client.status}</TableCell>
                                             <TableCell key={client._id} className="text-center">

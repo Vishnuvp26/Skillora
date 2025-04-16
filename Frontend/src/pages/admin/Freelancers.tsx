@@ -107,7 +107,7 @@ const Freelancer = () => {
                                             <TableCell>{freelancer.name}</TableCell>
                                             <TableCell>{freelancer.email}</TableCell>
                                             <TableCell>
-                                                {dayjs(freelancer.joinedAt).format("DD MMM YYYY")}
+                                                {dayjs(freelancer.createdAt).format("DD MMM YYYY")}
                                             </TableCell>
                                             <TableCell>{freelancer.status}</TableCell>
                                             <TableCell key={freelancer._id} className="text-center">
