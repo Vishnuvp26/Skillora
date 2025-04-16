@@ -4,6 +4,7 @@ import { env } from "../config/env.config";
 import { createHttpError } from "../utils/httpError";
 import { HttpStatus } from "../constants/statusContstants";
 import { Messages } from "../constants/messageConstants";
+import User from "../models/user/userModel";
 
 interface AuthRequest extends Request {
     user?: {
@@ -12,7 +13,7 @@ interface AuthRequest extends Request {
     };
 }
 
-export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
+export async function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 
@@ -22,6 +23,15 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
 
     try {
         const decoded = jwt.verify(token, env.JWT_SECRET) as { id: string; role: string };
+
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return next(createHttpError(HttpStatus.UNAUTHORIZED, Messages.USER_NOT_FOUND));
+        }
+        if (user.status === "blocked") {
+            return next(createHttpError(HttpStatus.FORBIDDEN, Messages.USER_BLOCKED));
+        }
+
         req.user = decoded;
         next();
     } catch (error) {

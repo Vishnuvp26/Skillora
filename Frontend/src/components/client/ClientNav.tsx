@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -106,6 +106,10 @@ const ClientNav: React.FC = () => {
                 {/* Right Side: Dark Mode & Profile Dropdown */}
                 <div className="hidden lg:flex gap-4 items-center">
                     {/* Dark Mode Toggle */}
+                    <Button variant="ghost">
+                        <Bell className="w-5 h-5" />
+                    </Button>
+
                     <Button variant="ghost" onClick={toggleTheme}>
                         {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                     </Button>

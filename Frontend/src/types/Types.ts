@@ -11,7 +11,7 @@ export interface UserType {
     email: string
     name: string
     status: "active" | "blocked";
-    joinedAt?: Date
+    createdAt?: Date
 }
 
 export interface Category {
@@ -252,6 +252,7 @@ export interface ConversationType {
     unreadCount: number;
     otherUserId: string;
     lastMessage: string;
+    lastMessageAt: string
 };
 
 export interface Transaction {

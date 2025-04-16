@@ -228,10 +228,29 @@ const Chat = () => {
                     return conversation;
                 });
             });
+            socket.emit("getConversations", userId);
         });
 
         socket.on("newMessage", (incomingMessage: MessageType) => {
             setMessages((prev) => [...prev, incomingMessage]);
+            
+            setConversations((prevConversations) => {
+                const updatedConversations = prevConversations.map((conversation) => {
+                    if (conversation._id === incomingMessage.conversationId) {
+                        return {
+                            ...conversation,
+                            lastMessage: incomingMessage.message,
+                            updatedAt: incomingMessage.createdAt,
+                        };
+                    }
+                    return conversation;
+                });
+                
+                return [...updatedConversations].sort((a, b) =>
+                    new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+                );
+            });
+        
             if (incomingMessage.senderId !== userId) {
                 setUnreadCounts(prev => ({
                     ...prev,
@@ -397,38 +416,43 @@ const Chat = () => {
                             <div className="p-4">
                                 {/* <h3 className="text-sm font-medium dark:text-gray-300 text-gray-900 mb-3">Your Freelancers</h3> */}
                                 <div className="space-y-2">
-                                    {filterUsers(freelancers).map((freelancer) => (
-                                        <div
-                                            key={freelancer._id}
-                                            onClick={() => handleUserSelect(freelancer._id)}
-                                            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors
+                                    {filterUsers(freelancers)
+                                        .sort((a, b) => {
+                                            const convoA = conversations.find(c => c.otherUserId === a._id);
+                                            const convoB = conversations.find(c => c.otherUserId === b._id);
+                                            return new Date(convoB?.updatedAt || 0).getTime() - new Date(convoA?.updatedAt || 0).getTime();
+                                        }).map((freelancer) => (
+                                            <div
+                                                key={freelancer._id}
+                                                onClick={() => handleUserSelect(freelancer._id)}
+                                                className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors
                                                 ${freelancer._id === receiverId
-                                                    ? 'dark:bg-gray-700 bg-gray-300'
-                                                    : 'dark:hover:bg-gray-700 hover:bg-gray-300'}`}
-                                        >
-                                            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                                                <span className="text-lg font-semibold text-white">
-                                                    {freelancer.name.charAt(0)}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <h4 className="dark:text-white font-medium">{freelancer.name}</h4>
-                                                <p className="text-sm dark:text-gray-400 text-gray-600">
-                                                    {getLastMessage(freelancer._id).message}
-                                                    {getLastMessage(freelancer._id).message !== "No messages yet" && (
-                                                        <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[freelancer._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                            {getLastMessage(freelancer._id).time}
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </div>
-                                            {unreadCounts[freelancer._id] > 0 && (
-                                                <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">
-                                                    {unreadCounts[freelancer._id]}
+                                                        ? 'dark:bg-gray-700 bg-gray-300'
+                                                        : 'dark:hover:bg-gray-700 hover:bg-gray-300'}`}
+                                            >
+                                                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                                                    <span className="text-lg font-semibold text-white">
+                                                        {freelancer.name.charAt(0)}
+                                                    </span>
                                                 </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                                <div>
+                                                    <h4 className="dark:text-white font-medium">{freelancer.name}</h4>
+                                                    <p className="text-sm dark:text-gray-400 text-gray-600">
+                                                        {getLastMessage(freelancer._id).message}
+                                                        {getLastMessage(freelancer._id).message !== "No messages yet" && (
+                                                            <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[freelancer._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                                {getLastMessage(freelancer._id).time}
+                                                            </span>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                {unreadCounts[freelancer._id] > 0 && (
+                                                    <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">
+                                                        {unreadCounts[freelancer._id]}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                 </div>
                             </div>
                         )}
@@ -437,7 +461,12 @@ const Chat = () => {
                             <div className="p-4">
                                 <h3 className="text-sm font-medium dark:text-gray-300 text-gray-900 mb-3">Your Clients</h3>
                                 <div className="space-y-2">
-                                    {filterUsers(clients).map((client) => (
+                                {filterUsers(clients)
+                                        .sort((a, b) => {
+                                            const convoA = conversations.find(c => c.otherUserId === a._id);
+                                            const convoB = conversations.find(c => c.otherUserId === b._id);
+                                            return new Date(convoB?.updatedAt || 0).getTime() - new Date(convoA?.updatedAt || 0).getTime();
+                                        }).map((client) => (
                                         <div
                                             key={client._id}
                                             onClick={() => handleUserSelect(client._id)}

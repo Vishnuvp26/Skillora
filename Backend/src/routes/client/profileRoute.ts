@@ -13,6 +13,8 @@ const profileController = new ProfileController(profileService)
 
 router.get(
     "/get-profile/:id",
+    authenticateToken,
+    authorizeRoles('client', 'freelancer'),
     profileController.getProfile.bind(profileController)
 );
 

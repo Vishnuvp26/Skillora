@@ -24,6 +24,8 @@ router.post(
 
 router.get(
     "/job-details/:id",
+    authenticateToken,
+    authorizeRoles('client'),
     jobController.getJobById.bind(jobController)
 );
 

@@ -1,6 +1,6 @@
 import { removeUser, setAccessToken } from '@/redux/authSlice';
 import axios from 'axios'
-import store from '../../redux/store/store';
+import store, { persistor } from '../../redux/store/store';
 import { refreshToken } from '../auth/authApi';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -50,6 +50,14 @@ Axios.interceptors.response.use(
                 return Promise.reject(refreshError);
             }
         }
+
+        if (error.response?.status === 403) {
+            store.dispatch(removeUser());
+            persistor.purge();
+            window.location.href = "/login";
+            return Promise.reject(error);
+        }
+
         return Promise.reject(error);
     }
 );
