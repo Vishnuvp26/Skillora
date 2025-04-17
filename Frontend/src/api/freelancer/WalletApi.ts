@@ -17,3 +17,12 @@ export const transactions = async (walletId: string) => {
         throw error.response?.data || "Failed to get transaction data"
     }
 };
+
+export const GetSalesReport = async (userId: string) => {
+    try {
+        const response = await Axios.get(`/api/freelancer/wallet/user-sales-report/${userId}`);
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Failed to get user sale report"
+    }
+};

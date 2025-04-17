@@ -83,4 +83,60 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
       
         return transactions;
     };
+
+    async userSalesReport(userId: string): Promise<any[]> {
+        return Wallet.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId),
+                    isDeleted: false
+                }
+            },
+            {
+                $unwind: "$transactions"
+            },
+            {
+                $match: {
+                    "transactions.type": "credit",
+                    "transactions.contractId": { $exists: true }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$transactions.date" },
+                        month: { $month: "$transactions.date" }
+                    },
+                    totalRevenue: { $sum: "$transactions.amount" },
+                    totalTransactions: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    "_id.year": 1,
+                    "_id.month": 1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: {
+                        $concat: [
+                            { $toString: "$_id.year" },
+                            "-",
+                            {
+                                $cond: [
+                                    { $lt: ["$_id.month", 10] },
+                                    { $concat: ["0", { $toString: "$_id.month" }] },
+                                    { $toString: "$_id.month" }
+                                ]
+                            }
+                        ]
+                    },
+                    totalRevenue: 1,
+                    totalTransactions: 1
+                }
+            }
+        ]);
+    }
 }

@@ -74,4 +74,14 @@ export class WalletController implements IWalletController {
             next(error);
         }
     };
+
+    async userSalesReport(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+          const { userId } = req.params;
+          const report = await this._walletService.getUserSalesReport(userId);
+          res.status(HttpStatus.OK).json({ data: report });
+        } catch (error) {
+          next(error);
+        }
+    };
 }

@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWallet, transactions as getTransactions } from "@/api/client/clientWalletApi";
+import { getWallet, transactions as getTransactions, GetSalesReport } from "@/api/freelancer/WalletApi";
 import { Wallet, Transaction } from "@/types/Types";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import WalletSkeleton from "../ui/WalletSkeleton";
 import NoWalletData from "./NoWalletFound";
 
@@ -16,13 +17,11 @@ const ViewEarnings = () => {
     const [wallet, setWallet] = useState<Wallet | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(false);
-
-    // Pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-
-    // Sorting
     const [sortAsc, setSortAsc] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [salesReport, setSalesReport] = useState<any[]>([]);
+
+    const itemsPerPage = 5;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,6 +32,8 @@ const ViewEarnings = () => {
                     setWallet(walletRes.data);
                     const txRes = await getTransactions(walletRes.data._id);
                     setTransactions(txRes.data);
+                    const salesData = await GetSalesReport(userId);
+                    setSalesReport(salesData.data);
                 }
             } catch (error) {
                 console.error("Error fetching data", error);
@@ -42,7 +43,7 @@ const ViewEarnings = () => {
         };
     
         fetchData();
-    }, [userId]);    
+    }, [userId]);
 
     // Sort transactions by date
     const sortedTransactions = [...transactions].sort((a, b) => {
@@ -58,12 +59,18 @@ const ViewEarnings = () => {
 
     const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
+    const formattedSalesData = salesReport.map((item) => ({
+        month: item.month,
+        totalRevenue: item.totalRevenue,
+    }));
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-white dark:bg-gray-950 p-4">
+        <div className="flex justify-center items-center min-h-screen bg-white dark:bg-gray-950 p-4 mt-20">
             {loading ? (
-                <WalletSkeleton/>
+                <WalletSkeleton />
             ) : wallet ? (
-                <div className="w-full max-w-4xl space-y-6">
+                <div className="w-full max-w-4xl space-y-6 mt-6">
+                        
                     {/* Wallet Summary Card */}
                     <Card className="border dark:border-gray-800 shadown-none border-gray-300">
                         <CardHeader>
@@ -78,9 +85,28 @@ const ViewEarnings = () => {
                             </div>
                         </CardContent>
                     </Card>
+                        
+                    {/* Sales Report Graph */}
+                    <Card className="border dark:border-gray-800 shadown-none border-gray-300">
+                        <CardHeader className="flex flex-row justify-between items-center">
+                            <CardTitle className="text-lg">Earnings Report</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={formattedSalesData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="totalRevenue" stroke="#8884d8" />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
 
                     {/* Transactions Table */}
-                    <Card className="bg-none shadow-none border-md bg-white dark:bg-gray-950">
+                    <Card className="border dark:border-gray-800 shadown-none border-gray-300">
                         <CardHeader className="flex flex-row justify-between items-center">
                             <CardTitle className="text-lg">Transactions</CardTitle>
                             <button
@@ -159,7 +185,7 @@ const ViewEarnings = () => {
                     </Card>
                 </div>
             ) : (
-                <NoWalletData/>
+                <NoWalletData />
             )}
         </div>
     );

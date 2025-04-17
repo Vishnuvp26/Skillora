@@ -23,4 +23,8 @@ export class WalletService implements IWalletService {
     async getUserTransactions(walletId: string): Promise<Array<any>> {
         return await this._walletRepository.getUserTransactions(walletId);
     };
+
+    async getUserSalesReport(userId: string) {
+        return this._walletRepository.userSalesReport(userId);
+    };
 }

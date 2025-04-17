@@ -24,4 +24,9 @@ router.get(
     walletController.getUserTransactions.bind(walletController)
 );
 
+router.get(
+    "/user-sales-report/:userId",
+    walletController.userSalesReport.bind(walletController)
+)
+
 export default router;
