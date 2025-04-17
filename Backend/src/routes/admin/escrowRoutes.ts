@@ -38,7 +38,7 @@ router.put(
 router.put(
     "/refund-client/:contractId/:clientId",
     authenticateToken,
-    authorizeRoles('admin'),
+    authorizeRoles('admin', 'client'),
     escrowController.refundToClient.bind(escrowController)
 );
 

@@ -4,6 +4,7 @@ import Contract from '../models/client/contractModel';
 import Conversation from '../models/user/conversationModel';
 import Message from '../models/user/messageModel';
 import { env } from '../config/env.config';
+import Notification from '../models/user/notificationModel';
 
 const activeUsers = new Map<string, string>();
 
@@ -237,8 +238,59 @@ export const initSocket = (server: HTTPServer) => {
                 console.error('Error deleting message:', error);
                 socket.emit('messageError', { message: 'Failed to delete message' });
             }
-        });                
+        });            
+        
+        // Notifications
+        socket.on('getNotifications', async (userId: string) => {
+            try {
+                const notifications = await Notification.find({ userId })
+                    .sort({ createdAt: -1 })
+                    .limit(5);
+                socket.emit('notifications', notifications);
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+                socket.emit('notificationError', { message: 'Failed to fetch notifications' });
+            }
+        });      
+        
+        socket.on('addNotification', async ({ userId, message, role, type }) => {
+            try {
+                const newNotification = new Notification({
+                    userId,
+                    message,
+                    role,
+                    type,
+                    read: false,
+                });
+                await newNotification.save();
+        
+                const receiverSocketId = activeUsers.get(userId);
+                if (receiverSocketId) {
+                    io.to(receiverSocketId).emit('newNotification', newNotification);
+                }
+            } catch (error) {
+                console.error('Error adding notification:', error);
+                socket.emit('notificationError', { message: 'Failed to add notification' });
+            }
+        });
 
+        socket.on('markNotificationAsRead', async (notificationId: string) => {
+            try {
+                const notification = await Notification.findById(notificationId);
+                if (!notification) {
+                    return socket.emit('notificationError', { message: 'Notification not found' });
+                }
+        
+                notification.read = true;
+                await notification.save();
+        
+                socket.emit('notificationRead', { notificationId });
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+                socket.emit('notificationError', { message: 'Failed to mark notification as read' });
+            }
+        });
+        
         socket.on('disconnect', () => {
             for (const [userId, socketId] of activeUsers.entries()) {
                 if (socketId === socket.id) {

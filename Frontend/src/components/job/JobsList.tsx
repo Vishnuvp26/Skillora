@@ -16,7 +16,7 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
     const userId = useSelector((state: RootState) => state.user._id);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortOption, setSortOption] = useState<"budget" | "date" | null>(null);
+    const [sortOption, setSortOption] = useState<"budgetHigh" | "budgetLow" | "dateNew" | "dateOld" | null>(null);
     const [filterExperience, setFilterExperience] = useState<string | null>(null);
     const [appliedJobs, setAppliedJobs] = useState<{ [key: string]: boolean }>({});
     const descriptionLimit = 100;
@@ -32,12 +32,18 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
         );
 
     const sortedJobs = [...filteredJobs].sort((a, b) => {
-        if (sortOption === "budget") {
-            return b.rate - a.rate;
-        } else if (sortOption === "date") {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        switch (sortOption) {
+            case "budgetHigh":
+                return b.rate - a.rate;
+            case "budgetLow":
+                return a.rate - b.rate;
+            case "dateNew":
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            case "dateOld":
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+            default:
+                return 0;
         }
-        return 0;
     });
 
     useEffect(() => {
@@ -93,11 +99,10 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
 
                     {/* Sort and Filter Options */}
                     <div className="flex flex-wrap gap-4 mt-4">
-                        {/* Sort Select */}
                         <Select
                             value={sortOption ?? "sort"}
                             onValueChange={(value) => {
-                                setSortOption(value === "clear" ? null : (value as "budget" | "date"));
+                                setSortOption(value === "clear" ? null : value as "budgetHigh" | "budgetLow" | "dateNew" | "dateOld");
                             }}
                         >
                             <SelectTrigger className="w-[180px] text-sm dark:bg-gray-950 dark:text-white">
@@ -105,8 +110,11 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="sort" disabled>Sort By</SelectItem>
-                                <SelectItem value="budget">Budget</SelectItem>
-                                <SelectItem value="date">Posted Date</SelectItem>
+                                <SelectItem value="budgetHigh">Budget: High to Low</SelectItem>
+                                <SelectItem value="budgetLow">Budget: Low to High</SelectItem>
+                                <SelectItem value="dateNew">Date: Newest First</SelectItem>
+                                <SelectItem value="dateOld">Date: Oldest First</SelectItem>
+
                                 <SelectItem value="clear">Clear Sort</SelectItem>
                             </SelectContent>
                         </Select>

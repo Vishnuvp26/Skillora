@@ -7,7 +7,7 @@ export class ProfileService implements IProfileService {
     constructor(private _profileRepository: IProfileRepositoryClient) { }
     
     async getProfile(userId: string): Promise<IClient | null> {
-        return await this._profileRepository.findByUserId(userId)
+        return await this._profileRepository.findByUserId(userId);
     }
 
     async updateProfile(userId: string, profileData: Partial<IClient>): Promise<IClient | null> {

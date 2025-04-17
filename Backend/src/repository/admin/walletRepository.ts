@@ -8,7 +8,7 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
         super(Wallet);
     }
 
-    async addFunds(userId: string, amount: number, description: string, type: "credit" | "debit"): Promise<IWallet> {
+    async addFunds(userId: string, amount: number, description: string, type: "credit" | "debit", contractId?: string): Promise<IWallet> {
         let wallet = await this.findOne({ userId: new mongoose.Types.ObjectId(userId), isDeleted: false }) as IWallet | null;
     
         if (!wallet) {
@@ -28,6 +28,7 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
             description,
             type,
             date: new Date(),
+            ...(contractId && { contractId: new mongoose.Types.ObjectId(contractId) })
         };
     
         return await this.findByIdAndUpdate(
@@ -40,13 +41,46 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
         ) as IWallet;
     }
 
-    async getUserTransactions(walletId: string): Promise<Array<any>> {
-        const wallet = await this.findById(walletId);
+    async getUserTransactions(walletId: string): Promise<any[]> {
+        const objectId = new mongoose.Types.ObjectId(walletId);
+      
+        const transactions = await this.model.aggregate([
+            { $match: { _id: objectId } },
+            { $unwind: "$transactions" },
+            {
+                $lookup: {
+                    from: "contracts",
+                    localField: "transactions.contractId",
+                    foreignField: "_id",
+                    as: "contract"
+                }
+            },
+            { $unwind: "$contract" },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "contract.clientId",
+                    foreignField: "_id",
+                    as: "client"
+                }
+            },
+            { $unwind: "$client" },
+            {
+                $project: {
+                    _id: 0,
+                    amount: "$transactions.amount",
+                    type: "$transactions.type",
+                    description: "$transactions.description",
+                    date: "$transactions.date",
+                    contractId: "$contract.contractId",
+                    clientName: "$client.name"
+                }
+            },
+            { $sort: { date: -1 } }
+        ]);
 
-        if (!wallet) return [];
-
-        return [...wallet.transactions].sort((a, b) => 
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
+        console.log('TRANSACTION RESULT OF AGGREGATION', transactions);
+      
+        return transactions;
     };
 }

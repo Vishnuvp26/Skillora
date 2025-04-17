@@ -218,7 +218,7 @@ const ClientContractDetails = () => {
                                 </Dialog>
                             )}
 
-                            {contract?.escrowPaid && contract.releaseFundStatus === "NotRequested" && (
+                            {contract?.escrowPaid && contract.releaseFundStatus === "NotRequested" && contract.status !== "Completed" && (
                                 <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
                                     <DialogTrigger asChild>
                                         <Button
@@ -291,7 +291,6 @@ const ClientContractDetails = () => {
                                     onSuccess={() => setHasReviewed(true)}
                                 />
                             )}
-
                         </div>
                     </div>
 
@@ -388,7 +387,10 @@ const ClientContractDetails = () => {
                     {contract.escrowPaid && contract.status !== "Canceled" && (
                         <div className="mt-8">
                             <h2 className="text-lg font-semibold border-b pb-2">Work Progress</h2>
-                            <ProgressBar workStatus={contract.status} />
+                            <ProgressBar
+                                workStatus={contract.status}
+                                statusHistory={contract.statusHistory}
+                            />
                         </div>
                     )}
                 </div>

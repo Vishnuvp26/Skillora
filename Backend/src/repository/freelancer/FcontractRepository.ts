@@ -34,13 +34,13 @@ export class FreelancerContractRepository extends BaseRepository<IContract> impl
         });
     };
 
-    async updateContract(contractId: string, updateData: Partial<IContract>): Promise<IContract | null> {
+    async updateContract(contractId: string, updateData: Partial<IContract> & any): Promise<IContract | null> {
         return await this.model.findOneAndUpdate(
             { _id: new mongoose.Types.ObjectId(contractId), isDeleted: false },
-            { $set: updateData },
+            updateData,
             { new: true }
         );
-    };
+    }    
 
     async getCompletedContractsByFreelancer(freelancerId: string): Promise<IContract[]> {
         return await this.model.find({

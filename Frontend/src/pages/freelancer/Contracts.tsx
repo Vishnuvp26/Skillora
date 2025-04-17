@@ -32,7 +32,7 @@ const Contracts = () => {
     }, [freelancerId]);
 
     const filteredContracts = contracts.filter((contract) =>
-        contract.jobId.title.toLowerCase().includes(searchTerm.toLowerCase())
+        contract.jobId?.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading) {
@@ -75,11 +75,21 @@ const Contracts = () => {
                             >
                                 <div className="flex justify-between items-center">
                                     <h5 className="font-semibold">{contract.jobId.title}</h5>
-                                    <Eye
-                                        className="text-gray-500 cursor-pointer hover:text-gray-700 w-5 h-5"
-                                        onClick={() => navigate(`/freelancer/contract/${contract._id}`)}
-                                    />
+    
+                                    <div className="flex items-center gap-2">
+                                        <Eye
+                                            className="text-gray-500 cursor-pointer hover:text-gray-700 w-5 h-5"
+                                            onClick={() => navigate(`/freelancer/contract/${contract._id}`)}
+                                        />
+
+                                        {!contract.isApproved && (
+                                            <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
+                                                New
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
+
                                 <p className="text-sm text-gray-700 dark:text-gray-400 mt-1">
                                     Budget: ₹{contract.amount}
                                 </p>

@@ -16,6 +16,7 @@ import { applyJob, getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { createContract, deleteContract, isContractCreated } from "@/api/client/contractApi";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { socket } from "@/utils/socket";
 
 const JobDetail = () => {
     const userRole = useSelector((state: RootState) => state.user.role)
@@ -137,6 +138,13 @@ const JobDetail = () => {
             toast.success(response.message);
             setIsApplied(true);
             setOpen(false);
+
+            socket.emit('addNotification', {
+                userId: job.clientId,
+                message: `Your job ${job.title} has got applicants check it now`,
+                role: "client",
+                type: "applied"
+            });
         } catch (error: any) {
             console.error("Error applying for job:", error);
             toast.error(error.error);
@@ -147,9 +155,18 @@ const JobDetail = () => {
     const makeContract = async (freelancerId: string) => {
         try {
             if (!id || !userId || !freelancerId) return;
+
             const response = await createContract(id, userId, { freelancerId, amount: job.rate });
             toast.success(response.message);
             setContractUpdated(prev => !prev);
+
+            socket.emit('addNotification', {
+                userId: freelancerId,
+                message: `Your application has been accepted by client`,
+                role: 'freelancer',
+                type: 'contract'
+            })
+            console.log('created noti and cont');
         } catch (error: any) {
             toast.error(error.error);
         }
@@ -217,9 +234,22 @@ const JobDetail = () => {
                     {/* Client Info */}
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                         <span className="text-gray-950 dark:text-gray-200 font-semibold">Posted by:</span>
-                        <span className="ml-2 flex items-center text-gray-900 dark:text-gray-200">
-                            {job.clientId?.name}
+                        <span
+                            className="ml-2 flex items-center text-gray-900 dark:text-gray-200 cursor-pointer group relative hover:text-blue-600 transition-colors duration-200"
+                            onClick={() =>
+                                navigate(
+                                  userRole === "client"
+                                    ? "/client/profile"
+                                    : `/freelancer/job/view-client/${job.clientId?._id}`
+                                )
+                            }
+                        >
+                            <span className="group-hover:underline">{job.clientId?.name}</span>
                             <BiSolidBadgeCheck className="w-4 h-4 ml-1 text-blue-600" />
+
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs bg-gray-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                                View Profile
+                            </span>
                         </span>
                     </div>
 

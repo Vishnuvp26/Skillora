@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell, Badge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,9 @@ import { logoutUser } from "@/api/auth/authApi";
 import { removeUser } from "@/redux/authSlice";
 import { RootState } from "@/redux/store/store";
 import { useLocation } from "react-router-dom";
+import { socket } from "@/utils/socket";
+import { Notification } from "@/types/Types";
+import dayjs from "dayjs";
 
 const FreelancerNav: React.FC = () => {
     
@@ -20,9 +23,11 @@ const FreelancerNav: React.FC = () => {
     const { theme, toggleTheme } = themeContext;
 
     const userName = useSelector((state: RootState) => state.user.name);
-    const userRole = useSelector((state: RootState) => state.user.role)
+    const userRole = useSelector((state: RootState) => state.user.role);
+    const userId = useSelector((state: RootState) => state.user._id);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     const location = useLocation()
     const dispatch = useDispatch()
@@ -42,6 +47,40 @@ const FreelancerNav: React.FC = () => {
     useEffect(() => {
         setIsSidebarOpen(false);
     }, [location.pathname]);
+
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location.pathname]);
+    
+    useEffect(() => {
+        if (!userId) return;
+        
+        socket.emit("getNotifications", userId);
+        
+        socket.on("notifications", (data: Notification[]) => {
+            setNotifications(data);
+        });
+        
+        socket.on("newNotification", () => {
+            socket.emit("getNotifications", userId);
+        });
+        
+        return () => {
+            socket.off("notifications");
+            socket.off("newNotification");
+        };
+    }, [userId]);
+        
+    const handleMarkAsRead = (notificationId: string) => {
+        socket.emit("markNotificationAsRead", notificationId);
+        setNotifications((prev) =>
+            prev.map((notif) =>
+                notif._id === notificationId ? { ...notif, read: true } : notif
+            )
+        );
+    };
+
+    const unreadCount = notifications.filter((n) => !n.read).length;
 
     return (
         <>
@@ -117,12 +156,47 @@ const FreelancerNav: React.FC = () => {
                         className={location.pathname === "/freelancer/messages" ? "text-[#0077B6] dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent" : ""}
                     >
                         Messages
-                        </Button>
+                    </Button>
                 </div>
 
                 {/* Right Side: Dark Mode & Profile Dropdown */}
                 <div className="hidden lg:flex gap-4 items-center">
                     {/* Dark Mode Toggle */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="relative">
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                        {unreadCount}
+                                    </Badge>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
+                            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                            {notifications.length === 0 ? (
+                                <DropdownMenuItem className="text-sm text-muted-foreground">No notifications</DropdownMenuItem>
+                            ) : (
+                                notifications.map((notif) => (
+                                    <DropdownMenuItem
+                                        key={notif._id}
+                                        onClick={() => {
+                                            handleMarkAsRead(notif._id);
+                                            navigate('/freelancer/contracts')
+                                        }}
+                                        className={`text-sm cursor-pointer flex flex-col ${notif.read ? 'text-gray-400' : 'font-semibold'}`}
+                                    >
+                                        <span>{notif.message}</span>
+                                        <span className="text-xs text-muted-foreground self-end mt-1">
+                                            {dayjs(notif.createdAt).format("DD MMM, hh:mm A")}
+                                        </span>
+                                    </DropdownMenuItem>
+                                ))
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
                     <Button variant="ghost" onClick={toggleTheme}>
                         {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-orange-400" />}
                     </Button>
@@ -156,7 +230,7 @@ const FreelancerNav: React.FC = () => {
                                 <User className="w-4 h-4 mr-2" /> Profile
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/freelancer/earnings')}>
-                                <DollarSign  className="w-4 h-4 mr-2" /> Earnings
+                                <DollarSign className="w-4 h-4 mr-2" /> Earnings
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => navigate('/freelancer/profile-settings')}>
                                 <Settings className="w-4 h-4 mr-2" /> Profile Settings
@@ -169,6 +243,41 @@ const FreelancerNav: React.FC = () => {
                 </div>
 
                 {/* Mobile: Hamburger Menu */}
+                <div className="flex items-center gap-2 lg:hidden">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="relative">
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                        {unreadCount}
+                                    </Badge>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
+                            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                            {notifications.length === 0 ? (
+                                <DropdownMenuItem className="text-sm text-muted-foreground">No notifications</DropdownMenuItem>
+                            ) : (
+                                notifications.map((notif) => (
+                                    <DropdownMenuItem
+                                        key={notif._id}
+                                        onClick={() => {
+                                            handleMarkAsRead(notif._id);
+                                            navigate('/freelancer/contracts')
+                                        }}
+                                        className={`text-sm cursor-pointer flex flex-col ${notif.read ? 'text-gray-400' : 'font-semibold'}`}
+                                    >
+                                        <span>{notif.message}</span>
+                                        <span className="text-xs text-muted-foreground self-end mt-1">
+                                            {dayjs(notif.createdAt).format("DD MMM, hh:mm A")}
+                                        </span>
+                                    </DropdownMenuItem>
+                                ))
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 <Button
                     variant="ghost"
                     className="lg:hidden"
@@ -176,6 +285,7 @@ const FreelancerNav: React.FC = () => {
                 >
                     <Menu className="w-6 h-6" />
                 </Button>
+                </div>
             </nav>
 
             {/* Mobile Sidebar */}

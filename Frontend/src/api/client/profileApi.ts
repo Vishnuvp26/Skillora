@@ -1,9 +1,9 @@
 import { IClient } from "@/types/Types";
-import Axios, { axiosInstance } from "../axios/axiosInstance"
+import Axios from "../axios/axiosInstance"
 
 export const fetchProfile = async (id: string) => {
     try {
-        const response = await axiosInstance.get(`/api/client/profile/get-profile/${id}`)
+        const response = await Axios.get(`/api/client/profile/get-profile/${id}`)
         return response.data
     } catch (error: any) {
         throw error.response?.data || "Failed to get profile"

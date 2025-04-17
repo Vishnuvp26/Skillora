@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import ProgressBar from "@/components/progress/ProgressBar";
+import { socket } from "@/utils/socket";
 
 const ContractDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -26,27 +27,22 @@ const ContractDetails = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchContract = async () => {
-            if (!id) {
-                setLoading(false);
-                return;
-            }
-            try {
-                const response = await contractDetails(id);
-                setContract(response.contract);
-                setIsApplied(response.contract.isApproved);
-                setWorkStatus(response.contract.status);
-            } catch (error) {
-                console.error("Failed to fetch contract details:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchContract();
-    }, [id]);
-
-    console.log('ct', contract)
+    const fetchContract = async () => {
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        try {
+            const response = await contractDetails(id);
+            setContract(response.contract);
+            setIsApplied(response.contract.isApproved);
+            setWorkStatus(response.contract.status);
+        } catch (error) {
+            console.error("Failed to fetch contract details:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleApprove = async () => {
         if (!contract) return;
@@ -56,6 +52,13 @@ const ContractDetails = () => {
             toast.success("Contract accepted!");
             setIsApplied(true);
             setOpen(false);
+
+            socket.emit('addNotification', {
+                userId: contract.clientId,
+                message: `Freelancer ${contract.freelancerId.name} has accepted the contract ${contract._id}`,
+                role: 'client',
+                type: 'approved',
+            });
         } catch (error) {
             console.error(error);
         }
@@ -81,6 +84,10 @@ const ContractDetails = () => {
         }
     };
 
+    useEffect(() => {
+        fetchContract();
+    }, [id]);
+
     const handleStatusUpdate = async (newStatus: string) => {
         if (!contract?._id) return;
 
@@ -89,6 +96,7 @@ const ContractDetails = () => {
             const response = await updateWorkStatus(contract._id, newStatus);
             toast.success(response.message);
             setWorkStatus(newStatus);
+            fetchContract();
         } catch (error: any) {
             toast.error(error.error || "Failed to update work status");
         } finally {
@@ -289,7 +297,10 @@ const ContractDetails = () => {
                                 </Select>
                             </div>
                             {/* Progress Bar */}
-                            <ProgressBar workStatus={workStatus} />
+                            <ProgressBar
+                                workStatus={workStatus}
+                                statusHistory={contract.statusHistory} 
+                            />
                         </div>
                     )}
 

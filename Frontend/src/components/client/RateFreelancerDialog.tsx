@@ -41,9 +41,9 @@ export const RateFreelancerDialog: React.FC<RateFreelancerDialogProps> = ({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
-                    className="mt-3 border border-[#0077B6] text-[#0077B6] bg-transparent 
+                    className="mt-3 border ml-3 border-[#0077B6] text-[#0077B6] bg-transparent 
                     hover:bg-[#0077B611] hover:text-[#0077B6] 
-                    dark:border-[#00FFE5] dark:text-[#00FFE5] dark:hover:bg-[#00FFE511] dark:hover:text-[#00FFE5]"
+                    dark:border-[#00FFE5] dark:text-[#ffff] dark:hover:bg-[#00FFE511] dark:hover:text-[#00FFE5]"
                     disabled={disabled}
                     variant="default"
                 >

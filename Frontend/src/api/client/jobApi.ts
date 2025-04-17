@@ -29,7 +29,7 @@ export const fetchAllJobs = async () => {
 
 export const jobDetails = async (id: string) => {
     try {
-        const response = await axiosInstance.get(`/api/client/job/job-details/${id}`);
+        const response = await Axios.get(`/api/client/job/job-details/${id}`);
         return response.data
     } catch (error: any) {
         throw error.response?.data || "Failed to get job details"

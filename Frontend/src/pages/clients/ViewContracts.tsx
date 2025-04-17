@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { Button } from "@/components/ui/button";
 import { getClientContracts } from "@/api/client/contractApi";
 import Spinner from "@/components/ui/Spinner";
-import { X, Eye } from "lucide-react";
+import { X, Eye, ChevronDown } from "lucide-react";
 import { IContract } from "@/types/Types";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -109,12 +108,14 @@ const ViewContracts = () => {
                             </div>
                         ))}
                         {visibleContracts < filteredContracts.length && (
-                            <Button
+                            <p
                                 onClick={() => setVisibleContracts((prev) => prev + 5)}
-                                className="mt-4 bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg"
+                                className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
+                            dark:bg-transparent dark:text-[#00FFE5] self-center cursor-pointer"
                             >
                                 View More
-                            </Button>
+                                <ChevronDown className="w-4 h-4" />
+                            </p>
                         )}
                     </div>
                 ) : (

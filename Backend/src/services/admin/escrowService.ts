@@ -51,7 +51,8 @@ export class EscrowService implements IEscrowService {
             contract.freelancerId.toString(),
             escrow.freelancerEarning,
             "Contract payment",
-            "credit"
+            "credit",
+            contractId
         );
     
         await this._contractRepository.updateOne(
@@ -118,7 +119,8 @@ export class EscrowService implements IEscrowService {
             clientId,
             refundAmount,
             "Contract refund",
-            "credit"
+            "credit",
+            contract._id as string
         );
 
         // If freelancer should get partial payment
@@ -127,7 +129,8 @@ export class EscrowService implements IEscrowService {
                 contract.freelancerId.toString(),
                 freelancerAmount,
                 "Partial payment for canceled contract",
-                "credit"
+                "credit",
+                contract._id as string
             );
         }
 

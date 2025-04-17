@@ -24,7 +24,7 @@ router.post(
 router.delete(
     "/cancel-contract/:contractId",
     authenticateToken,
-    authorizeRoles('client'),
+    authorizeRoles('client', 'freelancer'),
     contractController.cancelContract.bind(contractController)
 );
 

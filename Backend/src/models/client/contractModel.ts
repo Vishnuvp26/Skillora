@@ -14,6 +14,10 @@ export interface IContract extends Document {
     canceledBy?: "Client" | "Freelancer";
     cancelReasonDescription?: string;
     releaseFundStatus: "NotRequested" | "Requested" | "Approved";
+    statusHistory: {
+        status: "Pending" | "Started" | "Ongoing" | "Completed" | "Canceled";
+        timestamp: string;  
+    }[];
 };
 
 const ContractSchema: Schema = new Schema<IContract>({
@@ -40,10 +44,10 @@ const ContractSchema: Schema = new Schema<IContract>({
         type: Boolean,
         default: false
     },
-    status: { 
-        type: String, 
-        enum: ["Pending", "Started", "Ongoing", "Completed", "Canceled"], 
-        default: "Pending" 
+    status: {
+        type: String,
+        enum: ["Pending", "Started", "Ongoing", "Completed", "Canceled"],
+        default: "Pending"
     },
     amount: {
         type: Number,
@@ -74,7 +78,18 @@ const ContractSchema: Schema = new Schema<IContract>({
     isDeleted: {
         type: Boolean,
         default: false
-    }
+    },
+    statusHistory: [{
+        status: { 
+            type: String, 
+            enum: ["Pending", "Started", "Ongoing", "Completed", "Canceled"],
+            required: true 
+        },
+        timestamp: { 
+            type: String, 
+            required: true 
+        }
+    }]
 }, { timestamps: true });
 
 const Contract = mongoose.model<IContract>("Contract", ContractSchema);

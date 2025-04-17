@@ -80,13 +80,16 @@ export interface IFreelancer {
 
 export interface IClient {
     _id: string
-    userId: string
+    // userId: string
     firstName: string
     city: string
     state: string
     profilePic: string
     totalSpent: number
     jobsPosted: number
+    userId: {
+        email?: string
+    }
 }
 
 export interface FreelancerProfileFormProps {
@@ -194,7 +197,13 @@ export interface IContract {
     canceledBy?: "Client" | "Freelancer";
     cancelReasonDescription?: string;
     releaseFundStatus: "NotRequested" | "Requested" | "Approved";
+    statusHistory: { status: string; timestamp: string }[]
 };
+
+export interface ProgressBarProps {
+    workStatus: string;
+    statusHistory: { status: string; timestamp: string }[];
+}
 
 export interface IContractDetails {
     _id: string;
@@ -257,6 +266,7 @@ export interface ConversationType {
 
 export interface Transaction {
     _id: string;
+    contractId?: string;
     amount: number;
     description: string;
     type: "credit" | "debit";
@@ -265,7 +275,7 @@ export interface Transaction {
   
   export interface Wallet {
     _id: string;
-    userId: string;
+    contractId: string;
     balance: number;
     transactions: Transaction[];
     isDeleted: boolean;
@@ -278,8 +288,8 @@ export interface Review {
     rating: number;
     description: string;
     clientId: {
-      name: string;
-      profilePic?: string;
+        name: string;
+        profilePic?: string;
     };
     createdAt: string;
 };
@@ -296,4 +306,14 @@ export interface AdminTransaction {
         name: string;
         email: string;
     };
+};
+
+export interface Notification {
+    _id: string;
+    userId: string;
+    message: string;
+    role: "client" | "freelancer";
+    type: "contract" | "applied" | "approved";
+    read: boolean;
+    createdAt: string;
 };

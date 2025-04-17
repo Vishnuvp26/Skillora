@@ -95,6 +95,7 @@ const ViewEarnings = () => {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Description</TableHead>
+                                        <TableHead>Contract ID</TableHead>
                                         <TableHead>Date</TableHead>
                                         <TableHead>Type</TableHead>
                                         <TableHead>Amount</TableHead>
@@ -104,6 +105,7 @@ const ViewEarnings = () => {
                                     {paginatedTx.map((tx) => (
                                         <TableRow key={tx._id}>
                                             <TableCell>{tx.description}</TableCell>
+                                            <TableCell>{tx.contractId}</TableCell>
                                             <TableCell>
                                                 {new Date(tx.date).toLocaleDateString()}
                                             </TableCell>

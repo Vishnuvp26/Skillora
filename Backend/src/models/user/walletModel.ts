@@ -9,6 +9,7 @@ export interface IWallet extends Document {
         description: string;
         type: "credit" | "debit";
         date: Date;
+        contractId?: Schema.Types.ObjectId;
     }>;
     createdAt: Date;
     updatedAt: Date;
@@ -45,6 +46,10 @@ const WalletSchema: Schema = new Schema<IWallet>(
                     type: Date,
                     default: Date.now
                 },
+                contractId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Contract",
+                }
             }
         ],
         isDeleted: {

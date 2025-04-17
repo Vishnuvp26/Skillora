@@ -14,12 +14,11 @@ export class CProfileRepository extends BaseRepository<IClient> implements IProf
     };
 
     async findByUserId(userId: string): Promise<IClient | null> {
-        try {
-            return await this.model.findOne({userId: new mongoose.Types.ObjectId(userId)})
-        } catch (error) {
-            throw new Error(Messages.ERROR_FETCHING_PROFILE)
-        }
-    };
+        return await this.model
+            .findOne({ userId })
+            .populate("userId", "email")
+            .exec();
+    }    
 
     async updateProfile(userId: string, profileData: Partial<IClient>): Promise<IClient | null> {
         try {

@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell, Badge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoWhite from '../../assets/Logo white.png';
 import logoBlack from '../../assets/Logo black.png';
 import { logoutUser } from "@/api/auth/authApi";
@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "@/redux/store/store";
 import { useLocation } from "react-router-dom";
+import { socket } from "@/utils/socket";
+import { Notification } from "@/types/Types";
+import dayjs from "dayjs";
 
 const ClientNav: React.FC = () => {
     
@@ -20,9 +23,11 @@ const ClientNav: React.FC = () => {
     const { theme, toggleTheme } = themeContext;
 
     const userName = useSelector((state: RootState) => state.user.name);
-    const userRole = useSelector((state: RootState) => state.user.role)
+    const userRole = useSelector((state: RootState) => state.user.role);
+    const userId = useSelector((state: RootState) => state.user._id);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     const location = useLocation();
     const dispatch = useDispatch();
@@ -41,6 +46,36 @@ const ClientNav: React.FC = () => {
     useEffect(() => {
         setIsSidebarOpen(false);
     }, [location.pathname]);
+
+    useEffect(() => {
+        if (!userId) return;
+    
+        socket.emit("getNotifications", userId);
+    
+        socket.on("notifications", (data: Notification[]) => {
+            setNotifications(data);
+        });
+    
+        socket.on("newNotification", () => {
+            socket.emit("getNotifications", userId);
+        });
+    
+        return () => {
+            socket.off("notifications");
+            socket.off("newNotification");
+        };
+    }, [userId]);
+    
+    const handleMarkAsRead = (notificationId: string) => {
+        socket.emit("markNotificationAsRead", notificationId);
+        setNotifications((prev) =>
+            prev.map((notif) =>
+                notif._id === notificationId ? { ...notif, read: true } : notif
+            )
+        );
+    };
+
+    const unreadCount = notifications.filter((n) => !n.read).length;
 
     return (
         <>
@@ -106,9 +141,45 @@ const ClientNav: React.FC = () => {
                 {/* Right Side: Dark Mode & Profile Dropdown */}
                 <div className="hidden lg:flex gap-4 items-center">
                     {/* Dark Mode Toggle */}
-                    <Button variant="ghost">
-                        <Bell className="w-5 h-5" />
-                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="relative">
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                        {unreadCount}
+                                    </Badge>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
+                            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                            {notifications.length === 0 ? (
+                                <DropdownMenuItem className="text-sm text-muted-foreground">No notifications</DropdownMenuItem>
+                            ) : (
+                                notifications.map((notif) => (
+                                    <DropdownMenuItem
+                                        key={notif._id}
+                                        onClick={() => {
+                                            handleMarkAsRead(notif._id);
+                                        
+                                            if (notif.type === 'contract' || notif.type === 'approved') {
+                                                navigate('/client/contracts');
+                                            } else if (notif.type === 'applied') {
+                                                navigate('/client/home');
+                                            }
+                                        }}
+                                        className={`text-sm cursor-pointer flex flex-col ${notif.read ? 'text-gray-400' : 'font-semibold'}`}
+                                    >
+                                        <span>{notif.message}</span>
+                                        <span className="text-xs text-muted-foreground self-end mt-1">
+                                            {dayjs(notif.createdAt).format("DD MMM, hh:mm A")}
+                                        </span>
+                                    </DropdownMenuItem>
+                                ))
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
                     <Button variant="ghost" onClick={toggleTheme}>
                         {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
@@ -149,13 +220,49 @@ const ClientNav: React.FC = () => {
                 </div>
 
                 {/* Mobile: Hamburger Menu */}
-                <Button
-                    variant="ghost"
-                    className="lg:hidden"
-                    onClick={() => setIsSidebarOpen(true)}
-                >
-                    <Menu className="w-6 h-6" />
-                </Button>
+                <div className="flex items-center gap-2 lg:hidden">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="relative">
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                        {unreadCount}
+                                    </Badge>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
+                            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                            {notifications.length === 0 ? (
+                                <DropdownMenuItem className="text-sm text-muted-foreground">No notifications</DropdownMenuItem>
+                            ) : (
+                                notifications.map((notif) => (
+                                    <DropdownMenuItem
+                                        key={notif._id}
+                                        onClick={() => {
+                                            handleMarkAsRead(notif._id);
+                                            navigate('/client/contracts');
+                                        }}
+                                        className={`text-sm cursor-pointer flex flex-col ${notif.read ? 'text-gray-400' : 'font-semibold'}`}
+                                    >
+                                        <span>{notif.message}</span>
+                                        <span className="text-xs text-muted-foreground self-end mt-1">
+                                            {dayjs(notif.createdAt).format("DD MMM, hh:mm A")}
+                                        </span>
+                                    </DropdownMenuItem>
+                                ))
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button
+                        variant="ghost"
+                        className="lg:hidden"
+                        onClick={() => setIsSidebarOpen(true)}
+                    >
+                        <Menu className="w-6 h-6" />
+                    </Button>
+                </div>
             </nav>
 
             {/* Mobile Sidebar */}

@@ -1,4 +1,4 @@
-import Axios, { axiosInstance } from "../axios/axiosInstance";
+import Axios from "../axios/axiosInstance";
 
 export const createContract = async (jobId: string, clientId: string, data: { freelancerId: string; amount: number }) => {
     try {
@@ -11,7 +11,7 @@ export const createContract = async (jobId: string, clientId: string, data: { fr
 
 export const deleteContract = async (contractId: string) => {
     try {
-        const response = await axiosInstance.delete(`/api/client/contract/cancel-contract/${contractId}`);
+        const response = await Axios.delete(`/api/client/contract/cancel-contract/${contractId}`);
         return response.data
     } catch (error: any) {
         throw error.response?.data || "Failed to delete contract"
