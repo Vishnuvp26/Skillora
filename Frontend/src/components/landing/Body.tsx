@@ -6,6 +6,7 @@ import image2 from '../../assets/image2.jpg';
 import image3 from '../../assets/image3.jpg';
 import landing from '../../assets/landing.jpg'
 import { Button } from "../ui/button";
+import ChatBot from "./ChatBot";
 
 const Body = () => {
     return (
@@ -119,17 +120,16 @@ const Body = () => {
                     </ul>
                     <div className="mt-6 flex justify-center md:justify-start">
                         <Button className="px-5 py-3 border border-[#0077B6] text-[#0077B6] bg-transparent 
-                hover:bg-[#0077B611] hover:text-[#0077B6] 
-                dark:border-[#00FFE5] dark:text-[#00FFE5] dark:hover:bg-[#00FFE511] dark:hover:text-[#00FFE5] rounded-lg">
+                        hover:bg-[#0077B611] hover:text-[#0077B6] 
+                        dark:border-[#00FFE5] dark:text-[#00FFE5] dark:hover:bg-[#00FFE511] dark:hover:text-[#00FFE5] rounded-lg">
                             Get started
                         </Button>
                     </div>
-
                 </motion.div>
             </motion.div>
-
+            <ChatBot />
         </>
     )
 };
 
-export default Body
+export default Body;
