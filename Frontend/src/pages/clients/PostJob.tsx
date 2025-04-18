@@ -36,8 +36,6 @@ const PostJob = () => {
         const loadSkills = async () => {
             try {
                 const [skillsResponse, categoryResponce] = await Promise.all([fetchSkills(), fetchCategories()])
-                console.log('FETCHED SKILLS :', skillsResponse);
-                console.log('FETCHED CATEGORY :', categoryResponce);
                 setSkillsList(skillsResponse.data.map((skill: any) => ({ id: skill._id, name: skill.name })));
                 setCategoryList(categoryResponce.data.map((category: any) => ({ id: category._id, name: category.name })));
             } catch (error) {
@@ -74,10 +72,9 @@ const PostJob = () => {
             startDate: formData.startDate ? new Date(formData.startDate) : undefined,
             endDate: formData.endDate ? new Date(formData.endDate) : undefined,
         };
-        console.log("Submitting job data:", jobData);
         try {
             const response = await createJob(userId, jobData)
-            console.log("Job posted successfully:", response);
+            console.log(response);
             toast.success("Job posted successfully!");
             setTimeout(() => navigate("/client/home"), 2000);
         } catch (error: any) {

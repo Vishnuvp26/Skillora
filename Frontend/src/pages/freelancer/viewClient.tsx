@@ -25,7 +25,6 @@ const ViewClient = () => {
             if (!clientId) return;
             try {
                 const response = await fetchProfile(clientId)
-                console.log('Api response :', response)
                 setProfile(response.data)
             } catch (error) {
                 console.log('Error fetching client profile', error);
@@ -33,8 +32,6 @@ const ViewClient = () => {
         }
         getProfile()
     }, [clientId]);
-
-    console.log('P', profile)
 
     useEffect(() => {
         const getMyJobs = async () => {
@@ -54,8 +51,6 @@ const ViewClient = () => {
         };
         getMyJobs();
     }, [clientId]);
-
-    console.log(jobs);
 
     return (
         <div className="min-h-screen dark:bg-gray-950 flex justify-center p-6">

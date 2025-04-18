@@ -45,7 +45,6 @@ const ClientContractDetails = () => {
             }
             try {
                 const response = await contractDetails(id);
-                console.log('clientContractRepns', response.contract);
                 setContract(response.contract);
                 setRequestStatus(response.contract.releaseFundStatus);
             } catch (error: any) {

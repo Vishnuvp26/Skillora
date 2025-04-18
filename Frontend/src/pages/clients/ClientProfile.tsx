@@ -32,7 +32,6 @@ const ClientProfile = () => {
             if (!userId) return;
             try {
                 const response = await fetchProfile(userId)
-                console.log('Api response :', response)
                 setProfile(response.data)
             } catch (error) {
                 console.log('Error fetching client profile', error);
@@ -48,7 +47,6 @@ const ClientProfile = () => {
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        console.log('selected file...', file)
         if (!file || !userId) return;
         try {
             setIsUploading(true)
@@ -80,8 +78,6 @@ const ClientProfile = () => {
         };
         getMyJobs();
     }, [userId]);
-
-    console.log(jobs);
 
     return (
         <div className="min-h-screen dark:bg-gray-950 flex justify-center p-6">

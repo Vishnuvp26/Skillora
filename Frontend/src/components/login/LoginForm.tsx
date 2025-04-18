@@ -37,7 +37,6 @@ const LoginForm = () => {
     
         try {
             const response = await loginUser(email, password);
-            console.log("API login Response:", response);
             dispatch(setUser({
                 _id: response.user?.id || "",
                 email: response.user?.email || "",

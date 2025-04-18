@@ -4,8 +4,6 @@ import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa6";
 import { LuGlobe } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
-// import pic1 from '../../assets/portfolio1.png';
-// import pic2 from '../../assets/portfolio2.png';
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import FreelancerProfileForm from "../../components/freelancer/Form";
@@ -15,12 +13,6 @@ import { getProfile, uploadProfileImage } from "@/api/freelancer/profileApi";
 import { getCompletedWorks } from "@/api/freelancer/contractApi";
 import { getFreelancerReviews } from "@/api/client/reviewApi";
 import { Star } from "lucide-react";
-// import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
-// const projects = [
-//     { id: 1, src: pic1, title: "Ecommerce" },
-//     { id: 2, src: pic2, title: "Booking" },
-// ];
 
 const FreelancerProfile = () => {
     const userEmail = useSelector((state: RootState) => state.user.email);
@@ -41,7 +33,6 @@ const FreelancerProfile = () => {
             if (!userId) return;
             try {
                 const response = await getProfile(userId)
-                console.log('Api response :', response)
                 setProfile(response.data)
             } catch (error) {
                 console.log('Error fetching profile :', error)

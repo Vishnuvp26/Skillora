@@ -20,7 +20,6 @@ const ViewContracts = () => {
         const fetchContracts = async () => {
             try {
                 const response = await getClientContracts(clientId);
-                console.log('Client contracts', response);
                 setContracts(response.data);
             } catch (error: any) {
                 console.error("Failed to fetch contracts:", error.error);

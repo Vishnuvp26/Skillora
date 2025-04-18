@@ -45,7 +45,6 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         const loadData = async () => {
             try {
                 const [skillsResponse, categoriesResponse] = await Promise.all([fetchSkills(), fetchCategories()]);
-                console.log('FETCHED SKILLS :', skillsResponse);
                 setSkillsList(skillsResponse.data);
                 setJobCategories(categoriesResponse.data);[]
                 
@@ -136,9 +135,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         if (Object.keys(validationErrors).length > 0) return;
 
         try {
-            console.log('FORM DATA BEFORE SUMBIT', formData);
             const updatedData = await updateProfile(userId, formData);
-            console.log("Profile updated successfully:", updatedData);
             toast.success('Profile updted successfully')
             onUpdate?.(updatedData.data);
         } catch (error) {

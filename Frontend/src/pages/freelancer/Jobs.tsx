@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 const Jobs = () => {
 
     const [jobs, setJobs] = useState<Job[]>([]);
-    console.log('JOBSSSS', jobs);
     const [visibleJobs, setVisibleJobs] = useState(4);
     const [loading, setLoading] = useState(true);
 

@@ -37,7 +37,6 @@ const FreelancerNav: React.FC = () => {
         try {
             await logoutUser();
             dispatch(removeUser());
-            console.log('logout..')
             navigate("/");
         } catch (error) {
             console.error("Logout failed:", error);

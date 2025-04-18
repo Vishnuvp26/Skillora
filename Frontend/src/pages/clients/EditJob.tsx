@@ -100,7 +100,7 @@ const EditJob = () => {
         };
         try {
             const response = await updateJob(id!, jobData);
-            console.log("Job updated successfully:", response);
+            console.log(response);
             toast.success("Job updated successfully!");
             setTimeout(() => navigate(-1), 1000);
         } catch (error: any) {

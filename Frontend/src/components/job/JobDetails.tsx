@@ -108,8 +108,6 @@ const JobDetail = () => {
         fetchContract();
     }, [id, userId, contractUpdated]);
 
-    console.log('CONTRACT FROM useEffect..', contract);
-
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]">
@@ -166,7 +164,6 @@ const JobDetail = () => {
                 role: 'freelancer',
                 type: 'contract'
             })
-            console.log('created noti and cont');
         } catch (error: any) {
             toast.error(error.error);
         }
