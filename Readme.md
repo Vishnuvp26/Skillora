@@ -33,13 +33,3 @@ Skillora is a modern freelance marketplace and project management platform built
 
 ```bash
 git clone https://github.com/Vishnuvp26/Skillora.git
-
-# Backend Setup
-cd Backend
-npm install
-npm run dev
-
-# Frontend Setup
-cd ../Frontend
-npm install
-npm run dev
