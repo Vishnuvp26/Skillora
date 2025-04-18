@@ -20,9 +20,9 @@ Skillora is a modern freelance marketplace and project management platform built
 - **Frontend**: React + Vite + TypeScript + TailwindCSS
 - **Backend**: Node.js + Express + TypeScript + MongoDB
 - **State Management**: Redux Toolkit
-- **Styling**: Tailwind CSS + Shadcn
+- **Styling**: Tailwind + Shadcn
 - **Authentication**: JWT (JSON Web Tokens)
-- **Architecture**: Repository Pattern + MVC
+- **Architecture**: Repository Pattern
 - **Others**: Nodemailer, Socket.io, Redis (for OTP)
 
 ---
