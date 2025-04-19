@@ -242,7 +242,9 @@ export interface MessageType {
     createdAt: string;
     isRead?: boolean;
     readAt?: Date;
-    conversationId: string
+    conversationId: string;
+    mediaType: string;
+    mediaUrl: string;
 };
 
 export interface ContractType {

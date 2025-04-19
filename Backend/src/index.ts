@@ -9,6 +9,7 @@ import adminRoutes from './routes/admin/adminRoute';
 import clientRoutes from './routes/client/clientRoutes';
 import freelancerRoutes from './routes/freelancer/freelancerRoutes';
 import webhookRoutes from './routes/client/webhookRoutes';
+import messageRoutes from './routes/user/messageRoutes';
 import { errorHandler } from "./middlewares/errorMiddleware";
 import { logger, morganMiddleware } from "./middlewares/loggerMiddleware";
 import http from 'http';
@@ -52,6 +53,7 @@ class App {
         this.app.use('/api/admin', adminRoutes);
         this.app.use('/api/client', clientRoutes);
         this.app.use('/api/freelancer', freelancerRoutes);
+        this.app.use('/api/media/', messageRoutes);
         this.app.use(errorHandler);
     }
 

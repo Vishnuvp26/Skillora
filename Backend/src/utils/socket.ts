@@ -69,7 +69,7 @@ export const initSocket = (server: HTTPServer) => {
             }
         });
 
-        socket.on('sendMessage', async ({ conversationId, senderId, receiverId, message }) => {
+        socket.on('sendMessage', async ({ conversationId, senderId, receiverId, message, mediaType, mediaUrl }) => {
             try {
                 const conversation = await Conversation.findById(conversationId);
                 if (!conversation) {
@@ -90,11 +90,14 @@ export const initSocket = (server: HTTPServer) => {
                     senderId,
                     receiverId,
                     message,
+                    mediaType,
+                    mediaUrl,
                     isRead: false
                 });
+
                 await newMessage.save();
 
-                conversation.lastMessage = message;
+                conversation.lastMessage = mediaType ? `Sent ${mediaType}` : message;
                 conversation.lastMessageAt = new Date();
                 await conversation.save();
 
@@ -214,6 +217,8 @@ export const initSocket = (server: HTTPServer) => {
                 }
         
                 message.message = 'This message was deleted';
+                message.mediaUrl = '';
+                message.mediaType = null;
                 await message.save();
         
                 conversation.lastMessage = 'You deleted this message';

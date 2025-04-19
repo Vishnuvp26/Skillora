@@ -10,18 +10,22 @@ import UserListSkeleton from "@/components/ui/ListSkeleton";
 import { ThemeContext } from "@/context/ThemeContext";
 import chatWhite from '../../assets/chatwhite.png'
 import chatDark from '../../assets/chardark.png'
-import { Search, SendHorizontal, Smile, Trash2 } from 'lucide-react';
+import { Search, SendHorizontal, Smile, Trash2, Image, FileVideo, Paperclip } from 'lucide-react';
 import Picker from '@emoji-mart/react'
 import { IoCheckmarkDone } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { AiOutlineStop } from "react-icons/ai";
 import { TbMessageOff } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
+import { uploadChatMedia } from "@/api/media/mediaApi";
+import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
+import toast from "react-hot-toast";
+import { Loader2 } from 'lucide-react';
 import {
     AlertDialog, AlertDialogTrigger, AlertDialogContent,
     AlertDialogHeader, AlertDialogTitle, AlertDialogFooter,
     AlertDialogCancel, AlertDialogAction
 } from "@/components/ui/alert-dialog";
-import { useNavigate } from "react-router-dom";
 
 const Chat = () => {
     
@@ -45,6 +49,15 @@ const Chat = () => {
     const [showMobileChat, setShowMobileChat] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [unreadCounts, setUnreadCounts] = useState<{ [key: string]: number }>({});
+
+    const [selectedMedia, setSelectedMedia] = useState<File | null>(null);
+    const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+    const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const emojiRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -364,7 +377,12 @@ const Chat = () => {
         socket.on("messageDeleted", ({ messageId, message }) => {
             setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
-                    msg._id === messageId ? { ...msg, message } : msg
+                    msg._id === messageId ? {
+                        ...msg,
+                        message,
+                        mediaUrl: '',
+                        mediaType: null!
+                    } : msg
                 )
             );
         });
@@ -375,8 +393,72 @@ const Chat = () => {
     }, []);
 
     const handleDeleteMessage = (messageId: string) => {
-        console.log('aaaaaaaa', messageId);
         socket.emit("deleteMessage", { messageId, userId });
+    };
+
+    const handleMediaSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // Check file type and size
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!isImage && !isVideo) {
+            toast.error('Please select an image or video file');
+            return;
+        }
+
+        if (file.size > maxSize) {
+            toast.error('File size should be less than 5MB');
+            return;
+        }
+
+        setSelectedMedia(file);
+        const previewUrl = URL.createObjectURL(file);
+        setMediaPreview(previewUrl);
+        setIsAttachmentOpen(false);
+    };
+
+    const handleMediaUpload = async () => {
+        if (!selectedMedia || !conversationId || !receiverId) return;
+
+        setIsUploading(true);
+        try {
+            const { mediaUrl } = await uploadChatMedia(selectedMedia);
+            
+            const mediaType = selectedMedia.type.startsWith('image/') ? 'image' : 'video';
+    
+            socket.emit("sendMessage", {
+                conversationId,
+                senderId: userId,
+                receiverId,
+                message: "",
+                mediaType,
+                mediaUrl
+            });
+    
+            // Clear media preview
+            setSelectedMedia(null);
+            setMediaPreview(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } catch (error) {
+            console.error('Error uploading media:', error);
+            toast.error('Failed to upload media');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const cancelMediaPreview = () => {
+        setSelectedMedia(null);
+        setMediaPreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     return (
@@ -461,43 +543,43 @@ const Chat = () => {
                             <div className="p-4">
                                 <h3 className="text-sm font-medium dark:text-gray-300 text-gray-900 mb-3">Your Clients</h3>
                                 <div className="space-y-2">
-                                {filterUsers(clients)
+                                    {filterUsers(clients)
                                         .sort((a, b) => {
                                             const convoA = conversations.find(c => c.otherUserId === a._id);
                                             const convoB = conversations.find(c => c.otherUserId === b._id);
                                             return new Date(convoB?.updatedAt || 0).getTime() - new Date(convoA?.updatedAt || 0).getTime();
                                         }).map((client) => (
-                                        <div
-                                            key={client._id}
-                                            onClick={() => handleUserSelect(client._id)}
-                                            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors
+                                            <div
+                                                key={client._id}
+                                                onClick={() => handleUserSelect(client._id)}
+                                                className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors
                                                 ${client._id === receiverId
-                                                    ? 'dark:bg-gray-700 bg-gray-300'
-                                                    : 'dark:hover:bg-gray-700 hover:bg-gray-300'}`}
-                                        >
-                                            <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                                                <span className="text-lg font-semibold text-white">
-                                                    {client.name.charAt(0)}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <h4 className="dark:text-white text-gray-900 font-medium">{client.name}</h4>
-                                                <p className="text-sm dark:text-gray-400 text-gray-600">
-                                                    {getLastMessage(client._id).message}
-                                                    {getLastMessage(client._id).message !== "No messages yet" && (
-                                                        <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[client._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
-                                                            {getLastMessage(client._id).time}
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </div>
-                                            {unreadCounts[client._id] > 0 && (
-                                                <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">
-                                                    {unreadCounts[client._id]}
+                                                        ? 'dark:bg-gray-700 bg-gray-300'
+                                                        : 'dark:hover:bg-gray-700 hover:bg-gray-300'}`}
+                                            >
+                                                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                                                    <span className="text-lg font-semibold text-white">
+                                                        {client.name.charAt(0)}
+                                                    </span>
                                                 </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                                <div>
+                                                    <h4 className="dark:text-white text-gray-900 font-medium">{client.name}</h4>
+                                                    <p className="text-sm dark:text-gray-400 text-gray-600">
+                                                        {getLastMessage(client._id).message}
+                                                        {getLastMessage(client._id).message !== "No messages yet" && (
+                                                            <span className={`ml-2 font-semibold text-[13px] ${unreadCounts[client._id] > 0 ? 'text-green-700 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                                {getLastMessage(client._id).time}
+                                                            </span>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                {unreadCounts[client._id] > 0 && (
+                                                    <div className="bg-red-500 text-white text-xs font-medium px-2 min-w-[1.75rem] h-7 rounded-full flex items-center justify-center">
+                                                        {unreadCounts[client._id]}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                 </div>
                             </div>
                         )}
@@ -508,15 +590,6 @@ const Chat = () => {
             {/* Right Side - Chat Window */}
             <div className={`w-full flex flex-col flex-1 h-full bg-repeat bg-gray-850
                 ${showMobileChat ? 'flex' : 'hidden md:flex'}`}>
-                {/* Add back button for mobile */}
-                {/* {showMobileChat && (
-                    <button
-                        onClick={() => setShowMobileChat(false)}
-                        className="md:hidden p-2 mt-16 text-left w-full text-white dark:bg-gray-800"
-                    >
-                        ← Back to conversations
-                    </button>
-                )} */}
 
                 {!conversationId ? (
                     <div className="h-full flex items-center justify-center dark:bg-gray-900 bg-gray-50 ">
@@ -580,6 +653,52 @@ const Chat = () => {
                                             : 'bg-[#4a5053] rounded-bl-none'
                                             }`}
                                     >
+
+                                        {msg.mediaUrl && (
+                                            <div className="mb-2">
+                                                {msg.mediaType === 'image' ? (
+                                                    <>
+                                                        <img
+                                                            src={msg.mediaUrl}
+                                                            alt="Shared image"
+                                                            className="w-full max-w-[300px] max-h-[300px] sm:w-auto sm:max-w-[270px] sm:max-h-[270px] rounded-lg cursor-pointer object-cover"
+                                                            loading="lazy"
+                                                            onClick={() => {
+                                                                setSelectedImageUrl(msg.mediaUrl);
+                                                                setIsModalOpen(true);
+                                                            }}
+                                                        />
+                                                        {isModalOpen && selectedImageUrl === msg.mediaUrl && (
+                                                            <div
+                                                                className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                                                                onClick={() => setIsModalOpen(false)}
+                                                            >
+                                                                <div className="max-w-[90vw] max-h-[90vh] relative">
+                                                                    <button
+                                                                        className="absolute top-2 right-2 text-white bg-black/50 rounded-full p-2"
+                                                                        onClick={() => setIsModalOpen(false)}
+                                                                    >
+                                                                        ×
+                                                                    </button>
+                                                                    <img
+                                                                        src={selectedImageUrl}
+                                                                        alt="Full size"
+                                                                        className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                ) : msg.mediaType === 'video' && (
+                                                    <video
+                                                        src={msg.mediaUrl}
+                                                        controls
+                                                        className="w-full max-w-[90vw] max-h-[60vh] sm:max-w-[250px] sm:max-h-[250px] rounded-lg"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    />
+                                                )}
+                                            </div>
+                                        )}
 
                                         <p className={`flex items-center gap-1 ${msg.message === "This message was deleted" ? "italic text-gray-300" : "text-white"}`}>
                                             {msg.message === "This message was deleted" && <AiOutlineStop className="w-4 h-4" />}
@@ -646,14 +765,115 @@ const Chat = () => {
                                 </div>
                             )}
 
+                            {mediaPreview && (
+                                <div className="absolute bottom-20 left-0 p-4 dark:bg-gray-800 bg-gray-300 rounded-lg">
+                                    <div className="relative">
+                                        {selectedMedia?.type.startsWith('image/') ? (
+                                            <div className="relative">
+                                                <img
+                                                    src={mediaPreview}
+                                                    alt="Preview"
+                                                    className={`max-w-xs h-auto rounded ${isUploading ? 'opacity-50' : ''}`}
+                                                />
+                                                {isUploading && (
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded">
+                                                        <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="relative">
+                                                <video
+                                                    src={mediaPreview}
+                                                    className={`max-w-xs h-auto rounded ${isUploading ? 'opacity-50' : ''}`}
+                                                    controls
+                                                />
+                                                {isUploading && (
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded">
+                                                        <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                        <button
+                                            onClick={cancelMediaPreview}
+                                            className="absolute -top-4 -right-2 text-2xl font-bold p-1.5"
+                                            disabled={isUploading}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                    <button
+                                        onClick={handleMediaUpload}
+                                        className="dark:text-gray-200 text-gray-600 p-2 transition"
+                                        disabled={isUploading}
+                                    >
+                                        <SendHorizontal className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            )}
+
                             {/* Chat Input */}
                             <div className="flex items-center gap-2">
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleMediaSelect}
+                                    className="hidden"
+                                />
                                 <button
                                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                                     className="text-gray-600 dark:text-gray-300"
                                 >
                                     <Smile className="h-5 w-5" />
                                 </button>
+                                <Popover open={isAttachmentOpen} onOpenChange={setIsAttachmentOpen}>
+                                    <PopoverTrigger asChild>
+                                        <button
+                                            className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                                        >
+                                            <Paperclip className="h-5 w-5" />
+                                        </button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-48 p-2 dark:bg-gray-800 bg-white"
+                                        side="top"
+                                        align="start"
+                                    >
+                                        <div className="space-y-2">
+                                            <button
+                                                onClick={() => {
+                                                    if (fileInputRef.current) {
+                                                        fileInputRef.current.accept = "image/*";
+                                                        fileInputRef.current.click();
+                                                    }
+                                                }}
+                                                className="flex items-center space-x-2 w-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                                            >
+                                                <Image className="h-5 w-5" />
+                                                <span className="text-sm dark:text-gray-200">Photo</span>
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (fileInputRef.current) {
+                                                        fileInputRef.current.accept = "video/*";
+                                                        fileInputRef.current.click();
+                                                    }
+                                                }}
+                                                className="flex items-center space-x-2 w-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                                            >
+                                                <FileVideo className="h-5 w-5" />
+                                                <span className="text-sm dark:text-gray-200">Video</span>
+                                            </button>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                                {/* <button
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    className="text-gray-600 dark:text-gray-300"
+                                >
+                                    <Smile className="h-5 w-5" />
+                                </button> */}
 
                                 <Input
                                     placeholder="Type a message"

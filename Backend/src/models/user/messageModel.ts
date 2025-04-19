@@ -8,6 +8,8 @@ export interface IMessage extends Document {
     isRead: boolean;
     readAt?: Date;
     sentAt: Date;
+    mediaType?: 'image' | 'video' | null;
+    mediaUrl?: string;
 };
 
 const MessageSchema: Schema = new Schema<IMessage>({
@@ -28,7 +30,6 @@ const MessageSchema: Schema = new Schema<IMessage>({
     },
     message: {
         type: String,
-        required: true
     },
     isRead: {
         type: Boolean,
@@ -37,6 +38,15 @@ const MessageSchema: Schema = new Schema<IMessage>({
     readAt: {
         type: Date,
         default: null
+    },
+    mediaType: {
+        type: String,
+        enum: ['image', 'video', null],
+        default: null
+    },
+    mediaUrl: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true });
 
