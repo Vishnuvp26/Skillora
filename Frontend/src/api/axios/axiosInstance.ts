@@ -3,7 +3,7 @@ import axios from 'axios'
 import store, { persistor } from '../../redux/store/store';
 import { refreshToken } from '../auth/authApi';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const Axios = axios.create({
     baseURL: API_BASE_URL,
