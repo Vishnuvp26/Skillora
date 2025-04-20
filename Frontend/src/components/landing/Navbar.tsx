@@ -75,10 +75,10 @@ const Navbar: React.FC = () => {
                 </Button>
 
                 {/* Sidebar Links */}
-                <Button variant="ghost">Home</Button>
-                <Button variant="ghost">Find Talent</Button>
-                <Button variant="ghost">Find Work</Button>
-                <Button variant="ghost">About Us</Button>
+                <Button variant="ghost" onClick={() => navigate("/")}>Home</Button>
+                <Button variant="ghost" onClick={() => navigate("/login")}>Find Talent</Button>
+                <Button variant="ghost" onClick={() => navigate("/login")}>Find Work</Button>
+                <Button variant="ghost" onClick={() => navigate("/about-us")}>About Us</Button>
 
                 {/* Dark Mode Toggle */}
                 <Button variant="ghost" onClick={toggleTheme}>
