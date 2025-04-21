@@ -1,7 +1,7 @@
 import { ChevronDown, Eye, Users, X } from "lucide-react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { JobsListProps } from "@/types/Types";
+import { Job } from "@/types/Types";
 import { IoPricetagOutline } from "react-icons/io5";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,16 @@ import { RootState } from "@/redux/store/store";
 import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "../ui/button";
+import { fetchAllJobs } from "@/api/client/jobApi";
+import Spinner from "../ui/Spinner";
 
-const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
+const JobsList = () => {
     const userRole = useSelector((state: RootState) => state.user.role);
     const userId = useSelector((state: RootState) => state.user._id);
+
+    const [jobs, setJobs] = useState<Job[]>([]);
+    const [visibleJobs, setVisibleJobs] = useState(4);
+    const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState<"budgetHigh" | "budgetLow" | "dateNew" | "dateOld" | null>(null);
@@ -22,6 +28,20 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
     const descriptionLimit = 100;
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const getMyJobs = async () => {
+            try {
+                const response = await fetchAllJobs();
+                setJobs(response.jobs || []);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        getMyJobs();
+    }, []);
 
     const filteredJobs = jobs
         .filter((job) =>
@@ -69,6 +89,14 @@ const JobsList = ({ jobs, visibleJobs, setVisibleJobs }: JobsListProps) => {
         }
     }, [sortedJobs, userRole, userId]);
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center absolute inset-0">
+                <Spinner />
+            </div>
+        );
+    }
+    
     return (
         <div className="mt-10">
             {jobs.length > 0 ? (
