@@ -32,7 +32,7 @@ class App {
 
     private initializeMiddlewares(): void {
         this.app.use(cors({ 
-            origin: env.CLIENT_URL,
+            origin: "*",
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
             // allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
