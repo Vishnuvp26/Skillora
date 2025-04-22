@@ -33,11 +33,11 @@ class App {
     private initializeMiddlewares(): void {
         this.app.use(cors({ 
             origin: env.CLIENT_URL,
-            // methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-            // allowedHeaders: ["Content-Type", "Authorization"],
+            methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+            allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
         }));
-        // this.app.use(express.json());
+        this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(morganMiddleware);
     }
