@@ -4,6 +4,7 @@ import store, { persistor } from '../../redux/store/store';
 import { refreshToken } from '../auth/authApi';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+console.log('Axios base url test', API_BASE_URL)
 
 const Axios = axios.create({
     baseURL: API_BASE_URL,

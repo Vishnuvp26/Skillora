@@ -40,8 +40,10 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const logoutUser = async () => {
+    console.log('Login api hit in axios');
     try {
         const response = await Axios.post("/api/auth/logout")
+        console.log('Login response of axios', response.data);
         return response.data
     } catch (error: any) {
         throw error.response?.data || "Logout failed"
