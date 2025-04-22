@@ -45,7 +45,7 @@ export class UserController implements IUserController {
             res.cookie("refreshToken", response.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
     
@@ -64,7 +64,7 @@ export class UserController implements IUserController {
         try {
             res.clearCookie('refreshToken', {
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
             })
             res.status(HttpStatus.OK).json({message: Messages.LOGOUT_SUCCESS})
         } catch (error) {
@@ -90,7 +90,7 @@ export class UserController implements IUserController {
             res.cookie("refreshToken", response.refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
 
