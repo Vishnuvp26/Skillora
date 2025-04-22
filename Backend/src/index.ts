@@ -31,11 +31,13 @@ class App {
     }
 
     private initializeMiddlewares(): void {
+        console.log('CORS client URL:', env.CLIENT_URL);
         this.app.use(cors({ 
             origin: env.CLIENT_URL,
             methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
             allowedHeaders: ["Content-Type", "Authorization"],
-            credentials: true
+            credentials: true,
+            preflightContinue: false
         }));
         // this.app.use(express.json());
         this.app.use(cookieParser());
