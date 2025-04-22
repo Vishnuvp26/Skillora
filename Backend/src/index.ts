@@ -39,6 +39,7 @@ class App {
             credentials: true,
             preflightContinue: false
         }));
+        this.app.options('*', cors());
         // this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(morganMiddleware);
