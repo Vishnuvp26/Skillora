@@ -144,7 +144,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
     };
 
     return (
-        <Card className="max-w-6xl mx-auto my-10 bg-white dark:bg-gray-950 rounded-lg border-none">
+        <Card className="max-w-6xl mx-auto my-10 bg-white dark:bg-gray-950 rounded-lg border-none shadow-none">
             <CardHeader>
                 <CardTitle className="text-lg font-bold text-center text-gray-900 dark:text-white">Update Profile</CardTitle>
             </CardHeader>

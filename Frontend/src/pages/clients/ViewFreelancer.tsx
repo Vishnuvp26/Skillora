@@ -87,16 +87,16 @@ const ViewFreelancer = () => {
                             <img
                                 src={profile.profilePic || "/default-profile.png"}
                                 alt="Profile"
-                                className="w-28 h-28 rounded-full border border-gray-300 dark:border-gray-700 object-cover"
+                                className="w-28 aspect-square rounded-full border border-gray-300 dark:border-gray-700 object-cover"
                             />
                         </div>
 
                         {/* Name & Location */}
                         <div>
-                            <h2 className="text-3xl font-bold text-black dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black dark:bg-gradient-to-r dark:from-emerald-400 dark:to-cyan-400 dark:bg-clip-text dark:text-transparent">
                                 {profile.firstName}
                             </h2>
-                            <p className="text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-2">
                                 <IoLocationOutline className="text-xl" /> {profile.city || "No city provided"}
                             </p>
                         </div>

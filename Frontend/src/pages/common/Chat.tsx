@@ -374,23 +374,36 @@ const Chat = () => {
     }, []);
 
     useEffect(() => {
-        socket.on("messageDeleted", ({ messageId, message }) => {
+        socket.on("messageDeleted", ({ messageId }) => {
+            // Update messages list
             setMessages((prevMessages) =>
                 prevMessages.map((msg) =>
                     msg._id === messageId ? {
                         ...msg,
-                        message,
-                        mediaUrl: '',
-                        mediaType: null!
+                        message: "This message was deleted"
                     } : msg
                 )
+            );
+
+            // Update conversations list
+            setConversations((prevConversations) =>
+                prevConversations.map((conv) => {
+                    const lastMsg = messages.find(m => m._id === messageId);
+                    if (lastMsg && conv.lastMessage === lastMsg.message) {
+                        return {
+                            ...conv,
+                            lastMessage: "This message was deleted"
+                        };
+                    }
+                    return conv;
+                })
             );
         });
 
         return () => {
             socket.off("messageDeleted");
         };
-    }, []);
+    }, [messages]);
 
     const handleDeleteMessage = (messageId: string) => {
         socket.emit("deleteMessage", { messageId, userId });

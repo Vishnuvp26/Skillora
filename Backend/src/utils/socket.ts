@@ -222,7 +222,7 @@ export const initSocket = (server: HTTPServer) => {
                 message.mediaType = null;
                 await message.save();
         
-                conversation.lastMessage = 'You deleted this message';
+                conversation.lastMessage = 'This message was deleted';
                 await conversation.save();
         
                 const receiverSocketId = activeUsers.get(message.receiverId.toString());

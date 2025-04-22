@@ -39,7 +39,7 @@ const AppliedJobs = () => {
     }, [userId]);
 
     const filteredApplications = applications.filter((application) =>
-        application.jobId.title.toLowerCase().includes(searchTerm.toLowerCase())
+        application.jobId?.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const cancelJobApplication = async (applicationId: string) => {

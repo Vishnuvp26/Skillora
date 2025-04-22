@@ -119,7 +119,7 @@ const FreelancerNav: React.FC = () => {
                                 Find Work
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onSelect={() => navigate('/freelancer/saved-jobs')}
+                                // onSelect={() => navigate('/freelancer/saved-jobs')}
                                 className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md cursor-pointer text-gray-900 dark:text-gray-50"
                             >
                                 Saved Work
@@ -314,7 +314,7 @@ const FreelancerNav: React.FC = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => navigate('/freelancer/jobs')}>
                             Find Work
                         </DropdownMenuItem>
                         <DropdownMenuItem>
@@ -331,7 +331,7 @@ const FreelancerNav: React.FC = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => navigate('/freelancer/contracts')}>
                             Active Contract
                         </DropdownMenuItem>
                     </DropdownMenuContent>
