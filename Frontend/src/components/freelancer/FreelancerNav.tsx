@@ -331,6 +331,9 @@ const FreelancerNav: React.FC = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-40 bg-white dark:bg-gray-900 shadow-lg rounded-md p-2">
+                        <DropdownMenuItem onSelect={() => navigate('/freelancer/jobs/applied-jobs')}>
+                            Applied Work
+                        </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => navigate('/freelancer/contracts')}>
                             Active Contract
                         </DropdownMenuItem>
