@@ -10,7 +10,7 @@ import { RootState } from "@/redux/store/store";
 import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "../ui/button";
-import { fetchAllJobs } from "@/api/client/jobApi";
+import { fetchAllJobs, fetchMyJobs } from "@/api/client/jobApi";
 import Spinner from "../ui/Spinner";
 
 const JobsList = () => {
@@ -32,8 +32,16 @@ const JobsList = () => {
     useEffect(() => {
         const getMyJobs = async () => {
             try {
-                const response = await fetchAllJobs();
-                setJobs(response.jobs || []);
+                if (userRole === "client") {
+                    const response = await fetchMyJobs(userId);
+                    const sortedJobs = (response.jobs || []).sort(
+                        (a: Job, b: Job) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                    );
+                    setJobs(sortedJobs);
+                } else {
+                    const response = await fetchAllJobs();
+                    setJobs(response.jobs || []);
+                }
             } catch (error) {
                 console.log(error);
             } finally {
@@ -41,7 +49,7 @@ const JobsList = () => {
             }
         };
         getMyJobs();
-    }, []);
+    }, [userRole, userId]);
 
     const filteredJobs = jobs
         .filter((job) =>

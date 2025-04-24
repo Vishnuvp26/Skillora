@@ -10,20 +10,17 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
 
     async createJob(jobData: IJob): Promise<IJob> {
         const job = new Job(jobData);
-        console.log('CREATING JOBBB..', job)
         return await this.create(job)
     };
 
     async getJobs(): Promise<IJob[]> {
-        const jobs = await this.model.find()
+        const jobs = await this.model.find({ status: "Open" })
             .populate("category", "name")
             .populate("skills", "name")
             .populate("clientId", "name email")
             .populate("hiredFreelancer", "name email")
             .sort({ createdAt: -1 })
             .exec();
-
-        console.log("POPULATED JOBS:", jobs);
         return jobs;
     };
 
