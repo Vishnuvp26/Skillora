@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { cancelApplication, viewAppliedJobs } from "@/api/freelancer/applyJobApi";
 import Spinner from "@/components/ui/Spinner";
-import { Eye, X, XCircle } from "lucide-react";
+import { ChevronDown, Eye, X, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Application } from "@/types/Types";
@@ -159,12 +159,14 @@ const AppliedJobs = () => {
                             </div>
                         ))}
                         {visibleJobs < filteredApplications.length && (
-                            <Button
+                            <p
                                 onClick={() => setVisibleJobs((prev) => prev + 5)}
-                                className="mt-4 bg-[#0077B6] hover:bg-[#005f8c] text-white px-4 py-2 rounded-lg"
+                                className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
+                                dark:bg-transparent dark:text-[#00FFE5] self-center cursor-pointer"
                             >
                                 View More
-                            </Button>
+                                <ChevronDown className="w-4 h-4" />
+                            </p>
                         )}
                     </div>
                 ) : (
