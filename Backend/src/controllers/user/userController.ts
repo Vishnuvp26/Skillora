@@ -73,9 +73,12 @@ export class UserController implements IUserController {
     };
 
     async refreshAccessToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+        console.log('Refresh token controller inside...!!');
         try {
             const refreshToken = req.cookies.refreshToken;
-            const accessToken = await this._userService.refreshAccessToken(refreshToken)
+            console.log('Refresh token from body:::', refreshToken);
+            const accessToken = await this._userService.refreshAccessToken(refreshToken);
+            console.log('New accessToken generated:::', accessToken);
             res.status(HttpStatus.OK).json({accessToken})
         } catch (error) {
             next(error)

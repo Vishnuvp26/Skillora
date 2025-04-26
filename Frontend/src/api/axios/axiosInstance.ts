@@ -41,8 +41,11 @@ Axios.interceptors.response.use(
             originalReq._retry = true;
             try {
                 const response = await refreshToken();
+                console.log('Refresh token has been called in intreceptor')
                 const newAccessToken = response.accessToken;
+                console.log('Access token response', newAccessToken);
                 store.dispatch(setAccessToken({ accessToken: newAccessToken }));
+                console.log('!!...new access token set in redux...!!!');
                 originalReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
                 return Axios(originalReq);
             } catch (refreshError) {
