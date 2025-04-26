@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell, Badge } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -166,9 +166,9 @@ const FreelancerNav: React.FC = () => {
                             <Button variant="ghost" className="relative">
                                 <Bell className="w-5 h-5" />
                                 {unreadCount > 0 && (
-                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                    <div className="absolute -top-1 -right-0.5 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
                                         {unreadCount}
-                                    </Badge>
+                                    </div>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -248,9 +248,9 @@ const FreelancerNav: React.FC = () => {
                             <Button variant="ghost" className="relative">
                                 <Bell className="w-5 h-5" />
                                 {unreadCount > 0 && (
-                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                    <div className="absolute -top-1 -right-0.5 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
                                         {unreadCount}
-                                    </Badge>
+                                    </div>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -277,13 +277,13 @@ const FreelancerNav: React.FC = () => {
                             )}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                <Button
-                    variant="ghost"
-                    className="lg:hidden"
-                    onClick={() => setIsSidebarOpen(true)}
-                >
-                    <Menu className="w-6 h-6" />
-                </Button>
+                    <Button
+                        variant="ghost"
+                        className="lg:hidden"
+                        onClick={() => setIsSidebarOpen(true)}
+                    >
+                        <Menu className="w-6 h-6" />
+                    </Button>
                 </div>
             </nav>
 

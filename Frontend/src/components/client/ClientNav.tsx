@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell, Badge } from "lucide-react";
+import { Menu, X, Sun, Moon, User, Settings, LogOut, DollarSign, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -75,7 +75,9 @@ const ClientNav: React.FC = () => {
         );
     };
 
-    const unreadCount = notifications.filter((n) => !n.read).length;
+    const unreadCount = useMemo(() => {
+        return notifications.filter((n) => !n.read).length;
+    }, [notifications]);
 
     return (
         <>
@@ -146,9 +148,9 @@ const ClientNav: React.FC = () => {
                             <Button variant="ghost" className="relative">
                                 <Bell className="w-5 h-5" />
                                 {unreadCount > 0 && (
-                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                    <div className="absolute -top-1 -right-0.5 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
                                         {unreadCount}
-                                    </Badge>
+                                    </div>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -226,9 +228,9 @@ const ClientNav: React.FC = () => {
                             <Button variant="ghost" className="relative">
                                 <Bell className="w-5 h-5" />
                                 {unreadCount > 0 && (
-                                    <Badge className="absolute -top-1 -right-1 px-1 py-0.5 text-xs rounded-full bg-red-500 text-white">
+                                    <div className="absolute -top-1 -right-0.5 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
                                         {unreadCount}
-                                    </Badge>
+                                    </div>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
