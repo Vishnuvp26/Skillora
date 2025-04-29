@@ -13,16 +13,54 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         return await this.create(job)
     };
 
-    async getJobs(): Promise<IJob[]> {
-        const jobs = await this.model.find({ status: "Open" })
+    async getJobs(page: number = 1, limit: number = 4, search: string = '', filter: string = '', sort: string = ''): Promise<{ jobs: IJob[], total: number }> {
+        const query: any = { status: "Open" };
+        
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+    
+        if (filter) {
+            query.experienceLevel = filter;
+        }
+    
+        const skip = (page - 1) * limit;
+    
+        let sortObj: any = { createdAt: -1 };
+        if (sort) {
+            switch (sort) {
+                case 'budgetHigh':
+                    sortObj = { rate: -1 };
+                    break;
+                case 'budgetLow':
+                    sortObj = { rate: 1 };
+                    break;
+                case 'dateNew':
+                    sortObj = { createdAt: -1 };
+                    break;
+                case 'dateOld':
+                    sortObj = { createdAt: 1 };
+                    break;
+            }
+        }
+    
+        const total = await this.model.countDocuments(query);
+    
+        const jobs = await this.model.find(query)
             .populate("category", "name")
             .populate("skills", "name")
             .populate("clientId", "name email")
             .populate("hiredFreelancer", "name email")
-            .sort({ createdAt: -1 })
+            .sort(sortObj)
+            .skip(skip)
+            .limit(limit)
             .exec();
-        return jobs;
-    };
+    
+        return { jobs, total };
+    }
 
     async getJobById(jobId: string): Promise<IJob | null> {
         const job = await this.model.findById(jobId)
@@ -54,14 +92,62 @@ export class JobRepository extends BaseRepository<IJob> implements IJobRepositor
         return updatedJob;
     };
 
-    async getJobsByClientId(userId: string): Promise<IJob[]> {
-        const jobs = await this.model.find({ clientId: new mongoose.Types.ObjectId(userId) })
+    async getJobsByClientId(
+        userId: string,
+        page: number = 1,
+        limit: number = 4,
+        search: string = '',
+        filter: string = '',
+        sort: string = ''
+    ): Promise<{ jobs: IJob[], total: number }> {
+        const query: any = { 
+            clientId: new mongoose.Types.ObjectId(userId)
+        };
+        
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } }
+            ];
+        }
+    
+        if (filter) {
+            query.experienceLevel = filter;
+        }
+    
+        const skip = (page - 1) * limit;
+    
+        let sortObj: any = { createdAt: -1 };
+        if (sort) {
+            switch (sort) {
+                case 'budgetHigh':
+                    sortObj = { rate: -1 };
+                    break;
+                case 'budgetLow':
+                    sortObj = { rate: 1 };
+                    break;
+                case 'dateNew':
+                    sortObj = { createdAt: -1 };
+                    break;
+                case 'dateOld':
+                    sortObj = { createdAt: 1 };
+                    break;
+            }
+        }
+    
+        const total = await this.model.countDocuments(query);
+    
+        const jobs = await this.model.find(query)
             .populate("category", "name")
             .populate("skills", "name")
             .populate("hiredFreelancer", "name email")
+            .sort(sortObj)
+            .skip(skip)
+            .limit(limit)
             .exec();
-        return jobs;
-    };
+    
+        return { jobs, total };
+    }
 
     async incrementApplicants(jobId: string): Promise<void> {
         await this.model.updateOne(

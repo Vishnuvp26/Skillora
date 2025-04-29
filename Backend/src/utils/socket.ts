@@ -15,7 +15,7 @@ export const initSocket = (server: HTTPServer) => {
         cors: {
             origin: env.CLIENT_URL,
             methods: ['GET', 'POST'],
-            credentials: true // NEW LINE
+            credentials: true
         },
     });
 

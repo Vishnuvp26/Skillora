@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { addSkills, editSkills, fetchSkills, listSkills, unlistSkills } from "@/api/admin/skillsApi";
 import { validateSkill } from "@/utils/validation";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { TableSkeleton } from "@/components/ui/TableSkeleton";
 
 const Skills = () => {
     const isMobile = useMobile();
@@ -24,6 +25,7 @@ const Skills = () => {
     const [newSkills, setNewSkills] = useState("");
     const [editSkillsData, setEditSkillsData] = useState<{ id: string; name: string }>({ id: "", name: "" });
     const [editingSkillId, setEditingSkillId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     
     const itemsPerPage = 5;
 
@@ -33,11 +35,14 @@ const Skills = () => {
 
     const loadSkills = async () => {
         try {
+            setIsLoading(true)
             const response = await fetchSkills();
             console.log("Fetched skills:", response);
             setSkills(response.data);
         } catch (error) {
             console.log('Failed to fetch skills :', error);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -178,7 +183,9 @@ const Skills = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {skills.length > 0 ? (
+                                {isLoading ? (
+                                    <TableSkeleton rows={5} columns={4} />
+                                ) : skills.length > 0 ? (
                                     skills
                                         .filter((cat) => cat.name.toLowerCase().includes(search.toLowerCase()))
                                         .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)

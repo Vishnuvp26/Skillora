@@ -1,4 +1,4 @@
-import { ChevronDown, Eye, Users, X } from "lucide-react";
+import { Eye, Users, X } from "lucide-react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Job } from "@/types/Types";
@@ -9,22 +9,34 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { getApplicantStatus } from "@/api/freelancer/applyJobApi";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "../ui/button";
 import { fetchAllJobs, fetchMyJobs } from "@/api/client/jobApi";
 import Spinner from "../ui/Spinner";
+import NoJobsPosted from "./NoJobsPosted";
+import NoResultsFound from "./NoResultsFound";
+import { 
+    Pagination, 
+    PaginationContent, 
+    PaginationEllipsis, 
+    PaginationItem, 
+    PaginationLink, 
+    PaginationNext, 
+    PaginationPrevious 
+} from "@/components/ui/pagination";
 
 const JobsList = () => {
     const userRole = useSelector((state: RootState) => state.user.role);
     const userId = useSelector((state: RootState) => state.user._id);
 
     const [jobs, setJobs] = useState<Job[]>([]);
-    const [visibleJobs, setVisibleJobs] = useState(4);
     const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState<"budgetHigh" | "budgetLow" | "dateNew" | "dateOld" | null>(null);
     const [filterExperience, setFilterExperience] = useState<string | null>(null);
     const [appliedJobs, setAppliedJobs] = useState<{ [key: string]: boolean }>({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit] = useState(5);
     const descriptionLimit = 100;
 
     const navigate = useNavigate();
@@ -33,14 +45,26 @@ const JobsList = () => {
         const getMyJobs = async () => {
             try {
                 if (userRole === "client") {
-                    const response = await fetchMyJobs(userId);
-                    const sortedJobs = (response.jobs || []).sort(
-                        (a: Job, b: Job) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                    const response = await fetchMyJobs(
+                        userId,
+                        currentPage,
+                        limit,
+                        searchTerm,
+                        filterExperience || '',
+                        sortOption || ''
                     );
-                    setJobs(sortedJobs);
-                } else {
-                    const response = await fetchAllJobs();
                     setJobs(response.jobs || []);
+                    setTotalPages(Math.ceil(response.total / limit));
+                } else {
+                    const response = await fetchAllJobs(
+                        currentPage,
+                        limit,
+                        searchTerm,
+                        filterExperience || '',
+                        sortOption || ''
+                    );
+                    setJobs(response.jobs || []);
+                    setTotalPages(Math.ceil(response.total / limit));
                 }
             } catch (error) {
                 console.log(error);
@@ -49,37 +73,14 @@ const JobsList = () => {
             }
         };
         getMyJobs();
-    }, [userRole, userId]);
-
-    const filteredJobs = jobs
-        .filter((job) =>
-            job.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .filter((job) =>
-            filterExperience ? job.experienceLevel === filterExperience : true
-        );
-
-    const sortedJobs = [...filteredJobs].sort((a, b) => {
-        switch (sortOption) {
-            case "budgetHigh":
-                return b.rate - a.rate;
-            case "budgetLow":
-                return a.rate - b.rate;
-            case "dateNew":
-                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-            case "dateOld":
-                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-            default:
-                return 0;
-        }
-    });
+    }, [userRole, userId, currentPage, searchTerm, filterExperience, sortOption]);
 
     useEffect(() => {
         if (userRole === "freelancer") {
             const fetchAppliedStatus = async () => {
                 try {
                     const appliedStatuses = await Promise.all(
-                        sortedJobs.map(async (job) => {
+                        jobs.map(async (job) => {
                             const response = await getApplicantStatus(job._id, userId);
                             return { jobId: job._id, isApplied: response?.application?.isApplied };
                         })
@@ -95,7 +96,11 @@ const JobsList = () => {
             };
             fetchAppliedStatus();
         }
-    }, [sortedJobs, userRole, userId]);
+    }, [jobs, userRole, userId]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [currentPage]);
 
     if (loading) {
         return (
@@ -107,14 +112,17 @@ const JobsList = () => {
     
     return (
         <div className="mt-10">
-            {jobs.length > 0 ? (
+            {userRole === "client" && jobs.length === 0 && !searchTerm && !filterExperience && !sortOption ? (
+                <NoJobsPosted />
+            ) : (
                 <div className="flex flex-col gap-5 mt-1.5">
                     <div className="flex justify-between items-center flex-wrap gap-3">
-                        {userRole === "client" ? (
-                            <h2 className="text-xl font-semibold">Your Works</h2>
-                        ) : (
-                            <h2 className="text-xl font-semibold">Find Works</h2>
-                        )}
+                        {/* Title */}
+                        <h2 className="text-xl font-semibold">
+                            {userRole === "client" ? "Your Works" : "Find Works"}
+                        </h2>
+
+                        {/* Search Input - Show for both roles */}
                         <div className="w-full sm:w-72 md:w-96 lg:max-w-[600px] relative">
                             <input
                                 type="text"
@@ -122,23 +130,30 @@ const JobsList = () => {
                                 className="w-full border p-2.5 pl-3 pr-8 rounded-lg text-sm dark:bg-gray-950 dark:text-white 
                                 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
                             />
                             {searchTerm && (
                                 <X
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 cursor-pointer hover:text-gray-700"
-                                    onClick={() => setSearchTerm("")}
+                                    onClick={() => {
+                                        setSearchTerm("");
+                                        setCurrentPage(1);
+                                    }}
                                 />
                             )}
                         </div>
                     </div>
 
-                    {/* Sort and Filter Options */}
+                    {/* Sort and Filter Options - Show for both roles */}
                     <div className="flex flex-wrap gap-4 mt-4">
                         <Select
                             value={sortOption ?? "sort"}
                             onValueChange={(value) => {
                                 setSortOption(value === "clear" ? null : value as "budgetHigh" | "budgetLow" | "dateNew" | "dateOld");
+                                setCurrentPage(1);
                             }}
                         >
                             <SelectTrigger className="w-[180px] text-sm dark:bg-gray-950 dark:text-white">
@@ -158,9 +173,10 @@ const JobsList = () => {
                         {/* Experience Filter Select */}
                         <Select
                             value={filterExperience ?? "experience"}
-                            onValueChange={(value) =>
-                                setFilterExperience(value === "experience" || value === "clear" ? null : value)
-                            }
+                            onValueChange={(value) => {
+                                setFilterExperience(value === "experience" || value === "clear" ? null : value);
+                                setCurrentPage(1);
+                            }}
                         >
                             <SelectTrigger className="w-[200px] text-sm dark:bg-gray-950 dark:text-white">
                                 <SelectValue placeholder="Filter by Experience" />
@@ -175,8 +191,8 @@ const JobsList = () => {
                         </Select>
                     </div>
 
-                    {sortedJobs.length > 0 ? (
-                        sortedJobs.slice(0, visibleJobs).map((job) => (
+                    {jobs.length > 0 ? (
+                        jobs.map((job) => (
                             <div
                                 key={job._id}
                                 className="border rounded-lg p-5 bg-gray-100 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-950 transition duration-200"
@@ -255,35 +271,59 @@ const JobsList = () => {
                             </div>
                         ))
                     ) : (
-                        <div className="text-center text-gray-500 mt-4">No results found.</div>
+                        <NoResultsFound />
                     )}
 
-                    {visibleJobs < sortedJobs.length && (
-                        <p
-                            onClick={() => setVisibleJobs((prev) => prev + 5)}
-                            className="mt-4 text-blue-950 px-4 py-2 flex items-center gap-2
-                            dark:bg-transparent dark:text-[#00FFE5] self-center cursor-pointer"
-                        >
-                            View More
-                            <ChevronDown className="w-4 h-4" />
-                        </p>
+                    {/* Pagination Controls */}
+                    { jobs.length > 0 && (
+                        <Pagination className="mt-6">
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious 
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    />
+                                </PaginationItem>
+                                
+                                {[...Array(totalPages)].map((_, index) => {
+                                    const pageNumber = index + 1;
+                                    // Show first page, current page, last page, and pages around current
+                                    if (
+                                        pageNumber === 1 ||
+                                        pageNumber === totalPages ||
+                                        (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                                    ) {
+                                        return (
+                                            <PaginationItem key={pageNumber}>
+                                                <PaginationLink
+                                                    onClick={() => setCurrentPage(pageNumber)}
+                                                    isActive={currentPage === pageNumber}
+                                                >
+                                                    {pageNumber}
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        );
+                                    } else if (
+                                        pageNumber === currentPage - 2 ||
+                                        pageNumber === currentPage + 2
+                                    ) {
+                                        return (
+                                            <PaginationItem key={pageNumber}>
+                                                <PaginationEllipsis />
+                                            </PaginationItem>
+                                        );
+                                    }
+                                    return null;
+                                })}
+                                <PaginationItem>
+                                    <PaginationNext 
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     )}
-                </div>
-            ) : (
-                <div className="px-6 py-16 sm:p-24 mt-10 flex flex-col items-center text-center bg-white dark:bg-gray-950 rounded-xl shadow-sm">
-                    <p className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
-                        No Work Posts Yet
-                    </p>
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-2">
-                        You haven’t posted any jobs yet. Start by creating your first one!
-                    </p>
-
-                    <Button
-                        onClick={() => navigate("/client/post-job")}
-                        className="mt-6 px-5 py-2 sm:px-6 sm:py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 dark:from-purple-500 dark:to-indigo-500 rounded-full transition-all"
-                    >
-                        Get Started
-                    </Button>
                 </div>
             )}
         </div>

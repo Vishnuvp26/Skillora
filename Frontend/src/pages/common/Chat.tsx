@@ -380,7 +380,9 @@ const Chat = () => {
                 prevMessages.map((msg) =>
                     msg._id === messageId ? {
                         ...msg,
-                        message: "This message was deleted"
+                        message: "This message was deleted",
+                        mediaUrl: null as unknown as string,  
+                        mediaType: null as unknown as string  
                     } : msg
                 )
             );
@@ -392,12 +394,15 @@ const Chat = () => {
                     if (lastMsg && conv.lastMessage === lastMsg.message) {
                         return {
                             ...conv,
-                            lastMessage: "This message was deleted"
+                            lastMessage: "This message was deleted",
+                            mediaUrl: null as unknown as string, 
+                            mediaType: null as unknown as string 
                         };
                     }
                     return conv;
                 })
             );
+            socket.emit("getConversations", userId);
         });
 
         return () => {

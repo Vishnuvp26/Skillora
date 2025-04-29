@@ -8,6 +8,7 @@ import { getAdminTransactions } from "@/api/admin/escrowApi";
 import dayjs from "dayjs";
 import { Input } from "@/components/ui/input";
 import { AdminTransaction } from "@/types/Types";
+import { TableSkeleton } from "@/components/ui/TableSkeleton";
 
 const Payments = () => {
     const isMobile = useMobile();
@@ -15,15 +16,19 @@ const Payments = () => {
     const [transactions, setTransactions] = useState<AdminTransaction[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
     const itemsPerPage = 5;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 const res = await getAdminTransactions();
                 setTransactions(res.data);
             } catch (err) {
                 console.error("Error fetching transactions:", err);
+            } finally {
+                setIsLoading(false)
             }
         };
         fetchData();
@@ -92,27 +97,30 @@ const Payments = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {paginatedData.length > 0 ? (
-                                    paginatedData.map((tx, index) => (
-                                        <TableRow key={tx._id}>
-                                            <TableCell className="text-center">
-                                                {(currentPage - 1) * itemsPerPage + index + 1}
+                                {isLoading ? (
+                                    <TableSkeleton rows={5} columns={6} />
+                                ) :
+                                    paginatedData.length > 0 ? (
+                                        paginatedData.map((tx, index) => (
+                                            <TableRow key={tx._id}>
+                                                <TableCell className="text-center">
+                                                    {(currentPage - 1) * itemsPerPage + index + 1}
+                                                </TableCell>
+                                                <TableCell className="text-center">₹{tx.amount}</TableCell>
+                                                <TableCell className="text-center">₹{tx.platformFee.toFixed(2)}</TableCell>
+                                                <TableCell className="text-center">{dayjs(tx.createdAt).format("DD MMM YYYY")}</TableCell>
+                                                <TableCell className="text-center">{tx.clientId?.name || "-"}</TableCell>
+                                                {/* <TableCell className="text-center capitalize">{tx.transactionType}</TableCell> */}
+                                                <TableCell className="text-center capitalize">{tx.status}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center text-gray-500 dark:text-gray-400">
+                                                No transactions found.
                                             </TableCell>
-                                            <TableCell className="text-center">₹{tx.amount}</TableCell>
-                                            <TableCell className="text-center">₹{tx.platformFee.toFixed(2)}</TableCell>
-                                            <TableCell className="text-center">{dayjs(tx.createdAt).format("DD MMM YYYY")}</TableCell>
-                                            <TableCell className="text-center">{tx.clientId?.name || "-"}</TableCell>
-                                            {/* <TableCell className="text-center capitalize">{tx.transactionType}</TableCell> */}
-                                            <TableCell className="text-center capitalize">{tx.status}</TableCell>
                                         </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={5} className="text-center text-gray-500 dark:text-gray-400">
-                                            No transactions found.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
+                                    )}
                             </TableBody>
                         </Table>
                     </div>
@@ -138,7 +146,6 @@ const Payments = () => {
                                         </PaginationLink>
                                     </PaginationItem>
                                 ))}
-
                                 <PaginationItem>
                                     <PaginationNext
                                         onClick={() =>

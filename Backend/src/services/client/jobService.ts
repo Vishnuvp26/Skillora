@@ -39,9 +39,9 @@ export class JobService implements IJobService {
         return newJob
     };
 
-    async getJobs(): Promise<IJob[]> {
-        return this._jobRepository.getJobs()
-    };
+    async getJobs(page?: number, limit?: number, search?: string, filter?: string, sort?: string): Promise<{ jobs: IJob[], total: number }> {
+        return this._jobRepository.getJobs(page, limit, search, filter, sort);
+    }
 
     async getJobById(jobId: string): Promise<IJob | null> {
         if (!mongoose.isValidObjectId(jobId)) {
@@ -101,10 +101,17 @@ export class JobService implements IJobService {
         return this._jobRepository.updateJob(jobId, jobData);
     };
 
-    getJobsByClientId(userId: string): Promise<IJob[]> {
+    async getJobsByClientId(
+        userId: string,
+        page?: number,
+        limit?: number,
+        search?: string,
+        filter?: string,
+        sort?: string
+    ): Promise<{ jobs: IJob[], total: number }> {
         if (!mongoose.isValidObjectId(userId)) {
             throw createHttpError(HttpStatus.BAD_REQUEST, Messages.INVALID_ID)
         }
-        return this._jobRepository.getJobsByClientId(userId)
+        return this._jobRepository.getJobsByClientId(userId, page, limit, search, filter, sort);
     }
 };

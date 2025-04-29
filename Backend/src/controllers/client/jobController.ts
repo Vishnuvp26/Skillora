@@ -33,12 +33,24 @@ export class JobController implements IJobController {
 
     async getJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const jobs = await this._jobService.getJobs()
-            res.status(HttpStatus.OK).json({ jobs });
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 4;
+            const search = (req.query.search as string) || '';
+            const filter = (req.query.filter as string) || '';
+            const sort = (req.query.sort as string) || '';
+    
+            const { jobs, total } = await this._jobService.getJobs(page, limit, search, filter, sort);
+            
+            res.status(HttpStatus.OK).json({ 
+                jobs,
+                total,
+                currentPage: page,
+                totalPages: Math.ceil(total / limit)
+            });
         } catch (error) {
-            next(error)
+            next(error);
         }
-    };
+    }
 
     async getJobById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -95,18 +107,36 @@ export class JobController implements IJobController {
     async getClientJobs(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.params.id;
-
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 4;
+            const search = (req.query.search as string) || '';
+            const filter = (req.query.filter as string) || '';
+            const sort = (req.query.sort as string) || '';
+    
             if(!userId){
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.USER_NOT_FOUND });
-                return
+                return;
             }
-
-            const jobs = await this._jobService.getJobsByClientId(userId);
-            res.status(HttpStatus.OK).json({ jobs })
+    
+            const { jobs, total } = await this._jobService.getJobsByClientId(
+                userId,
+                page,
+                limit,
+                search,
+                filter,
+                sort
+            );
+    
+            res.status(HttpStatus.OK).json({ 
+                jobs,
+                total,
+                currentPage: page,
+                totalPages: Math.ceil(total / limit)
+            });
         } catch (error) {
-            next(error)
+            next(error);
         }
-    };
+    }
 
     async stripePayment(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {

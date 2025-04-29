@@ -9,18 +9,27 @@ export const createJob = async (id: string, formData: any) => {
     }
 };
 
-export const fetchMyJobs = async (id: string) => {
+export const fetchMyJobs = async (
+    id: string, 
+    page: number, 
+    limit: number, 
+    search: string, 
+    filter: string, 
+    sort: string
+) => {
     try {
-        const response = await axiosInstance.get(`/api/client/job/my-jobs/${id}`);
+        const response = await axiosInstance.get(
+            `/api/client/job/my-jobs/${id}?page=${page}&limit=${limit}&search=${search}&sort=${sort}&filter=${filter}`
+        );
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get my jobs"
     }
 };
 
-export const fetchAllJobs = async () => {
+export const fetchAllJobs = async (page:number, limit:number, search: string, filter: string, sort: string) => {
     try {
-        const response = await axiosInstance.get(`/api/client/job/get-jobs`)
+        const response = await axiosInstance.get(`/api/client/job/get-jobs?page=${page}&limit=${limit}&search=${search}&sort=${sort}&filter=${filter}`)
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get all jobs"

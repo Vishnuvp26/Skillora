@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog"; 
 import { Button } from "@/components/ui/button";
+import { TableSkeleton } from "@/components/ui/TableSkeleton";
 
 const Freelancer = () => {
     const isMobile = useMobile();
@@ -95,11 +96,7 @@ const Freelancer = () => {
                             </TableHeader>
                             <TableBody>
                                 {loading ? (
-                                    <TableRow>
-                                        <TableCell colSpan={4} className="text-center text-gray-500 dark:text-gray-400">
-                                            Loading...
-                                        </TableCell>
-                                    </TableRow>
+                                    <TableSkeleton rows={5} columns={6}/>
                                 ) : filteredFreelancers.length > 0 ? (
                                     filteredFreelancers.map((freelancer, index) => (
                                         <TableRow key={freelancer._id}>

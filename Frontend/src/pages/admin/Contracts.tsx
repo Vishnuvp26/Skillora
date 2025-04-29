@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import useMobile from "@/hooks/useMobile";
@@ -9,14 +9,16 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { fetchAllContracts } from "@/api/admin/contractApi";
 import { IContract } from "@/types/Types";
 import { Button } from "@/components/ui/button";
+import { TableSkeleton } from "@/components/ui/TableSkeleton";
 
 const Contracts = () => {
     const isMobile = useMobile();
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(isMobile);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [contracts, setContracts] = useState<IContract[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -25,17 +27,20 @@ const Contracts = () => {
 
     const loadContracts = async () => {
         try {
+            setIsLoading(true);
             const response = await fetchAllContracts();
             setContracts(response.data);
         } catch (error) {
             console.error("Failed to fetch contracts:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
     const handleViewContract = (contractId: string) => {
-        navigate(`/admin/contracts/${contractId}`); // Navigate to the contract details page
+        navigate(`/admin/contracts/${contractId}`);
     };
 
     return (
@@ -85,7 +90,9 @@ const Contracts = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {contracts.length > 0 ? (
+                                {isLoading ? (
+                                    <TableSkeleton rows={5} columns={8}/>
+                                ) : contracts.length > 0 ? (
                                     contracts
                                         .filter((contract) =>
                                             contract.contractId.toLowerCase().includes(search.toLowerCase())

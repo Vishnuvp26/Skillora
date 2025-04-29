@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Category } from "@/types/Types";
 import { validateCategory } from "@/utils/validation";
+import { TableSkeleton } from "@/components/ui/TableSkeleton";
 
 const JobCategories = () => {
     const isMobile = useMobile();
@@ -25,6 +26,7 @@ const JobCategories = () => {
     const [newCategory, setNewCategory] = useState("");
     const [editCategoryData, setEditCategoryData] = useState<{ id: string; name: string }>({ id: "", name: "" });
     const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const itemsPerPage = 5;
 
@@ -34,10 +36,13 @@ const JobCategories = () => {
 
     const loadCategories = async () => {
         try {
+            setIsLoading(true);
             const response = await fetchCategories();
             setCategories(response.data);
         } catch (error) {
             console.log('Failed to fetch categories :', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -100,7 +105,7 @@ const JobCategories = () => {
             setError(error.error || "Failed to update category");
             setTimeout(() => setError(""), 3000);
         }
-    };  
+    };
 
     const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
@@ -174,7 +179,9 @@ const JobCategories = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {categories.length > 0 ? (
+                                {isLoading ? (
+                                    <TableSkeleton rows={5} columns={4} />
+                                ) : categories.length > 0 ? (
                                     categories
                                         .filter((cat) => cat.name.toLowerCase().includes(search.toLowerCase()))
                                         .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)

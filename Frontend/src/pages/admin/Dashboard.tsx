@@ -3,7 +3,7 @@ import AdminNavbar from "@/components/admin/AdminNavbar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import useMobile from "@/hooks/useMobile";
 import { escrowBalance, generateSalesReport, totalRevenue } from "@/api/admin/escrowApi";
-import Spinner from "@/components/ui/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { GiMoneyStack } from "react-icons/gi";
 import { FaUserTie } from "react-icons/fa";
 import { GrUserWorker } from "react-icons/gr";
@@ -73,8 +73,17 @@ const Dashboard = () => {
                 <main className="p-6 bg-gray-300 dark:bg-zinc-900 min-h-[calc(100vh-4rem)] relative">
                     <h1 className="text-gray-900 dark:text-white text-xl font-semibold mb-4">Dashboard</h1>
                     {loading ? (
-                        <div className="absolute inset-0 flex justify-center items-center">
-                            <Spinner />
+                        <div className="flex flex-wrap gap-6">
+                            {/* Skeleton for cards */}
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="w-full sm:w-64 h-24">
+                                    <Skeleton className="w-full h-full rounded-xl" />
+                                </div>
+                            ))}
+                            {/* Skeleton for chart */}
+                            <div className="w-11/12">
+                                <Skeleton className="w-full h-[300px] rounded-xl" />
+                            </div>
                         </div>
                     ) : error ? (
                         <p className="text-red-500">{error}</p>
