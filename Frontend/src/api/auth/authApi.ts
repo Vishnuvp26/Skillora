@@ -12,7 +12,7 @@ export const registerUser = async (userData: { name: string; email: string; pass
 export const verifyOtp = async (email: string, otp: string, userData = {}) => {
     console.log("Sending to backend:", { email, otp, userData });
     try {
-        const response = await axiosInstance.post("/api/auth/verify-otp", { email, otp, userData });
+        const response = await Axios.post("/api/auth/verify-otp", { email, otp, userData });
         console.log('verifyOtp api call response in axios file: ', response)
         return response.data;
     } catch (error: any) {
@@ -52,8 +52,12 @@ export const logoutUser = async () => {
 
 export const refreshToken = async () => {
     try {
-        const response = await axiosInstance.post("/api/auth/refresh-token")
-        return response.data
+        const response = await axiosInstance.post(
+            "/api/auth/refresh-token",
+            {},
+            { withCredentials: true }
+        );
+        return response.data;
     } catch (error: any) {
         throw error.response?.data || "Refresh token failed";
     }

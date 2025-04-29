@@ -2,6 +2,7 @@ import { removeUser, setAccessToken } from '@/redux/authSlice';
 import axios from 'axios'
 import store, { persistor } from '../../redux/store/store';
 import { refreshToken } from '../auth/authApi';
+import Cookies from 'js-cookie';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 console.log('Axios base url test', API_BASE_URL)
@@ -24,8 +25,7 @@ export const axiosInstance = axios.create({
 
 Axios.interceptors.request.use(
     (config) => {
-        const authToken = store.getState().user?.accessToken;
-        const token = authToken
+        const token = Cookies.get("accessToken");
         if (token) {
             config.headers["authorization"] = `Bearer ${token}`
         }
@@ -41,14 +41,12 @@ Axios.interceptors.response.use(
             originalReq._retry = true;
             try {
                 const response = await refreshToken();
-                console.log('Refresh token has been called in intreceptor')
                 const newAccessToken = response.accessToken;
-                console.log('Access token response', newAccessToken);
                 store.dispatch(setAccessToken({ accessToken: newAccessToken }));
-                console.log('!!...new access token set in redux...!!!');
                 originalReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
                 return Axios(originalReq);
             } catch (refreshError) {
+                console.log('Refresh error', refreshError);
                 store.dispatch(removeUser());
                 window.location.href = "/login";
                 return Promise.reject(refreshError);
