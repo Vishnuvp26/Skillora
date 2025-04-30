@@ -53,6 +53,7 @@ const JobsList = () => {
                         filterExperience || '',
                         sortOption || ''
                     );
+                    console.log('API Response clientJobs:', response);
                     setJobs(response.jobs || []);
                     setTotalPages(Math.ceil(response.total / limit));
                 } else {
@@ -63,6 +64,7 @@ const JobsList = () => {
                         filterExperience || '',
                         sortOption || ''
                     );
+                    console.log('API Response ALL JOBS:', response);
                     setJobs(response.jobs || []);
                     setTotalPages(Math.ceil(response.total / limit));
                 }
@@ -275,12 +277,15 @@ const JobsList = () => {
                     )}
 
                     {/* Pagination Controls */}
-                    {jobs.length > 0 && totalPages > 0 && (
+                    {jobs.length > 0 && Number(totalPages) > 1 && (
                         <Pagination className="mt-6">
                             <PaginationContent>
                                 <PaginationItem>
                                     <PaginationPrevious 
-                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        onClick={() => {
+                                            console.log('Current page before:', currentPage);
+                                            setCurrentPage(prev => Math.max(prev - 1, 1));
+                                        }}
                                         className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                                     />
                                 </PaginationItem>

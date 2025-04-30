@@ -11,11 +11,11 @@ export const createJob = async (id: string, formData: any) => {
 
 export const fetchMyJobs = async (
     id: string, 
-    page: number, 
-    limit: number, 
-    search: string, 
-    filter: string, 
-    sort: string
+    page?: number, 
+    limit?: number, 
+    search?: string, 
+    filter?: string, 
+    sort?: string
 ) => {
     try {
         const response = await axiosInstance.get(
@@ -39,8 +39,10 @@ export const fetchAllJobs = async (page:number, limit:number, search: string, fi
 export const jobDetails = async (id: string) => {
     try {
         const response = await Axios.get(`/api/client/job/job-details/${id}`);
+        console.log('API Response:', response.data);
         return response.data
     } catch (error: any) {
+        console.error('API Error:', error.response || error);
         throw error.response?.data || "Failed to get job details"
     }
 };
