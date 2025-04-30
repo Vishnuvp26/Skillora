@@ -11,11 +11,11 @@ export const createJob = async (id: string, formData: any) => {
 
 export const fetchMyJobs = async (
     id: string, 
-    page: number, 
-    limit: number, 
-    search: string, 
-    filter: string, 
-    sort: string
+    page?: number, 
+    limit?: number, 
+    search?: string, 
+    filter?: string, 
+    sort?: string
 ) => {
     try {
         const response = await axiosInstance.get(

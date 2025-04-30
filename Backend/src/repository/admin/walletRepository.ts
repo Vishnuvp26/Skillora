@@ -79,8 +79,6 @@ export class WalletRepository extends BaseRepository<IWallet> implements IWallet
             { $sort: { date: -1 } }
         ]);
 
-        console.log('TRANSACTION RESULT OF AGGREGATION', transactions);
-      
         return transactions;
     };
 

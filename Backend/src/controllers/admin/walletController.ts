@@ -8,7 +8,6 @@ export class WalletController implements IWalletController {
     constructor(private _walletService: IWalletService) { }
     
     async getWallet(req: Request, res: Response, next: NextFunction): Promise<void> {
-        console.log('heyy wallet');
         try {
             const { userId } = req.params;
 
