@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 export type Role = "freelancer" | "client" | "admin"
 
 export function generateAccessToken(userId: string, role: Role) {
-    return jwt.sign({id: userId, role}, env.JWT_SECRET, {expiresIn: '10s'});
+    return jwt.sign({id: userId, role}, env.JWT_SECRET, {expiresIn: '1h'});
 }
 
 export function generateRefreshToken(userId: string, role: Role) {

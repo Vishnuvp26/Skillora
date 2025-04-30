@@ -22,6 +22,7 @@ import {
     PaginationNext, 
     PaginationPrevious 
 } from "@/components/ui/pagination";
+import { Input } from "../ui/input";
 
 const JobsList = () => {
     const userRole = useSelector((state: RootState) => state.user.role);
@@ -36,7 +37,7 @@ const JobsList = () => {
     const [appliedJobs, setAppliedJobs] = useState<{ [key: string]: boolean }>({});
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [limit] = useState(5);
+    const [limit] = useState(4);
     const descriptionLimit = 100;
 
     const navigate = useNavigate();
@@ -53,7 +54,6 @@ const JobsList = () => {
                         filterExperience || '',
                         sortOption || ''
                     );
-                    console.log('API Response clientJobs:', response);
                     setJobs(response.jobs || []);
                     setTotalPages(Math.ceil(response.total / limit));
                 } else {
@@ -64,7 +64,6 @@ const JobsList = () => {
                         filterExperience || '',
                         sortOption || ''
                     );
-                    console.log('API Response ALL JOBS:', response);
                     setJobs(response.jobs || []);
                     setTotalPages(Math.ceil(response.total / limit));
                 }
@@ -118,18 +117,19 @@ const JobsList = () => {
                 <NoJobsPosted />
             ) : (
                 <div className="flex flex-col gap-5 mt-1.5">
-                    <div className="flex justify-between items-center flex-wrap gap-3">
-                        {/* Title */}
-                        <h2 className="text-xl font-semibold">
-                            {userRole === "client" ? "Your Works" : "Find Works"}
-                        </h2>
+                    {/* Title */}
+                    <h2 className="text-xl font-semibold">
+                        {userRole === "client" ? "Your Works" : "Find Works"}
+                    </h2>
 
-                        {/* Search Input - Show for both roles */}
-                        <div className="w-full sm:w-72 md:w-96 lg:max-w-[600px] relative">
-                            <input
+                    {/* Search, Sort and Filter Options - all in one row */}
+                    <div className="flex flex-wrap items-center gap-4">
+                        {/* Search Input */}
+                        <div className="relative w-full sm:w-72 md:w-96">
+                            <Input
                                 type="text"
                                 placeholder="Search works..."
-                                className="w-full border p-2.5 pl-3 pr-8 rounded-lg text-sm dark:bg-gray-950 dark:text-white 
+                                className="w-full border p-3 h-9 pl-3 pr-8 rounded-lg text-sm dark:bg-gray-950 dark:text-white 
                                 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600"
                                 value={searchTerm}
                                 onChange={(e) => {
@@ -147,10 +147,8 @@ const JobsList = () => {
                                 />
                             )}
                         </div>
-                    </div>
 
-                    {/* Sort and Filter Options - Show for both roles */}
-                    <div className="flex flex-wrap gap-4 mt-4">
+                        {/* Sort Select */}
                         <Select
                             value={sortOption ?? "sort"}
                             onValueChange={(value) => {
@@ -277,15 +275,12 @@ const JobsList = () => {
                     )}
 
                     {/* Pagination Controls */}
-                    {jobs.length > 0 && Number(totalPages) > 1 && (
+                    {jobs.length > 0 && Number(totalPages) > 0 && (
                         <Pagination className="mt-6">
                             <PaginationContent>
                                 <PaginationItem>
                                     <PaginationPrevious 
-                                        onClick={() => {
-                                            console.log('Current page before:', currentPage);
-                                            setCurrentPage(prev => Math.max(prev - 1, 1));
-                                        }}
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                         className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                                     />
                                 </PaginationItem>
