@@ -275,7 +275,7 @@ const JobsList = () => {
                     )}
 
                     {/* Pagination Controls */}
-                    { jobs.length > 0 && (
+                    {jobs.length > 0 && totalPages > 0 && (
                         <Pagination className="mt-6">
                             <PaginationContent>
                                 <PaginationItem>
@@ -285,9 +285,9 @@ const JobsList = () => {
                                     />
                                 </PaginationItem>
                                 
-                                {[...Array(totalPages)].map((_, index) => {
+                                {Array.from({ length: Math.min(totalPages, 100) }).map((_, index) => {
                                     const pageNumber = index + 1;
-                                    // Show first page, current page, last page, and pages around current
+                                    
                                     if (
                                         pageNumber === 1 ||
                                         pageNumber === totalPages ||
@@ -304,8 +304,9 @@ const JobsList = () => {
                                             </PaginationItem>
                                         );
                                     } else if (
-                                        pageNumber === currentPage - 2 ||
-                                        pageNumber === currentPage + 2
+                                        (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) &&
+                                        pageNumber > 1 && 
+                                        pageNumber < totalPages
                                     ) {
                                         return (
                                             <PaginationItem key={pageNumber}>
@@ -315,6 +316,7 @@ const JobsList = () => {
                                     }
                                     return null;
                                 })}
+
                                 <PaginationItem>
                                     <PaginationNext 
                                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
