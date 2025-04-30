@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Briefcase, DollarSign } from "lucide-react";
+import { CheckCircle, Briefcase, DollarSign, Search } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import image1 from '../../assets/image1.jpg';
 import image2 from '../../assets/image2.jpg';
@@ -7,6 +7,7 @@ import image3 from '../../assets/image3.jpg';
 import landing from '../../assets/landing.jpg'
 import { Button } from "../ui/button";
 import ChatBot from "./ChatBot";
+import { Input } from "../ui/input";
 
 const Body = () => {
     return (
@@ -25,17 +26,37 @@ const Body = () => {
                     className="w-full lg:w-1/2 text-left"
                 >
                     <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-[1.3]">
-                        We <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-green-300 dark:via-teal-400 dark:to-cyan-500 dark:bg-clip-text dark:text-transparent">
-                            connect
-                        </span>
-                        <br />
+                        We <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-green-300 dark:via-teal-400 dark:to-cyan-500 dark:bg-clip-text dark:text-transparent">connect</span> <br />
                         people to bring <br />
                         projects to <span className="text-[#0077B6] dark:bg-gradient-to-r dark:from-green-300 dark:via-teal-400 dark:to-cyan-500 dark:bg-clip-text dark:text-transparent">life</span>
                     </h1>
+        
                     <h3 className="text-white-500 dark:text-gray-400 mx-auto mt-10">
                         Find high-quality talent or open jobs with the <br />
                         help of AI tools that keep you in control.
                     </h3>
+        
+                    {/* Search Bar Component */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+                        className="relative w-full max-w-md mt-8"
+                    >
+                        <div className="relative flex items-center w-full">
+                            <Input
+                                type="text"
+                                placeholder="Search by role, skills, or keywords"
+                                className="w-full rounded-full py-4 sm:py-6 pl-4 sm:pl-6 pr-16 sm:pr-24 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 border border-gray-500 dark:border-gray-700 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 text-sm sm:text-base"
+                            />
+                            <div className="absolute right-2 flex items-center">
+                                <button className="bg-gray-400 dark:bg-gray-800 hover:bg-gray-800 text-white rounded-full px-3 sm:px-6 py-1.5 sm:py-2 flex items-center justify-center">
+                                    <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                                    <span className="font-medium text-sm sm:text-base hidden xs:inline">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
                 </motion.div>
 
                 {/* Right Section: Carousel */}
@@ -76,7 +97,7 @@ const Body = () => {
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.8 }}
                     className="w-full lg:w-[50%] mt-10 lg:mt-0"
                 >
-                    <img src={landing} alt="Work Collaboration" className="rounded-sm shadow-lg w-[500px] h-auto mx-auto" />
+                    <img src={landing} alt="Work Collaboration" className="rounded-sm shadow-lg w-[600px] h-auto mx-auto" />
                 </motion.div>
 
                 {/* Right: Glassmorphic Text Box */}

@@ -1,6 +1,6 @@
 const NoResultsFound = () => {
     return (
-        <div className="px-6 py-16 sm:p-24 mt-10 flex flex-col items-center text-center bg-white dark:bg-gray-950 rounded-xl shadow-sm">
+        <div className="px-6 py-16 sm:p-24 mt-10 flex flex-col items-center text-center bg-white dark:bg-gray-950 rounded-xl">
             <p className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200">
                 No Results Found
             </p>

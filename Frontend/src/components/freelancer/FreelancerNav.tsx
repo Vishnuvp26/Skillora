@@ -359,8 +359,8 @@ const FreelancerNav: React.FC = () => {
                         {/* User Info Section */}
                         <div className="flex items-center gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
                             <div>
-                                <p className="text-sm font-medium text-gray-900 dark:text-white">Vishnu</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">Freelancer</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white">{userName}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">{userRole}</p>
                             </div>
                         </div>
 
