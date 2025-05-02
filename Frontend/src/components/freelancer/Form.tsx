@@ -11,7 +11,7 @@ import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import { updateProfile } from "@/api/freelancer/profileApi";
 import toast from "react-hot-toast";
-import { Plus, X } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import { validateFreelancerForm } from "@/utils/validation";
 import { Textarea } from "../ui/textarea";
 
@@ -40,6 +40,7 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
     const [selectedSkills, setSelectedSkills] = useState<string[]>(formData.skills?.map(skill => skill._id || "") || []);
     const [languageInput, setLanguageInput] = useState("")
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -135,11 +136,14 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
         if (Object.keys(validationErrors).length > 0) return;
 
         try {
+            setIsLoading(true);
             const updatedData = await updateProfile(userId, formData);
             toast.success('Profile updted successfully')
             onUpdate?.(updatedData.data);
         } catch (error) {
             console.error("Error updating profile:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -347,8 +351,18 @@ const FreelancerProfileForm: React.FC<FreelancerProfileFormProps> = ({ profile, 
                     </div>
 
                     {/* Submit Button */}
-                    <Button type="submit" className="w-full bg-[#186e9c] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700">
-                        Save Profile
+                    <Button
+                        type="submit"
+                        className="w-full bg-[#186e9c] dark:bg-gray-800 dark:text-white hover:bg-[#005F8C] dark:hover:bg-gray-700"
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Saving changes...
+                            </>
+                        ) : (
+                            "Save Profile"
+                        )}
                     </Button>
                 </form>
             </CardContent>
