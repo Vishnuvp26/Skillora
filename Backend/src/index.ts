@@ -62,8 +62,8 @@ class App {
     }
 
     public listen() {
-        const PORT = env.PORT
-        this.server.listen(PORT, () => {
+        const PORT = Number(process.env.PORT);
+        this.server.listen(Number(PORT), '0.0.0.0', () => {
             logger.info(`Server running on http://localhost:${PORT}`);
             console.log(`Server running on http://localhost:${PORT}`);
         });
