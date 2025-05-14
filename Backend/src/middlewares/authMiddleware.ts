@@ -6,7 +6,7 @@ import { HttpStatus } from "../constants/statusContstants";
 import { Messages } from "../constants/messageConstants";
 import User from "../models/user/userModel";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
     user?: {
         id: string;
         role: string;

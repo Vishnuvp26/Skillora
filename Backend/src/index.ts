@@ -27,7 +27,7 @@ class App {
         this.initializeMiddlewares()
         this.initializeDatabase()
         this.initializeRoutes()
-        this.initializeSocket()
+        // this.initializeSocket()
     }
 
     private initializeMiddlewares(): void {
@@ -62,10 +62,11 @@ class App {
     }
 
     public listen() {
-        const PORT = Number(process.env.PORT);
+        const PORT = Number(process.env.PORT) || 3000
         this.server.listen(Number(PORT), '0.0.0.0', () => {
             logger.info(`Server running on http://localhost:${PORT}`);
             console.log(`Server running on http://localhost:${PORT}`);
+            this.initializeSocket();
         });
     }
 };

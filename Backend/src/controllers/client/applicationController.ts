@@ -3,14 +3,15 @@ import { IApplicationController } from "../../interfaces/client/application/IApp
 import { IApplicationService } from "../../interfaces/client/application/IApplicationService";
 import { HttpStatus } from "../../constants/statusContstants";
 import { Messages } from "../../constants/messageConstants";
+import { AuthRequest } from "../../middlewares/authMiddleware";
 
 export class ApplicationController implements IApplicationController {
     constructor(private _applicationService: IApplicationService) { }
     
-    async applyForJob(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async applyForJob(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const jobId = req.params.jobId;
-            const freelancerId = req.params.freelancerId;
+            const freelancerId = req.user?.id
 
             if (!jobId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.JOB_ID_REQUIRED });
@@ -29,10 +30,10 @@ export class ApplicationController implements IApplicationController {
         }
     };
 
-    async cancelApplication(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async cancelApplication(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const applicationId = req.params.applicationId;
-            const freelancerId = req.params.freelancerId;
+            const freelancerId = req.user?.id;
 
             if (!applicationId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.JOB_APPLICATION_REQUIRED });
@@ -80,9 +81,9 @@ export class ApplicationController implements IApplicationController {
         }
     };
 
-    async getFreelancerApplication(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getFreelancerApplication(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const freelancerId = req.params.freelancerId;
+            const freelancerId = req.user?.id;
 
             if (!freelancerId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.USER_NOT_FOUND });
@@ -96,10 +97,10 @@ export class ApplicationController implements IApplicationController {
         }
     };
 
-    async getJobApplicationDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getJobApplicationDetails(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const jobId = req.params.jobId;
-            const freelancerId = req.params.freelancerId;
+            const freelancerId = req.user?.id;
 
             if (!jobId || !freelancerId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });

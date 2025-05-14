@@ -11,6 +11,7 @@ const activeUsers = new Map<string, string>();
 let io: Server;
 
 export const initSocket = (server: HTTPServer) => {
+    console.log("⚡ Initializing Socket.IO...");
     io = new Server(server, {
         cors: {
             origin: env.CLIENT_URL,

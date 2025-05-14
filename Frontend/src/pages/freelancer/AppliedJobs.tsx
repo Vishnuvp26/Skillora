@@ -23,7 +23,7 @@ const AppliedJobs = () => {
     useEffect(() => {
         const fetchApplications = async () => {
             try {
-                const response = await viewAppliedJobs(userId);
+                const response = await viewAppliedJobs();
                 const sortedJobs = (response.applications || []).sort(
                     (a: Application, b: Application) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
@@ -44,7 +44,7 @@ const AppliedJobs = () => {
 
     const cancelJobApplication = async (applicationId: string) => {
         try {
-            await cancelApplication(applicationId, userId);
+            await cancelApplication(applicationId);
             setApplications((prev) =>
                 prev.filter((application) => application._id !== applicationId)
             );

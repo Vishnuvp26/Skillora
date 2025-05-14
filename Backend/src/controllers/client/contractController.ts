@@ -3,14 +3,15 @@ import { IContractController } from "../../interfaces/client/contract/IContractC
 import { IContractService } from "../../interfaces/client/contract/IContractService";
 import { HttpStatus } from "../../constants/statusContstants";
 import { Messages } from "../../constants/messageConstants";
+import { AuthRequest } from "../../middlewares/authMiddleware";
 
 export class ContractController implements IContractController {
     constructor(private _contractService: IContractService) { };
 
-    async createContract(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async createContract(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
+            const clientId = req.user?.id;
             const jobId = req.params.jobId;
-            const clientId = req.params.clientId;
             const freelancerId = req.body.freelancerId;
             const amount = req.body.amount;
 

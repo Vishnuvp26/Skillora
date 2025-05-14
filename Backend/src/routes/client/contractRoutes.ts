@@ -15,7 +15,7 @@ const contractService = new ContractService(contractRepository, jobRepository, a
 const contractController = new ContractController(contractService);
 
 router.post(
-    "/create-contract/:jobId/:clientId",
+    "/create-contract/:jobId/",
     authenticateToken,
     authorizeRoles('client'),
     contractController.createContract.bind(contractController)

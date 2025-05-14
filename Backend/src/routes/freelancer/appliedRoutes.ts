@@ -13,26 +13,30 @@ const applicationService = new ApplicationService(applicationRepsitory, jobRepos
 const applicationController = new ApplicationController(applicationService);
 
 router.post(
-    "/apply-job/:jobId/:freelancerId",
+    "/apply-job/:jobId",
     authenticateToken,
     authorizeRoles('freelancer'),
     applicationController.applyForJob.bind(applicationController)
 );
 
 router.delete(
-    "/cancel-application/:applicationId/:freelancerId",
+    "/cancel-application/:applicationId",
     authenticateToken,
     authorizeRoles('freelancer'),
     applicationController.cancelApplication.bind(applicationController)
 );
 
 router.get(
-    "/applied-jobs/:freelancerId",
+    "/applied-jobs",
+    authenticateToken,
+    authorizeRoles('freelancer'),
     applicationController.getFreelancerApplication.bind(applicationController)
 );
 
 router.get(
-    "/applied-status/:jobId/:freelancerId",
+    "/applied-status/:jobId",
+    authenticateToken,
+    authorizeRoles('freelancer'),
     applicationController.getJobApplicationDetails.bind(applicationController)
 );
 

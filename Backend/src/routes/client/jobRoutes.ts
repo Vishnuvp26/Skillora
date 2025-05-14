@@ -16,7 +16,7 @@ router.get(
 );
 
 router.post(
-    "/create-job/:id",
+    "/create-job",
     authenticateToken,
     authorizeRoles('client'),
     jobController.createJob.bind(jobController)

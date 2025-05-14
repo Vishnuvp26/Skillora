@@ -6,6 +6,7 @@ import { Messages } from "../../constants/messageConstants";
 import mongoose from "mongoose";
 import { env } from "../../config/env.config";
 import Stripe from "stripe";
+import { AuthRequest } from "../../middlewares/authMiddleware";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY!, {
     apiVersion: "2025-02-24.acacia"
@@ -14,10 +15,11 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY!, {
 export class JobController implements IJobController {
     constructor(private _jobService: IJobService) { }
     
-    async createJob(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async createJob(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
-            const userId = req.params.id;
-            const jobData = req.body
+            const userId = req.user?.id;
+            console.log('UserId from token : ', userId)
+            const jobData = req.body;
 
             if (!userId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.USER_NOT_FOUND })
@@ -74,10 +76,10 @@ export class JobController implements IJobController {
         }
     };
 
-    async updateJob(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async updateJob(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const jobId = req.params.id;
-            const userId = req.body.userId;
+            const userId = req.user?.id;
             const jobData = req.body
 
             if (!jobId) {

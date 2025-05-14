@@ -3,9 +3,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RootState } from "@/redux/store/store";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { updateJob, jobDetails } from "@/api/client/jobApi";
 import toast from "react-hot-toast";
 import { fetchSkills } from "@/api/admin/skillsApi";
@@ -19,7 +17,6 @@ const EditJob = () => {
     const [skillsList, setSkillsList] = useState<{ id: string; name: string }[]>([]);
     const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-    const userId = useSelector((state: RootState) => state.user._id);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -86,7 +83,6 @@ const EditJob = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const jobData = {
-            userId,
             title: formData.title,
             description: formData.description,
             rate: Number(formData.rate),

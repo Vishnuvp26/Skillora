@@ -13,23 +13,28 @@ const AdminRoutes = lazy(() => import("@/routes/AdminRoutes"));
 const App = () => {
 
     useEffect(() => {
-        console.log("socket");
-        
-        socket.on("connect", () => {
-            console.log(`socket connected to server with id: ${socket.id} `);
+        console.log("Attempting socket connection...");
     
-        })
-        socket.on("connect_error", (err) => {
-            console.error("Socket connection error:", err.message);
-        });
+        const timeout = setTimeout(() => {
+            socket.connect();
+            
+            socket.on("connect", () => {
+                console.log(`✅ Socket connected to server with ID: ${socket.id}`);
+            });
+    
+            socket.on("connect_error", (err) => {
+                console.error("❌ Socket connection error:", err.message);
+            });
+        }, 500);
+    
         return () => {
+            clearTimeout(timeout);
             if (socket.connected) {
                 socket.disconnect();
                 console.log("Socket disconnected");
             }
-        }
-    
-    }, []);
+        };
+    }, []);    
 
     return (
         <ThemeProvider>

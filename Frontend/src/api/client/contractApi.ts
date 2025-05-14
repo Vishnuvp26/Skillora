@@ -1,8 +1,8 @@
-import Axios from "../axios/axiosInstance";
+import Axios, { axiosInstance } from "../axios/axiosInstance";
 
-export const createContract = async (jobId: string, clientId: string, data: { freelancerId: string; amount: number }) => {
+export const createContract = async (jobId: string, data: { freelancerId: string; amount: number }) => {
     try {
-        const response = await Axios.post(`/api/client/contract/create-contract/${jobId}/${clientId}`, data);
+        const response = await Axios.post(`/api/client/contract/create-contract/${jobId}`, data);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to create contract";
@@ -29,7 +29,7 @@ export const isContractCreated = async (jobId: string, clientId: string) => {
 
 export const getClientContracts = async (clientId: string) => {
     try {
-        const response = await Axios.get(`api/client/contract/get-contracts/${clientId}`);
+        const response = await axiosInstance.get(`api/client/contract/get-contracts/${clientId}`);
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to get clients contracts"

@@ -1,8 +1,8 @@
 import Axios, { axiosInstance } from "../axios/axiosInstance"
 
-export const createJob = async (id: string, formData: any) => {
+export const createJob = async (formData: any) => {
     try {
-        const response = await Axios.post(`/api/client/job/create-job/${id}`, formData)
+        const response = await Axios.post(`/api/client/job/create-job`, formData)
         return response.data;
     } catch (error: any) {
         throw error.response?.data || "Failed to add job"

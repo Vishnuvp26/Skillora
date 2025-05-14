@@ -55,19 +55,21 @@ const JobDetail = () => {
 
     // Button state after job applied
     useEffect(() => {
-        if (!id || !userId) return;
+        if (!id || !userId || userRole !== "freelancer") return;
+    
         const appliedStatus = async () => {
             try {
-                const appliedStatus = await getApplicantStatus(id, userId);
+                const appliedStatus = await getApplicantStatus(id);
                 if (appliedStatus?.application?.isApplied) {
-                    setIsApplied(appliedStatus?.application?.isApplied);
+                    setIsApplied(appliedStatus.application.isApplied);
                 }
             } catch (error: any) {
-                console.log('Error checking applied status', error);
+                console.log("Error checking applied status", error);
             }
-        }
-        appliedStatus()
-    }, [id]);
+        };
+    
+        appliedStatus();
+    }, [id, userId, userRole]);
 
     // Show applied freelancers
     useEffect(() => {
@@ -131,7 +133,7 @@ const JobDetail = () => {
         }
 
         try {
-            const response = await applyJob(id, userId);
+            const response = await applyJob(id);
             console.log('APPLY JOB RESPONSE', response);
             toast.success(response.message);
             setIsApplied(true);
@@ -154,7 +156,7 @@ const JobDetail = () => {
         try {
             if (!id || !userId || !freelancerId) return;
 
-            const response = await createContract(id, userId, { freelancerId, amount: job.rate });
+            const response = await createContract(id, { freelancerId, amount: job.rate });
             toast.success(response.message);
             setContractUpdated(prev => !prev);
 
