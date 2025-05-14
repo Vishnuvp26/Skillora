@@ -82,7 +82,7 @@ const JobsList = () => {
                 try {
                     const appliedStatuses = await Promise.all(
                         jobs.map(async (job) => {
-                            const response = await getApplicantStatus(job._id, userId);
+                            const response = await getApplicantStatus(job._id);
                             return { jobId: job._id, isApplied: response?.application?.isApplied };
                         })
                     );
