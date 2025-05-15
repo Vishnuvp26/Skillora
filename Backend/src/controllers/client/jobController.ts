@@ -18,7 +18,6 @@ export class JobController implements IJobController {
     async createJob(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.user?.id;
-            console.log('UserId from token : ', userId)
             const jobData = req.body;
 
             if (!userId) {

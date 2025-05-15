@@ -55,21 +55,19 @@ const JobDetail = () => {
 
     // Button state after job applied
     useEffect(() => {
-        if (!id || !userId || userRole !== "freelancer") return;
-    
+        if (!id || !userId) return;
         const appliedStatus = async () => {
             try {
-                const appliedStatus = await getApplicantStatus(id);
+                const appliedStatus = await getApplicantStatus(id, userId);
                 if (appliedStatus?.application?.isApplied) {
-                    setIsApplied(appliedStatus.application.isApplied);
+                    setIsApplied(appliedStatus?.application?.isApplied);
                 }
             } catch (error: any) {
-                console.log("Error checking applied status", error);
+                console.log('Error checking applied status', error);
             }
-        };
-    
-        appliedStatus();
-    }, [id, userId, userRole]);
+        }
+        appliedStatus()
+    }, [id]);
 
     // Show applied freelancers
     useEffect(() => {

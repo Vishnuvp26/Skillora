@@ -34,9 +34,7 @@ router.get(
 );
 
 router.get(
-    "/applied-status/:jobId",
-    authenticateToken,
-    authorizeRoles('freelancer'),
+    "/applied-status/:jobId/:freelancerId",
     applicationController.getJobApplicationDetails.bind(applicationController)
 );
 

@@ -97,10 +97,10 @@ export class ApplicationController implements IApplicationController {
         }
     };
 
-    async getJobApplicationDetails(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    async getJobApplicationDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const jobId = req.params.jobId;
-            const freelancerId = req.user?.id;
+            const freelancerId = req.params.freelancerId;
 
             if (!jobId || !freelancerId) {
                 res.status(HttpStatus.BAD_REQUEST).json({ message: Messages.MISSING_PARAMETERS });
