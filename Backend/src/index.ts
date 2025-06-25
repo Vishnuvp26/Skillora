@@ -37,7 +37,7 @@ class App {
             allowedHeaders: ["Content-Type", "Authorization"],
             credentials: true
         }));
-        this.app.use(express.json());
+        // this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(morganMiddleware);
     }
