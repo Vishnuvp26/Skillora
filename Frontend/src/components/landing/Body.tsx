@@ -8,8 +8,17 @@ import landing from '../../assets/landing.jpg'
 import { Button } from "../ui/button";
 import ChatBot from "./ChatBot";
 import { Input } from "../ui/input";
+import { useEffect } from "react";
+import { pingBackend } from "@/api/auth/authApi";
 
 const Body = () => {
+
+    useEffect(() => {
+        pingBackend()
+            .then(() => console.log("Backend awake"))
+            .catch((err) => console.error("Ping error:", err));
+    }, []);
+
     return (
         <>
             <motion.div

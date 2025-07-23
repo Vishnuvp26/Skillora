@@ -103,3 +103,12 @@ export const resetPasswordWithToken = async (token: string, newPassword: string,
         throw error.response?.data || "Failed to reset password"
     }
 };
+
+export const pingBackend = async () => {
+    try {
+        const response = await axiosInstance.get("/api/ping");
+        return response.data;
+    } catch (error: any) {
+        throw error.response?.data || "Backend ping failed";
+    }
+};
