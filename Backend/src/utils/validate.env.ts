@@ -37,4 +37,10 @@ export default function validateEnv() {
     if (!env.STRIPE_WEBHOOK_SECRET) {
         throw new Error('STRIPE_WEBHOOK_SECRET is not defined in env')
     }
+    if (!env.UPSTASH_REDIS_REST_URL) {
+        throw new Error('UPSTASH_REDIS_REST_URL is not defined in env')
+    }
+    if (!env.UPSTASH_REDIS_REST_TOKEN) {
+        throw new Error('UPSTASH_REDIS_REST_TOKEN is not defined in env')
+    }
 }

@@ -39,5 +39,11 @@ export const env = {
     },
     get STRIPE_WEBHOOK_SECRET() {
         return process.env.STRIPE_WEBHOOK_SECRET
+    },
+    get UPSTASH_REDIS_REST_URL() {
+        return process.env.UPSTASH_REDIS_REST_URL
+    },
+    get UPSTASH_REDIS_REST_TOKEN() {
+        return process.env.UPSTASH_REDIS_REST_TOKEN
     }
 };
