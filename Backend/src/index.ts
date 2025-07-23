@@ -54,6 +54,11 @@ class App {
         this.app.use('/api/client', clientRoutes);
         this.app.use('/api/freelancer', freelancerRoutes);
         this.app.use('/api/media/', messageRoutes);
+        
+        this.app.get('/api/ping', (req, res) => {
+            res.status(200).send('pong');
+        });
+
         this.app.use(errorHandler);
     }
 
